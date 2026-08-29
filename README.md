@@ -1,21 +1,41 @@
-# Kairank
+# KaiRank rebuild
 
-Search visibility landing page for dental, physio, and recovery clinics, with a live audit console that scans a visitor's site through the real Google PageSpeed Insights API.
+The production foundation for KaiRank: a premium SEO, technical SEO, local SEO, AI search/GEO and organic visibility consultancy.
 
-Static site, no build step or backend required — open `index.html` directly or serve the folder from any static host (GitHub Pages, Netlify, Vercel, S3, etc.).
+This milestone establishes a Next.js App Router architecture, TypeScript, central site configuration, metadata scaffolding, design tokens, responsive interface primitives, data visualisation and the internal visual-system review route. It intentionally does **not** build the final homepage or service pages.
 
-## Files
+## Run locally
 
-- `index.html` — page markup and styles
-- `app.js` — the audit console (URL scan → PageSpeed API call → gauge animation) and email capture form
-- `scroll.js` — scroll-driven effects (GSAP/ScrollTrigger + Lenis smooth scroll, reveal-on-scroll, the South City case-study chart, the horizontal Recovery Room scroller)
+```bash
+npm install
+npm run dev
+```
 
-## Before going live
+Open [http://localhost:3000/visual-system](http://localhost:3000/visual-system) to review the design language.
 
-- **Email capture form** (`index.html`, the `#emailForm` element) posts to `https://formspree.io/f/YOUR_FORM_ID` — replace `YOUR_FORM_ID` with a real [Formspree](https://formspree.io) form ID, or swap in your own endpoint. Until then, submissions are validated client-side but not actually sent anywhere.
-- **PageSpeed Insights API**: the audit console calls the public, unauthenticated PageSpeed API, which has a low shared rate limit and will show the "rate limited" error fairly quickly under real traffic. For production, get a free [PageSpeed Insights API key](https://developers.google.com/speed/docs/insights/v5/get-started) and append `&key=YOUR_KEY` to the `api` URL built in `app.js`.
-- Update the `mailto:hello@kairank.com` link in the final CTA section to a real inbox.
+## Quality checks
 
-## Enabling GitHub Pages
+```bash
+npm run lint
+npm run typecheck
+npm run build
+```
 
-Settings → Pages → Deploy from branch → `main` / `/ (root)`.
+## Structure
+
+- `app/` — App Router pages, layout, global styles, robots and sitemap
+- `components/brand/` — signal mark and wordmark
+- `components/layout/` — site navigation foundations
+- `components/ui/` — controls and form specimens
+- `components/data/` — evidence-led visualisation primitives
+- `components/motion/` — lightweight interactive SIGNAL primitives
+- `lib/site.ts` — central business, navigation and route configuration
+- `lib/metadata.ts` — reusable metadata and canonical helper
+- `styles/tokens.css` — colour, typography, spacing and motion tokens
+- `legacy/MIGRATION.md` — legacy feature and evidence inventory
+
+## Legacy site
+
+The original static site remains intact at the repository root in `index.html`, `app.js` and `scroll.js`. Git history is unchanged. These files are retained as migration source material and are not loaded by Next.js.
+
+See `legacy/MIGRATION.md` before migrating the PageSpeed audit, email capture or case studies.

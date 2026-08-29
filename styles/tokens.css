@@ -1,0 +1,58 @@
+:root {
+  color-scheme: dark;
+
+  --color-ink: #080a0f;
+  --color-ink-raised: #0e1118;
+  --color-graphite: #151922;
+  --color-graphite-soft: #1b202b;
+  --color-paper: #f2efe8;
+  --color-paper-soft: #d8d6d1;
+  --color-text-secondary: #a7aab1;
+  --color-text-muted: #707681;
+  --color-line: rgba(242, 239, 232, 0.12);
+  --color-line-strong: rgba(242, 239, 232, 0.22);
+  --color-signal: #718dff;
+  --color-signal-bright: #a9b8ff;
+  --color-signal-muted: rgba(113, 141, 255, 0.14);
+  --color-success: #64c4a4;
+  --color-warning: #ddb66f;
+  --color-error: #e68478;
+
+  --font-display: var(--font-instrument-serif), Georgia, serif;
+  --font-body: var(--font-manrope), Arial, sans-serif;
+  --font-data: var(--font-ibm-plex-mono), "SFMono-Regular", Consolas, monospace;
+
+  --type-display: clamp(4.25rem, 10.2vw, 10.5rem);
+  --type-h1: clamp(3.4rem, 7.8vw, 7.8rem);
+  --type-h2: clamp(2.7rem, 5.4vw, 5.75rem);
+  --type-h3: clamp(1.65rem, 2.8vw, 2.65rem);
+  --type-lead: clamp(1.12rem, 1.55vw, 1.4rem);
+  --type-body: clamp(0.98rem, 1.05vw, 1.08rem);
+  --type-small: 0.84rem;
+  --type-label: 0.71rem;
+  --type-data: clamp(0.68rem, 0.75vw, 0.76rem);
+
+  --container-max: 92rem;
+  --reading-max: 42rem;
+  --gutter: clamp(1.25rem, 4.2vw, 5rem);
+  --section-space: clamp(6rem, 11vw, 11rem);
+  --grid-gap: clamp(1rem, 2.2vw, 2.5rem);
+  --control-height: 3.25rem;
+
+  --radius-sm: 0.35rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.15rem;
+
+  --ease-signal: cubic-bezier(0.2, 0.72, 0.2, 1);
+  --duration-fast: 160ms;
+  --duration-base: 420ms;
+  --duration-slow: 900ms;
+}
+
+@media (max-width: 42rem) {
+  :root {
+    --type-display: clamp(3.8rem, 22vw, 6.2rem);
+    --type-h1: clamp(3rem, 17vw, 5rem);
+    --section-space: clamp(4.75rem, 22vw, 7rem);
+  }
+}
