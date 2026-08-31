@@ -16,10 +16,10 @@ export const siteConfig = {
   },
   navigation: [
     { label: "Services", href: "#services" },
-    { label: "Results", href: "#results" },
-    { label: "AI Search", href: "#ai-search" },
-    { label: "Insights", href: "#system" },
-    { label: "About", href: "#trust" },
+    { label: "Results", href: "#proof" },
+    { label: "Approach", href: "#system" },
+    { label: "Process", href: "#process" },
+    { label: "FAQ", href: "#faq" },
   ],
   serviceRoutes: [
     { label: "SEO", href: "/seo/" },

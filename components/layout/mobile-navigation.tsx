@@ -44,7 +44,7 @@ export function MobileNavigation() {
         id="mobile-navigation-panel"
         aria-hidden={!open}
       >
-        <div className="mobile-navigation__meta data-label">KaiRank / Search pathways</div>
+        <div className="mobile-navigation__meta data-label">KaiRank / Visibility system</div>
         <nav aria-label="Mobile navigation">
           {siteConfig.navigation.map((item, index) => (
             <Link
@@ -60,13 +60,13 @@ export function MobileNavigation() {
           ))}
           <Link className="mobile-navigation__audit" href="#audit" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
             <span className="data-label">06</span>
-            <span>Run my visibility audit</span>
+            <span>Run the Fast Check</span>
             <span aria-hidden="true">↘</span>
           </Link>
         </nav>
         <div className="mobile-navigation__footer">
           <span className="data-label">Google / Maps / AI search</span>
-          <p>Be visible where patients decide.</p>
+          <p>Make the searches that matter lead to your clinic.</p>
         </div>
       </div>
     </div>

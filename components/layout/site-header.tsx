@@ -26,7 +26,7 @@ export function SiteHeader() {
           ))}
         </nav>
         <Link className="site-header__contact" href="#audit">
-          Run my visibility audit <span aria-hidden="true">↘</span>
+          Run the Fast Check <span aria-hidden="true">↘</span>
         </Link>
         <MobileNavigation />
       </div>

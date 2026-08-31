@@ -20,21 +20,23 @@ export function ScrollExperience() {
     };
 
     const revealTargets = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { rootMargin: "0px 0px -12%", threshold: 0.12 },
-    );
+    const observer = !reduceMotion && "IntersectionObserver" in window
+      ? new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer?.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: "0px 0px -12%", threshold: 0.12 },
+        )
+      : null;
 
     revealTargets.forEach((target) => {
-      if (reduceMotion) target.classList.add("is-visible");
-      else observer.observe(target);
+      if (observer) observer.observe(target);
+      else target.classList.add("is-visible");
     });
 
     updateProgress();
@@ -42,7 +44,7 @@ export function ScrollExperience() {
     window.addEventListener("resize", onScroll, { passive: true });
 
     return () => {
-      observer.disconnect();
+      observer?.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       if (frame) window.cancelAnimationFrame(frame);
