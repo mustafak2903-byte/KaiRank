@@ -3,7 +3,7 @@ export const siteConfig = {
   legalName: "KaiRank",
   title: "KaiRank — Search visibility, engineered.",
   description:
-    "SEO, technical SEO, local SEO and AI search visibility engineered for organisations that need to be found.",
+    "Search visibility engineered for clinics across Google, Maps and AI discovery.",
   url: "https://kairank.com",
   locale: "en_GB",
   contact: {
@@ -15,10 +15,11 @@ export const siteConfig = {
     x: null,
   },
   navigation: [
-    { label: "Expertise", href: "/seo/" },
-    { label: "Case studies", href: "/case-studies/" },
-    { label: "Insights", href: "/insights/" },
-    { label: "About", href: "/about/" },
+    { label: "Services", href: "#services" },
+    { label: "Results", href: "#results" },
+    { label: "AI Search", href: "#ai-search" },
+    { label: "Insights", href: "#system" },
+    { label: "About", href: "#trust" },
   ],
   serviceRoutes: [
     { label: "SEO", href: "/seo/" },

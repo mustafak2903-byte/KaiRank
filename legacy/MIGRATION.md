@@ -13,7 +13,7 @@ Source: `index.html` and `app.js`
 - Animates result gauges and resolves immediately to the final state when reduced motion is enabled.
 - Uses the public unauthenticated endpoint today; a production migration needs a protected API key or server-side proxy and rate-limit strategy.
 
-Do not rebuild this API integration during the visual-system milestone.
+Migration status: replaced in the V2 prototype by `/api/audit`, which validates public URLs, rate-limits requests, keeps the optional API key server-side and returns a deliberately small normalised response. The legacy implementation remains untouched for historical reference.
 
 ## Email capture
 
@@ -22,8 +22,8 @@ Source: `index.html` and `app.js`
 - Appears after a completed audit and carries the checked URL into the submission.
 - Validates empty and malformed email states.
 - Describes a free 15-point manual audit delivered within 24 hours.
-- Formspree is configured with the placeholder `YOUR_FORM_ID`; no production submission currently occurs.
-- Success copy and the promise of one email/no automated sequence must be reviewed when the real endpoint is selected.
+- Formspree is configured with the placeholder `YOUR_FORM_ID`; no production submission occurs in the legacy site.
+- The V2 prototype posts to `/api/visibility-review`, which requires a configured HTTPS webhook and only confirms success after that endpoint responds successfully.
 
 ## South City Hospital evidence
 

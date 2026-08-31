@@ -8,14 +8,19 @@ export function MobileNavigation() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!open) return;
+    document.body.classList.toggle("has-menu-open", open);
+
+    if (!open) return () => document.body.classList.remove("has-menu-open");
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
     };
 
     document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.classList.remove("has-menu-open");
+    };
   }, [open]);
 
   return (
@@ -39,7 +44,7 @@ export function MobileNavigation() {
         id="mobile-navigation-panel"
         aria-hidden={!open}
       >
-        <div className="mobile-navigation__meta data-label">Navigation / 05 pathways</div>
+        <div className="mobile-navigation__meta data-label">KaiRank / Search pathways</div>
         <nav aria-label="Mobile navigation">
           {siteConfig.navigation.map((item, index) => (
             <Link
@@ -53,13 +58,16 @@ export function MobileNavigation() {
               <span aria-hidden="true">↗</span>
             </Link>
           ))}
-          <Link href="/contact/" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
-            <span className="data-label">05</span>
-            <span>Start a project</span>
-            <span aria-hidden="true">↗</span>
+          <Link className="mobile-navigation__audit" href="#audit" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
+            <span className="data-label">06</span>
+            <span>Run my visibility audit</span>
+            <span aria-hidden="true">↘</span>
           </Link>
         </nav>
-        <div className="mobile-navigation__footer data-label">Search visibility, engineered.</div>
+        <div className="mobile-navigation__footer">
+          <span className="data-label">Google / Maps / AI search</span>
+          <p>Be visible where patients decide.</p>
+        </div>
       </div>
     </div>
   );
