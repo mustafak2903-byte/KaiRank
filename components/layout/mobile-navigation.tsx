@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { siteConfig } from "@/lib/site";
 
 export function MobileNavigation() {
@@ -63,6 +64,7 @@ export function MobileNavigation() {
             <span>Check my clinic</span>
             <span aria-hidden="true">↘</span>
           </Link>
+          <BookingTrigger className="mobile-navigation__booking" label="Talk through my search strategy" source="mobile-navigation" tabIndex={open ? 0 : -1} />
         </nav>
         <div className="mobile-navigation__footer">
           <span className="data-label">Google / Maps / AI search</span>

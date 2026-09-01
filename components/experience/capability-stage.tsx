@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type KeyboardEvent } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 const capabilities = [
   {
@@ -27,7 +28,7 @@ const capabilities = [
   {
     id: "content",
     index: "04",
-    title: "Content + authority",
+    title: "Content & authority",
     label: "Make expertise easier to trust.",
     body: "Build useful treatment, practitioner and patient-focused content that clarifies expertise and strengthens topical authority.",
   },
@@ -35,7 +36,7 @@ const capabilities = [
     id: "entity",
     index: "05",
     title: "AI search optimisation",
-    label: "Make your clinic easier for modern search systems to understand.",
+    label: "Help modern search systems understand your clinic.",
     body: "Connect services, locations, expertise and evidence clearly enough for emerging search systems to interpret and potentially surface.",
   },
 ] as const;
@@ -96,6 +97,12 @@ export function CapabilityStage() {
   const [activeId, setActiveId] = useState<Capability["id"]>("technical");
   const active = capabilities.find((item) => item.id === activeId) ?? capabilities[0];
 
+  function selectCapability(id: Capability["id"]) {
+    setActiveId(id);
+    trackEvent("service_selected", { service: id });
+    window.dispatchEvent(new CustomEvent("kairank:service-context", { detail: { service: id } }));
+  }
+
   function moveTab(event: KeyboardEvent<HTMLButtonElement>, id: Capability["id"]) {
     const current = capabilities.findIndex((item) => item.id === id);
     let next = current;
@@ -106,12 +113,12 @@ export function CapabilityStage() {
     else return;
     event.preventDefault();
     const nextCapability = capabilities[next];
-    setActiveId(nextCapability.id);
+    selectCapability(nextCapability.id);
     window.requestAnimationFrame(() => document.getElementById(`capability-tab-${nextCapability.id}`)?.focus());
   }
 
   return (
-    <div className="capability-stage" data-reveal>
+    <div className="capability-stage">
       <div className="capability-stage__tabs" role="tablist" aria-label="KaiRank capabilities">
         {capabilities.map((capability) => (
           <button
@@ -119,7 +126,7 @@ export function CapabilityStage() {
             aria-selected={activeId === capability.id}
             id={`capability-tab-${capability.id}`}
             key={capability.id}
-            onClick={() => setActiveId(capability.id)}
+            onClick={() => selectCapability(capability.id)}
             onKeyDown={(event) => moveTab(event, capability.id)}
             role="tab"
             tabIndex={activeId === capability.id ? 0 : -1}
@@ -133,11 +140,17 @@ export function CapabilityStage() {
       </div>
       <div className="capability-stage__panel" id={`capability-${active.id}`} role="tabpanel" aria-labelledby={`capability-tab-${active.id}`}>
         <div className="capability-stage__copy">
-          <span className="data-label">Constraint / {active.index}</span>
+          <span className="data-label">Active search constraint / {active.index}</span>
           <h3>{active.label}</h3>
           <p>{active.body}</p>
         </div>
-        <CapabilityVisual capability={active} />
+        <div className="capability-stage__environment" aria-live="polite">
+          {capabilities.map((capability) => (
+            <div className={`capability-scene${active.id === capability.id ? " is-active" : ""}`} key={capability.id} aria-hidden={active.id !== capability.id}>
+              <CapabilityVisual capability={capability} />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

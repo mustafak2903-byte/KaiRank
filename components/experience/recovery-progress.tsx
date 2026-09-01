@@ -7,22 +7,22 @@ const moments = [
     index: "01",
     label: "Surface area",
     value: "+808%",
-    title: "Visibility expanded.",
-    body: "Search impressions grew as technical access and treatment relevance improved.",
+    title: "Search impressions",
+    body: "A much larger set of relevant searches could find the clinic.",
   },
   {
     index: "02",
     label: "Organic discovery",
     value: "+354%",
-    title: "Visibility became visits.",
-    body: "Organic clicks grew as more relevant searches reached the clinic.",
+    title: "Organic clicks",
+    body: "Expanded visibility became measurable organic visits.",
   },
   {
     index: "03",
     label: "Commercial intent",
     value: "#1",
-    title: "A high-intent treatment search was won.",
-    body: "The clinic reached first position for “deep tissue massage Birmingham”.",
+    title: "High-intent treatment search",
+    body: "“Deep tissue massage Birmingham” reached first position.",
   },
 ] as const;
 

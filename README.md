@@ -2,7 +2,7 @@
 
 The production foundation for KaiRank: a premium SEO, technical SEO, local SEO, AI search/GEO and organic visibility consultancy.
 
-This branch contains the V5 homepage and search-intelligence product pass for KaiRank. The `/visual-system` route combines the approved V3 editorial experience with a progressive clinic Search Visibility Diagnostic, a transparent public-signal Visibility Gap, verified healthcare case-study evidence, five interactive services and the deterministic Kai assistant. It remains a review route rather than the production homepage, so `/` is deliberately unchanged.
+This branch contains the V6 corrective experience pass for KaiRank. The `/visual-system` route combines the approved editorial system with a continuous patient-search journey, five interactive services, verified healthcare evidence, a progressive clinic Search Visibility Diagnostic, the deterministic Kai assistant and a lazy Cal.com booking modal. It remains a review route rather than the production homepage, so `/` is deliberately unchanged.
 
 ## Run locally
 
@@ -19,7 +19,7 @@ If macOS reports an `EMFILE` watcher error, use the webpack polling fallback:
 WATCHPACK_POLLING=true CHOKIDAR_USEPOLLING=1 npm run dev -- --webpack
 ```
 
-Copy `.env.example` to `.env.local` when configuring production integrations. `PAGESPEED_API_KEY` is optional: the independent Fast Technical Check still returns public response, redirect, HTTPS, timing and on-page signals when PageSpeed is missing, unavailable or quota-limited. `AUDIT_LEAD_WEBHOOK_URL` is required before the post-value visibility-review form can accept leads; the interface will never show a false success when it is absent. No competitor provider is configured in V5, so the Visibility Gap reports observable website signals and explicitly withholds competitor names and ranking claims.
+Copy `.env.example` to `.env.local` when configuring production integrations. `PAGESPEED_API_KEY` is optional: the independent Fast Technical Check still returns public response, redirect, HTTPS, timing and on-page signals when PageSpeed is missing, unavailable or quota-limited. `AUDIT_LEAD_WEBHOOK_URL` is required before the post-value visibility-review form can accept leads; the interface will never show a false success when it is absent. No competitor provider is configured in V6, so competitor names and ranking claims remain explicitly withheld.
 
 ## Quality checks
 
@@ -58,3 +58,5 @@ See `legacy/MIGRATION.md` for the original feature inventory and the current mig
 See `docs/v3-implementation-notes.md` for the creative rationale, verified evidence sources, audit threat model and third-party research/licensing record.
 
 See `docs/v5-implementation-notes.md` for the final homepage/product architecture, live audit verification, Kai ownership finding, competitor-provider boundary and remaining integrations.
+
+See `docs/v6-implementation-notes.md` for the corrective journey, interaction bug fix, evolved Kai physics, lazy Cal.com popup and final QA boundaries.

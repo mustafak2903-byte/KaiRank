@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { buildVisibilityGap } from "@/lib/competitors/compare";
+import { useEffect, useState, type FormEvent } from "react";
 import type { FastVisibilitySurface } from "@/lib/competitors/types";
 import { trackEvent } from "@/lib/analytics";
+import { BookingTrigger } from "@/components/experience/booking-trigger";
 
 type AuditState =
   | "idle"
@@ -71,7 +71,7 @@ function FastResult({ result, state, performance }: { result: FastResponse; stat
   return (
     <div className="fast-result" role="status" aria-live="polite">
       <div className="fast-result__summary">
-        <div><span className="data-label">Fast technical check / complete</span><strong>{passed}/{result.fast.checks.length}</strong><small>signals clear</small></div>
+        <div><span className="data-label">Public technical check</span><strong>{passed} / {result.fast.checks.length}</strong><small>checks passed</small></div>
         <div><span className="data-label">Public response</span><strong>{result.fast.statusCode}</strong><small>{result.fast.responseMs} ms</small></div>
         <div><span className="data-label">Review next</span><strong>{needsAttention}</strong><small>signal{needsAttention === 1 ? "" : "s"} to inspect</small></div>
       </div>
@@ -96,8 +96,8 @@ function FastResult({ result, state, performance }: { result: FastResponse; stat
           </>
         ) : (
           <>
-            <span className="data-label">PageSpeed / optional enrichment</span>
-            <p>{state === "fast-result" ? "Requesting mobile performance data…" : "Google performance data temporarily unavailable. The technical check remains complete."}</p>
+            <span className="data-label">Mobile performance</span>
+            <p>{state === "fast-result" ? "Requesting mobile performance data…" : "Google performance data temporarily unavailable."}</p>
           </>
         )}
       </div>
@@ -114,47 +114,23 @@ function FastResult({ result, state, performance }: { result: FastResponse; stat
           ))}
         </div>
       </details>
-      <p className="fast-result__url">Live audit data · checked <strong>{result.fast.finalUrl}</strong></p>
+      <p className="fast-result__url">Checked live: <strong>{result.fast.finalUrl}</strong></p>
     </div>
   );
 }
 
-function VisibilityGap({ result, location, priorityService }: { result: FastCheck; location: string; priorityService: string }) {
-  const gap = useMemo(() => buildVisibilityGap(result, { website: result.finalUrl, location, priorityService }), [result, location, priorityService]);
-
+function ReviewContext({ location, priorityService }: { location: string; priorityService: string }) {
   return (
-    <section className="visibility-gap" aria-labelledby="visibility-gap-title" aria-live="polite">
-      <div className="visibility-gap__header">
-        <span className="data-label">Visibility Gap / public-signal MVP</span>
-        <h3 id="visibility-gap-title">Your clinic’s observable search surface.</h3>
-        <p>Useful before email. Honest about what still needs a provider-backed or manual review.</p>
+    <div className="audit-context-ready" aria-live="polite">
+      <div>
+        <span className="data-label">Search context added</span>
+        <h3>Now the competitive landscape has a useful frame.</h3>
       </div>
-      <div className="visibility-gap__context data-label">
-        <span>{location}</span><span>{priorityService}</span><span>Website signals only</span>
+      <div className="audit-context-ready__query">
+        <span>{priorityService}</span><i aria-hidden="true" /><span>{location}</span>
       </div>
-      <div className="visibility-gap__signals">
-        {gap.clinic.signals.map((signal) => (
-          <details key={signal.id}>
-            <summary>
-              <span>{signal.label}</span>
-              <strong className={`is-${signal.status}`}>{signal.status.replace("-", " ")}</strong>
-              <i aria-hidden="true">+</i>
-            </summary>
-            <p><b>Why am I seeing this?</b> {signal.evidence}</p>
-          </details>
-        ))}
-      </div>
-      <div className="visibility-gap__opportunity">
-        <span className="data-label">Strongest observed opportunity</span>
-        <strong>{gap.strongestOpportunity.label}</strong>
-        <p>{gap.strongestOpportunity.evidence}</p>
-      </div>
-      <div className="visibility-gap__provider">
-        <span className="data-label">Competitive comparison / needs provider</span>
-        <p>{gap.provider.note}</p>
-      </div>
-      <p className="visibility-gap__note">{gap.note}</p>
-    </section>
+      <p>A deeper review examines the real clinics and pages surfacing for this treatment and location.</p>
+    </div>
   );
 }
 
@@ -171,12 +147,13 @@ function FullReviewForm({
 }) {
   const [state, setState] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [email, setEmail] = useState("");
 
   async function submitReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setState("sending");
     setMessage("");
-    trackEvent("full_review_requested", { source: "visibility-gap" });
+    trackEvent("full_review_requested", { source: "search-context" });
     const form = new FormData(event.currentTarget);
 
     try {
@@ -211,14 +188,14 @@ function FullReviewForm({
     <div className="audit-review">
       <div>
         <span className="data-label">Want the deeper visibility breakdown?</span>
-        <strong>Review what automation cannot see.</strong>
-        <p>Treatment demand, local competition and the wider gaps—without pretending the automated check knows more than it does.</p>
+        <strong>See which search constraints deserve attention first.</strong>
+        <p>We’ll review treatment demand, nearby competition and the wider search landscape.</p>
       </div>
       {state === "success" ? (
         <p className="audit-review__success" role="status">{message}</p>
       ) : (
         <form onSubmit={submitReview} noValidate>
-          <label><span>Email</span><input name="email" type="email" autoComplete="email" placeholder="you@yourclinic.com" required /></label>
+          <label><span>Email</span><input name="email" type="email" autoComplete="email" placeholder="you@yourclinic.com" required value={email} onChange={(event) => setEmail(event.target.value)} /></label>
           <label><span>Clinic <i>optional</i></span><input name="businessName" type="text" autoComplete="organization" placeholder="Clinic name" /></label>
           <label>
             <span>Number of locations <i>optional</i></span>
@@ -234,6 +211,7 @@ function FullReviewForm({
           {message ? <p className={`audit-review__message is-${state}`} role={state === "error" ? "alert" : "status"}>{message}</p> : null}
         </form>
       )}
+      <BookingTrigger className="audit-review__booking" label="Talk through my findings" source="post-diagnostic" prefill={{ email }} />
     </div>
   );
 }
@@ -303,6 +281,7 @@ export function VisibilityAudit() {
       setWebsite(fast.fast.finalUrl);
       setState("fast-result");
       trackEvent("diagnostic_completed", { status: fast.fast.statusCode });
+      window.dispatchEvent(new CustomEvent("kairank:diagnostic-complete", { detail: { checks: fast.fast.checks } }));
 
       try {
         const secondLayer = await post<PageSpeedResponse>(fast.fast.finalUrl, "pagespeed");
@@ -321,6 +300,7 @@ export function VisibilityAudit() {
       const timedOut = auditError instanceof Error && auditError.name === "TimeoutError";
       setError(auditError instanceof Error ? auditError.message : "The technical check could not be completed.");
       setState(timedOut ? "timeout" : "error");
+      window.dispatchEvent(new CustomEvent("kairank:diagnostic-error"));
     }
   }
 
@@ -335,7 +315,7 @@ export function VisibilityAudit() {
     }
     setGapError("");
     setGapReady(true);
-    trackEvent("visibility_gap_completed", { provider: "website-signals-only" });
+    trackEvent("visibility_gap_completed", { result: "search-context-ready" });
   }
 
   const isBusy = state === "validating" || state === "scanning";
@@ -345,8 +325,8 @@ export function VisibilityAudit() {
     <section className={`visibility-audit is-${state}`} id="audit" aria-labelledby="audit-title">
       <div className="visibility-audit__lead">
         <span className="data-label">Clinic search visibility diagnostic</span>
-        <h2 id="audit-title">See the public signals first.</h2>
-        <p>Start with a live technical check. Then add your location and priority treatment to uncover the deeper visibility gap.</p>
+        <h2 id="audit-title">Let’s check your clinic.</h2>
+        <p>Start with the public technical signals. Then add your location and priority treatment to look deeper.</p>
       </div>
 
       <form className="visibility-audit__form visibility-audit__form--technical" onSubmit={runAudit} noValidate>
@@ -367,7 +347,7 @@ export function VisibilityAudit() {
         </label>
         <button type="submit" disabled={isBusy}><span>{isBusy ? "Reading signal…" : "Run technical check"}</span><i aria-hidden="true">↗</i></button>
       </form>
-      <p className="visibility-audit__detail data-label" id="audit-detail">Public fetch · safe redirects · on-page signals · optional PageSpeed</p>
+      <p className="visibility-audit__detail data-label" id="audit-detail">No account or website access required</p>
 
       {isBusy ? (
         <div className="audit-scan" aria-live="polite" role="status">
@@ -388,19 +368,19 @@ export function VisibilityAudit() {
       {hasResult ? (
         <div className="audit-next">
           <div>
-            <span className="data-label">Step 2 / Visibility Gap</span>
-            <strong>Technical foundation checked. Now let’s look at the search opportunity.</strong>
+            <span className="data-label">Add search context</span>
+            <strong>Technical foundation checked. Now frame the search landscape that matters.</strong>
           </div>
           <form onSubmit={findVisibilityGap} noValidate>
             <label><span>Location</span><input name="location" type="text" autoComplete="address-level2" placeholder="Birmingham" value={location} onChange={(event) => { setLocation(event.target.value); setGapReady(false); }} /></label>
             <label><span>Priority treatment or service</span><input name="priorityService" type="text" placeholder="Deep tissue massage" value={priorityService} onChange={(event) => { setPriorityService(event.target.value); setGapReady(false); }} /></label>
-            <button type="submit">Find my visibility gap <span aria-hidden="true">↗</span></button>
+            <button type="submit">Add search context <span aria-hidden="true">↗</span></button>
           </form>
           {gapError ? <p className="audit-next__error" role="alert">{gapError}</p> : null}
         </div>
       ) : null}
 
-      {hasResult && gapReady ? <VisibilityGap result={fastResult.fast} location={location.trim()} priorityService={priorityService.trim()} /> : null}
+      {hasResult && gapReady ? <ReviewContext location={location.trim()} priorityService={priorityService.trim()} /> : null}
       {hasResult && gapReady ? (
         <FullReviewForm website={fastResult.fast.finalUrl} location={location.trim()} priorityService={priorityService.trim()} auditResults={fastResult.fast} />
       ) : null}

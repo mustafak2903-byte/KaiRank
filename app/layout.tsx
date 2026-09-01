@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { siteConfig } from "@/lib/site";
 import "@/styles/tokens.css";
 import "./globals.css";
+import "@/styles/v6.css";
 
 const display = Instrument_Serif({
   subsets: ["latin"],

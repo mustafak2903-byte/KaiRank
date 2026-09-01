@@ -2,12 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const stages = [
-  ["01", "Search"],
-  ["02", "Maps"],
-  ["03", "AI"],
-  ["04", "Shortlist"],
-] as const;
+const stages = ["Patient need", "Search", "Google · Maps · AI", "Competitors surface", "Shortlist"] as const;
 
 export function ProblemJourney() {
   const rootRef = useRef<HTMLElement>(null);
@@ -25,7 +20,16 @@ export function ProblemJourney() {
       const rect = root.getBoundingClientRect();
       const distance = Math.max(1, rect.height - window.innerHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / distance));
-      const phase = reduceMotion ? 3 : Math.min(3, Math.floor(progress * 4));
+      const phase = reduceMotion ? 4 : Math.min(4, Math.floor(progress * 5));
+      const scene = root.querySelector<HTMLElement>(".v6-journey__scene");
+      const token = root.querySelector<HTMLElement>(".v6-query-token");
+      if (scene && token) {
+        const mobile = window.innerWidth <= 768;
+        const available = Math.max(0, scene.clientWidth - token.offsetWidth - 24);
+        const travel = Math.min(available, scene.clientWidth * (mobile ? 0.22 : 0.5));
+        root.style.setProperty("--journey-x", `${reduceMotion ? travel : progress * travel}px`);
+        root.style.setProperty("--journey-y", `${reduceMotion ? (mobile ? 88 : 112) : progress * (mobile ? 88 : 112)}px`);
+      }
       root.style.setProperty("--journey-progress", progress.toFixed(4));
       if (phase !== lastPhase) {
         root.dataset.phase = String(phase);
@@ -48,43 +52,43 @@ export function ProblemJourney() {
   }, []);
 
   return (
-    <section className="problem-journey" id="problem" aria-labelledby="problem-title" data-phase="0" ref={rootRef}>
+    <section className="problem-journey v6-journey" id="problem" aria-labelledby="problem-title" data-phase="0" ref={rootRef}>
       <div className="problem-journey__sticky">
         <div className="container">
-          <div className="v3-section-index data-label"><span>01 / The cost of invisibility</span><span>Scroll the decision path</span></div>
-          <div className="problem-journey__grid">
-            <div className="problem-journey__copy">
-              <p className="v3-eyebrow">Search demand does not wait</p>
-              <h2 id="problem-title">Being good is not the same as being found.</h2>
-              <p className="problem-journey__support">A patient searches with intent. If your clinic never enters the result set, your quality never gets considered.</p>
-              <ol>
-                {stages.map(([index, title], phase) => (
-                  <li key={index} data-stage={phase}>
-                    <span className="data-label">{index}</span>
-                    <div><strong>{title}</strong></div>
-                  </li>
-                ))}
-              </ol>
+          <div className="v3-section-index data-label"><span>02 / Patient search journey</span><span>One query · one decision</span></div>
+          <div className="v6-journey__heading">
+            <h2 id="problem-title">You can’t be chosen if you never enter the shortlist.</h2>
+            <p>A patient’s need becomes somebody else’s opportunity before your clinic is considered.</p>
+          </div>
+
+          <div className="v6-journey__scene" aria-label="A patient query moves through search environments and forms a clinic shortlist">
+            <ol className="v6-journey__stages">
+              {stages.map((stage, index) => (
+                <li data-stage={index} key={stage}>
+                  <span className="data-label">0{index + 1}</span><strong>{stage}</strong><i aria-hidden="true" />
+                </li>
+              ))}
+            </ol>
+
+            <div className="v6-query-token">
+              <span className="data-label">Patient query</span>
+              <strong>deep tissue massage Birmingham</strong>
+              <i aria-hidden="true" />
             </div>
 
-            <div className="problem-journey__visual" aria-hidden="true">
-              <div className="problem-search">
-                <span className="data-label">Patient query / Birmingham</span>
-                <strong>deep tissue massage Birmingham</strong>
-                <i />
-              </div>
-              <div className="problem-path">
-                {stages.map(([index, title], phase) => (
-                  <div data-stage={phase} key={index}><span>{index}</span><strong>{title}</strong><i /></div>
-                ))}
-              </div>
-              <div className="problem-shortlist">
-                <span className="data-label">Clinic shortlist</span>
-                <div><strong>Relevant clinic</strong><small>Visible · evidenced</small></div>
-                <div><strong>Nearby clinic</strong><small>Visible · trusted</small></div>
-                <div className="is-missing"><strong>Your clinic</strong><small>Not surfaced</small></div>
-              </div>
-              <div className="problem-loss"><span className="data-label">End state</span><strong>Your clinic · not surfaced</strong><i /></div>
+            <div className="v6-journey__surfaces" aria-hidden="true">
+              <span>G</span><span>M</span><span>AI</span>
+            </div>
+
+            <div className="v6-journey__shortlist">
+              <span className="data-label">Clinic shortlist</span>
+              <div><i>01</i><strong>Relevant clinic</strong><small>Visible · evidenced</small></div>
+              <div><i>02</i><strong>Nearby clinic</strong><small>Visible · trusted</small></div>
+              <div className="is-missing"><i>—</i><strong>Your clinic</strong><small>Not surfaced</small></div>
+            </div>
+
+            <div className="v6-journey__outcome">
+              <span className="data-label">Decision point</span><strong>Your clinic</strong><em>Not surfaced</em>
             </div>
           </div>
         </div>

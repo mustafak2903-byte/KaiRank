@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Wordmark } from "@/components/brand/wordmark";
+import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
 import { siteConfig } from "@/lib/site";
 
@@ -25,9 +26,12 @@ export function SiteHeader() {
             <Link href={item.href} key={item.href}>{item.label}</Link>
           ))}
         </nav>
-        <Link className="site-header__contact" href="#audit">
-          Check my clinic <span aria-hidden="true">↘</span>
-        </Link>
+        <div className="site-header__actions">
+          <BookingTrigger className="site-header__strategy" label="Talk through my search strategy" source="navigation" />
+          <Link className="site-header__contact" href="#audit">
+            Check my clinic <span aria-hidden="true">↘</span>
+          </Link>
+        </div>
         <MobileNavigation />
       </div>
     </header>
