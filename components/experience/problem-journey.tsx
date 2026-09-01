@@ -3,10 +3,10 @@
 import { useEffect, useRef } from "react";
 
 const stages = [
-  ["01", "Demand exists", "A patient searches for a treatment, location or answer with real intent."],
-  ["02", "Your clinic is absent", "The expertise may be excellent. The result still belongs to someone else."],
-  ["03", "Trust forms elsewhere", "Another provider supplies the relevance, proof and next action first."],
-  ["04", "The enquiry disappears", "No click. No call. No attribution—just opportunity that never reached the clinic."],
+  ["01", "Search"],
+  ["02", "Maps"],
+  ["03", "AI"],
+  ["04", "Shortlist"],
 ] as const;
 
 export function ProblemJourney() {
@@ -56,11 +56,12 @@ export function ProblemJourney() {
             <div className="problem-journey__copy">
               <p className="v3-eyebrow">Search demand does not wait</p>
               <h2 id="problem-title">Being good is not the same as being found.</h2>
+              <p className="problem-journey__support">A patient searches with intent. If your clinic never enters the result set, your quality never gets considered.</p>
               <ol>
-                {stages.map(([index, title, body], phase) => (
+                {stages.map(([index, title], phase) => (
                   <li key={index} data-stage={phase}>
                     <span className="data-label">{index}</span>
-                    <div><strong>{title}</strong><p>{body}</p></div>
+                    <div><strong>{title}</strong></div>
                   </li>
                 ))}
               </ol>
@@ -68,16 +69,22 @@ export function ProblemJourney() {
 
             <div className="problem-journey__visual" aria-hidden="true">
               <div className="problem-search">
-                <span className="data-label">Patient search / Birmingham</span>
-                <strong>private back pain clinic near me</strong>
+                <span className="data-label">Patient query / Birmingham</span>
+                <strong>deep tissue massage Birmingham</strong>
                 <i />
               </div>
-              <div className="problem-results">
-                <div><span>01</span><strong>Competitor clinic</strong><small>Relevant · nearby · evidenced</small></div>
-                <div className="is-missing"><span>—</span><strong>Your clinic</strong><small>Signal incomplete</small></div>
-                <div><span>02</span><strong>Directory result</strong><small>Available now</small></div>
+              <div className="problem-path">
+                {stages.map(([index, title], phase) => (
+                  <div data-stage={phase} key={index}><span>{index}</span><strong>{title}</strong><i /></div>
+                ))}
               </div>
-              <div className="problem-loss"><span className="data-label">Opportunity state</span><strong>Enquiry routed elsewhere</strong><i /></div>
+              <div className="problem-shortlist">
+                <span className="data-label">Clinic shortlist</span>
+                <div><strong>Relevant clinic</strong><small>Visible · evidenced</small></div>
+                <div><strong>Nearby clinic</strong><small>Visible · trusted</small></div>
+                <div className="is-missing"><strong>Your clinic</strong><small>Not surfaced</small></div>
+              </div>
+              <div className="problem-loss"><span className="data-label">End state</span><strong>Your clinic · not surfaced</strong><i /></div>
             </div>
           </div>
         </div>

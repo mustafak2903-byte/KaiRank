@@ -90,8 +90,10 @@ function validateHostname(hostname: string) {
 
 export function normalizeAuditUrl(input: unknown) {
   if (typeof input !== "string") throw new AuditError("invalid_url", "Add a valid website address.");
-  const value = input.trim();
+  let value = input.trim();
   if (!value || value.length > 2048) throw new AuditError("invalid_url", "Add a valid website address.");
+  const repeatedProtocol = value.match(/^(https?:\/\/)(?:https?:\/\/)+/i);
+  if (repeatedProtocol) value = value.replace(/^(?:https?:\/\/)+/i, repeatedProtocol[1].toLowerCase());
   const explicitProtocol = value.match(/^([a-z][a-z0-9+.-]*):\/\//i)?.[1]?.toLowerCase();
   if (explicitProtocol && explicitProtocol !== "http" && explicitProtocol !== "https") {
     throw new AuditError("invalid_protocol", "Only HTTP and HTTPS website addresses can be checked.");
@@ -293,6 +295,7 @@ export type FastCheck = {
   https: boolean;
   title: string | null;
   metaDescription: string | null;
+  primaryHeading: string | null;
   canonical: string | null;
   robotsMeta: string | null;
   h1Count: number;
@@ -316,6 +319,7 @@ export async function runFastCheck(url: string): Promise<FastCheck> {
   const page = await safeFetch(url, { timeoutMs: 9_000, maxBytes: MAX_HTML_BYTES, requireHtml: true });
   const title = decodeText(page.body.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? null);
   const metaDescription = findMeta(page.body, "description");
+  const primaryHeading = decodeText(page.body.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? null);
   const canonical = findLink(page.body, "canonical", page.finalUrl);
   const robotsMeta = findMeta(page.body, "robots");
   const viewport = Boolean(findMeta(page.body, "viewport"));
@@ -351,6 +355,7 @@ export async function runFastCheck(url: string): Promise<FastCheck> {
     https: page.finalUrl.startsWith("https://"),
     title,
     metaDescription,
+    primaryHeading,
     canonical,
     robotsMeta,
     h1Count,

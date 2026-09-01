@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, type KeyboardEvent } from "react";
 
 const channels = {
   search: {
@@ -28,9 +28,41 @@ const channels = {
 
 type Channel = keyof typeof channels;
 
+type DiagnosticContext = {
+  website: string;
+  location: string;
+  priorityService: string;
+};
+
 export function HeroSignal() {
   const [channel, setChannel] = useState<Channel>("search");
+  const [context, setContext] = useState<DiagnosticContext>({ website: "", location: "", priorityService: "" });
   const active = channels[channel];
+  const hasContext = Boolean(context.website || context.location || context.priorityService);
+  const contextualQuery = [context.priorityService, context.location].filter(Boolean).join(" · ") || active.query;
+  const contextualTarget = context.website
+    .replace(/^https?:\/\//i, "")
+    .replace(/\/.*$/, "") || "Your clinic website";
+
+  useEffect(() => {
+    const update = (event: Event) => setContext((event as CustomEvent<DiagnosticContext>).detail);
+    window.addEventListener("kairank:diagnostic-context", update);
+    return () => window.removeEventListener("kairank:diagnostic-context", update);
+  }, []);
+
+  function moveTab(event: KeyboardEvent<HTMLButtonElement>, key: Channel) {
+    const keys = Object.keys(channels) as Channel[];
+    const current = keys.indexOf(key);
+    let next = current;
+    if (event.key === "ArrowRight") next = (current + 1) % keys.length;
+    else if (event.key === "ArrowLeft") next = (current - 1 + keys.length) % keys.length;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = keys.length - 1;
+    else return;
+    event.preventDefault();
+    setChannel(keys[next]);
+    window.requestAnimationFrame(() => document.getElementById(`signal-tab-${keys[next]}`)?.focus());
+  }
 
   return (
     <div className={`hero-signal is-${channel}`} data-reveal>
@@ -40,9 +72,9 @@ export function HeroSignal() {
       </div>
 
       <div className="hero-signal__query">
-        <span className="data-label">Patient query</span>
-        <strong>{active.query}</strong>
-        <small>{active.detail}</small>
+        <span className="data-label">{hasContext ? "Your diagnostic context" : "Patient query"}</span>
+        <strong>{hasContext ? contextualQuery : active.query}</strong>
+        <small>{hasContext ? "Clinic-supplied · not live ranking data" : active.detail}</small>
       </div>
 
       <svg className="hero-signal__routes" viewBox="0 0 680 280" role="img" aria-label={`${active.label} signal connecting a patient query to a clinic result`}>
@@ -59,9 +91,9 @@ export function HeroSignal() {
       </svg>
 
       <div className="hero-signal__result">
-        <span className="data-label">Clinic surfaced</span>
-        <strong>{active.result}</strong>
-        <small>{active.position}</small>
+        <span className="data-label">{hasContext ? "Diagnostic target" : "Clinic surfaced"}</span>
+        <strong>{hasContext ? contextualTarget : active.result}</strong>
+        <small>{hasContext ? "Technical surface only" : active.position}</small>
       </div>
 
       <div className="hero-signal__tabs" role="tablist" aria-label="Search discovery channels">
@@ -72,6 +104,7 @@ export function HeroSignal() {
             id={`signal-tab-${key}`}
             key={key}
             onClick={() => setChannel(key)}
+            onKeyDown={(event) => moveTab(event, key)}
             role="tab"
             tabIndex={channel === key ? 0 : -1}
             type="button"

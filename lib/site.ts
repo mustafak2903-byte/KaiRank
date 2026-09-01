@@ -10,15 +10,21 @@ export const siteConfig = {
     email: "hello@kairank.com",
     phone: null,
   },
+  founder: {
+    name: "Muhammad Mustafa Khan",
+    role: "Founder · Search strategist",
+    linkedIn: "https://www.linkedin.com/in/muhammad-mustafa-khan/",
+    aboutUrl: null,
+  },
+  bookingUrl: "https://cal.com/mustafa-reuzwm",
   social: {
-    linkedIn: null,
+    linkedIn: "https://www.linkedin.com/in/muhammad-mustafa-khan/",
     x: null,
   },
   navigation: [
     { label: "Services", href: "#services" },
     { label: "Results", href: "#proof" },
-    { label: "Approach", href: "#system" },
-    { label: "Process", href: "#process" },
+    { label: "How We Work", href: "#process" },
     { label: "FAQ", href: "#faq" },
   ],
   serviceRoutes: [

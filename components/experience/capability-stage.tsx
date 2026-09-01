@@ -1,42 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type KeyboardEvent } from "react";
 
 const capabilities = [
   {
     id: "technical",
     index: "01",
-    title: "Technical access",
-    label: "Unblock the path",
-    body: "Remove crawl, render, indexation and performance barriers before strong clinical content is asked to compete.",
+    title: "Technical SEO",
+    label: "Remove what blocks discovery.",
+    body: "Fix crawl, rendering, indexation, architecture and performance barriers before asking stronger content to compete.",
   },
   {
     id: "intent",
     index: "02",
-    title: "Search demand",
-    label: "Filter for value",
-    body: "Separate broad traffic from treatment, condition, practitioner and location searches with a credible route to enquiry.",
+    title: "Search strategy & on-page SEO",
+    label: "Compete for searches worth winning.",
+    body: "Align treatment, service and location pages with the searches most likely to matter commercially.",
   },
   {
     id: "local",
     index: "03",
-    title: "Local visibility",
-    label: "Clarify the map",
-    body: "Align locations, services, profiles, reviews and on-site evidence around how nearby patients actually choose.",
+    title: "Local SEO",
+    label: "Be easier to find nearby.",
+    body: "Strengthen the location, relevance and local-search signals that help nearby patients discover the clinic.",
   },
   {
     id: "content",
     index: "04",
-    title: "Content authority",
-    label: "Make expertise cohere",
-    body: "Connect treatments, clinicians, questions and evidence so each page strengthens the wider clinical subject.",
+    title: "Content + authority",
+    label: "Make expertise easier to trust.",
+    body: "Build useful treatment, practitioner and patient-focused content that clarifies expertise and strengthens topical authority.",
   },
   {
     id: "entity",
     index: "05",
-    title: "AI entity clarity",
-    label: "Join the evidence graph",
-    body: "Give answer engines consistent information about what the clinic does, where it operates and why it is credible.",
+    title: "AI search optimisation",
+    label: "Make your clinic easier for modern search systems to understand.",
+    body: "Connect services, locations, expertise and evidence clearly enough for emerging search systems to interpret and potentially surface.",
   },
 ] as const;
 
@@ -96,6 +96,20 @@ export function CapabilityStage() {
   const [activeId, setActiveId] = useState<Capability["id"]>("technical");
   const active = capabilities.find((item) => item.id === activeId) ?? capabilities[0];
 
+  function moveTab(event: KeyboardEvent<HTMLButtonElement>, id: Capability["id"]) {
+    const current = capabilities.findIndex((item) => item.id === id);
+    let next = current;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (current + 1) % capabilities.length;
+    else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (current - 1 + capabilities.length) % capabilities.length;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = capabilities.length - 1;
+    else return;
+    event.preventDefault();
+    const nextCapability = capabilities[next];
+    setActiveId(nextCapability.id);
+    window.requestAnimationFrame(() => document.getElementById(`capability-tab-${nextCapability.id}`)?.focus());
+  }
+
   return (
     <div className="capability-stage" data-reveal>
       <div className="capability-stage__tabs" role="tablist" aria-label="KaiRank capabilities">
@@ -106,6 +120,7 @@ export function CapabilityStage() {
             id={`capability-tab-${capability.id}`}
             key={capability.id}
             onClick={() => setActiveId(capability.id)}
+            onKeyDown={(event) => moveTab(event, capability.id)}
             role="tab"
             tabIndex={activeId === capability.id ? 0 : -1}
             type="button"

@@ -7,21 +7,21 @@ const moments = [
     index: "01",
     label: "Surface area",
     value: "+808%",
-    title: "More searches could see the clinic.",
-    body: "Search impressions expanded as technical access and treatment relevance improved.",
+    title: "Visibility expanded.",
+    body: "Search impressions grew as technical access and treatment relevance improved.",
   },
   {
     index: "02",
-    label: "Qualified discovery",
+    label: "Organic discovery",
     value: "+354%",
     title: "Visibility became visits.",
-    body: "Organic clicks grew with demand-led pages and a clearer route from search to service.",
+    body: "Organic clicks grew as more relevant searches reached the clinic.",
   },
   {
     index: "03",
     label: "Commercial intent",
     value: "#1",
-    title: "A valuable treatment search was won.",
+    title: "A high-intent treatment search was won.",
     body: "The clinic reached first position for “deep tissue massage Birmingham”.",
   },
 ] as const;
@@ -85,13 +85,13 @@ export function RecoveryProgress() {
             <div><dt>120K</dt><dd>search impressions</dd></div>
             <div><dt>214</dt><dd>booking-intent clicks / 28 days</dd></div>
           </dl>
-          <details>
-            <summary>Evidence and context <span aria-hidden="true">+</span></summary>
+          <details className="recovery-evidence-drawer">
+            <summary data-event="evidence_opened" data-event-label="The Recovery Room case study">View verified case study <span aria-hidden="true">↗</span></summary>
             <div>
-              <p>Verified portfolio case-study data. The source repository includes a report link but no analytics screenshots, so this page does not fabricate one.</p>
-              <a href="https://drive.google.com/file/d/1J4ZsFBqIM2yaaLEP7uJljvjyYRoD-cLO/view?usp=sharing" target="_blank" rel="noreferrer">Open evidence report <span aria-hidden="true">↗</span></a>
+              <p>Technical SEO, local search and treatment-page architecture turned a constrained search foundation into broader, measurable discovery. Booking-intent clicks record tracked actions—not completed bookings.</p>
             </div>
           </details>
+          <a className="recovery-source-link" data-event="evidence_opened" data-event-label="The Recovery Room source evidence" href="https://drive.google.com/file/d/1J4ZsFBqIM2yaaLEP7uJljvjyYRoD-cLO/view?usp=sharing" target="_blank" rel="noreferrer">View source evidence <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </div>
