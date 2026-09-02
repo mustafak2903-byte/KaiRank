@@ -6,6 +6,7 @@ type MetadataInput = {
   description?: string;
   path?: string;
   noIndex?: boolean;
+  absoluteTitle?: boolean;
 };
 
 export function createMetadata({
@@ -13,12 +14,13 @@ export function createMetadata({
   description = siteConfig.description,
   path = "/",
   noIndex = false,
+  absoluteTitle = false,
 }: MetadataInput = {}): Metadata {
   const documentTitle = title ?? siteConfig.title;
   const socialTitle = title ? `${title} — ${siteConfig.name}` : siteConfig.title;
 
   return {
-    title: documentTitle,
+    title: absoluteTitle ? { absolute: documentTitle } : documentTitle,
     description,
     alternates: { canonical: path },
     robots: noIndex ? { index: false, follow: false } : undefined,

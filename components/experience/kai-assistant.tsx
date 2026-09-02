@@ -58,7 +58,7 @@ const contextPrompts: Record<Context, string> = {
 
 type Point = { x: number; y: number };
 
-function KaiRobot({ waving, surprised }: { waving: boolean; surprised: boolean }) {
+export function KaiRobot({ waving, surprised }: { waving: boolean; surprised: boolean }) {
   return (
     <svg className={`kai-robot${waving ? " is-waving" : ""}${surprised ? " is-surprised" : ""}`} viewBox="0 0 92 104" aria-hidden="true">
       <defs>
