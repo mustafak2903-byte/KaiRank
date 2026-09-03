@@ -25,6 +25,11 @@ export default function AtlasExperimentPage() {
 
       <main>
         <section className="atlas-hero" aria-labelledby="atlas-title" id="top">
+          <svg className="atlas-hero__terrain" viewBox="0 0 1200 860" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <path d="M119 712C37 596 77 481 206 432c139-53 125-189 275-246 143-55 236 58 375 26 143-33 268 46 273 168 5 127-120 165-177 270-60 112-128 182-266 155-131-26-204 37-331 20-103-14-179-34-236-113Z" />
+            <path d="M174 692C102 592 139 506 246 461c116-48 115-166 244-215 123-47 210 51 330 24 123-28 228 38 233 140 5 107-99 145-151 233-54 92-110 155-228 132-111-22-178 31-286 15-88-13-165-28-214-98Z" />
+            <path d="M241 661c-59-78-24-139 61-176 92-41 100-138 207-179 104-40 179 43 281 21 102-22 185 30 190 112 5 86-78 124-125 193-47 70-91 125-188 106-91-18-148 25-235 10-71-12-151-31-191-87Z" />
+          </svg>
           <div className="atlas-hero__copy" data-exp-reveal>
             <p className="exp-kicker">Healthcare SEO &amp; search visibility</p>
             <h1 id="atlas-title">
@@ -38,7 +43,7 @@ export default function AtlasExperimentPage() {
             </div>
           </div>
 
-          <div className="atlas-hero__visual" data-exp-reveal>
+          <div className="atlas-hero__visual" data-exp-reveal data-kai-avoid>
             <AtlasField />
           </div>
 

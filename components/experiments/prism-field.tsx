@@ -36,7 +36,7 @@ export function PrismField() {
   }
 
   return (
-    <div className={`prism-field is-${active}`} onPointerLeave={resetRefraction} onPointerMove={refract} ref={fieldRef}>
+    <div className={`prism-field is-${active}`} data-kai-avoid onPointerLeave={resetRefraction} onPointerMove={refract} ref={fieldRef}>
       <div className="prism-field__coordinate">
         <span>Patient intent / 01</span>
         <strong>deep tissue massage Birmingham</strong>

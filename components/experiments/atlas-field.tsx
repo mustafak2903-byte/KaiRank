@@ -4,21 +4,38 @@ import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 
 type Lens = "google" | "maps" | "ai";
 
-const lenses: Record<Lens, { label: string; note: string; nodes: [string, string, string, string] }> = {
+type AtlasNode = { label: string; detail: string };
+
+const lenses: Record<Lens, { label: string; note: string; nodes: [AtlasNode, AtlasNode, AtlasNode, AtlasNode] }> = {
   google: {
     label: "Google",
     note: "Pages, relevance and result-entry pathways across the same search territory.",
-    nodes: ["Service page", "Query relevance", "Authority signal", "Result entry"],
+    nodes: [
+      { label: "Service page", detail: "Creates an eligible entry point for a patient’s treatment intent." },
+      { label: "Query relevance", detail: "Connects the patient phrase to a specific, clearly described service." },
+      { label: "Authority signal", detail: "Supports why this clinic is a credible option for that treatment." },
+      { label: "Result entry", detail: "The clinic enters consideration when a relevant result can surface." },
+    ],
   },
   maps: {
     label: "Maps",
     note: "Location, proximity and local evidence interpreted without implying a live Maps position.",
-    nodes: ["Clinic location", "Proximity field", "Local evidence", "Service area"],
+    nodes: [
+      { label: "Clinic location", detail: "Defines where the clinic can be locally relevant to a patient." },
+      { label: "Proximity field", detail: "Distance shapes local discovery, but it does not act alone." },
+      { label: "Local evidence", detail: "Consistent place and service evidence strengthens local relevance." },
+      { label: "Service area", detail: "Clarifies the locations the clinic genuinely serves." },
+    ],
   },
   ai: {
     label: "AI",
     note: "Service, expertise and evidence relationships—not an unverified citation claim.",
-    nodes: ["Service entity", "Expertise", "Evidence", "Location entity"],
+    nodes: [
+      { label: "Service entity", detail: "Names the treatment clearly enough for search systems to understand." },
+      { label: "Expertise", detail: "Connects practitioners and relevant experience to the service." },
+      { label: "Evidence", detail: "Supports clinic claims with corroborating, crawlable proof." },
+      { label: "Location entity", detail: "Links the clinic, its service and its real-world place." },
+    ],
   },
 };
 
@@ -26,10 +43,14 @@ const lensOrder = Object.keys(lenses) as Lens[];
 
 export function AtlasField() {
   const fieldRef = useRef<HTMLDivElement>(null);
+  const focusedNodeRef = useRef(0);
   const [lens, setLens] = useState<Lens>("google");
+  const [focusedNode, setFocusedNode] = useState(0);
 
   function selectLens(next: Lens) {
     setLens(next);
+    focusedNodeRef.current = 0;
+    setFocusedNode(0);
   }
 
   function moveLens(event: KeyboardEvent<HTMLButtonElement>, current: Lens) {
@@ -43,6 +64,8 @@ export function AtlasField() {
     event.preventDefault();
     const value = lensOrder[next];
     setLens(value);
+    focusedNodeRef.current = 0;
+    setFocusedNode(0);
     window.requestAnimationFrame(() => document.getElementById(`atlas-lens-${value}`)?.focus());
   }
 
@@ -55,10 +78,36 @@ export function AtlasField() {
     field.style.setProperty("--atlas-y", `${event.clientY - bounds.top}px`);
     field.style.setProperty("--atlas-nx", (((event.clientX - bounds.left) / bounds.width - 0.5) * 2).toFixed(4));
     field.style.setProperty("--atlas-ny", (((event.clientY - bounds.top) / bounds.height - 0.5) * 2).toFixed(4));
+
+    let nearestIndex = focusedNodeRef.current;
+    let nearestDistance = Number.POSITIVE_INFINITY;
+    field.querySelectorAll<HTMLElement>("[data-atlas-node]").forEach((node, index) => {
+      const nodeBounds = node.getBoundingClientRect();
+      const distance = Math.hypot(event.clientX - (nodeBounds.left + nodeBounds.width / 2), event.clientY - (nodeBounds.top + nodeBounds.height / 2));
+      const heat = Math.max(0.14, 1 - distance / 210);
+      node.style.setProperty("--node-heat", heat.toFixed(3));
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestIndex = index;
+      }
+    });
+    if (nearestDistance < 175 && nearestIndex !== focusedNodeRef.current) {
+      focusedNodeRef.current = nearestIndex;
+      setFocusedNode(nearestIndex);
+    }
   }
 
+  function focusNode(index: number) {
+    focusedNodeRef.current = index;
+    setFocusedNode(index);
+  }
+
+  const reading = lenses[lens].nodes[focusedNode];
+
   return (
-    <div className={`atlas-field is-${lens}`} onPointerMove={scan} ref={fieldRef}>
+    <div className={`atlas-field is-${lens}`} onPointerMove={scan} onPointerLeave={() => {
+      fieldRef.current?.querySelectorAll<HTMLElement>("[data-atlas-node]").forEach((node) => node.style.setProperty("--node-heat", "0.14"));
+    }} ref={fieldRef}>
       <div className="atlas-field__meta">
         <span>52.4862° N</span>
         <span>1.8904° W</span>
@@ -88,12 +137,26 @@ export function AtlasField() {
       <div className="atlas-field__crosshair" aria-hidden="true"><i /><i /></div>
 
       {lenses[lens].nodes.map((node, index) => (
-        <span className={`atlas-node atlas-node--${index + 1}`} key={node}>
+        <button
+          aria-pressed={focusedNode === index}
+          className={`atlas-node atlas-node--${index + 1}`}
+          data-atlas-node
+          key={node.label}
+          onClick={() => focusNode(index)}
+          onFocus={() => focusNode(index)}
+          type="button"
+        >
           <i aria-hidden="true" />
           <b>{String(index + 1).padStart(2, "0")}</b>
-          <em>{node}</em>
-        </span>
+          <em>{node.label}</em>
+        </button>
       ))}
+
+      <aside className="atlas-field__reading" aria-live="polite">
+        <span>Scanner reading / {lenses[lens].label}</span>
+        <strong>{reading.label}</strong>
+        <p>{reading.detail}</p>
+      </aside>
 
       <div className="atlas-field__lenses" role="tablist" aria-label="Search visibility lenses">
         {lensOrder.map((item, index) => (

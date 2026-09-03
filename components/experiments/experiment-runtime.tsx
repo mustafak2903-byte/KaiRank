@@ -62,6 +62,7 @@ export function ExperimentRuntime({ scope }: ExperimentRuntimeProps) {
           (entries) => {
             entries.forEach((entry) => {
               if (!entry.isIntersecting) return;
+              entry.target.classList.remove("is-pending");
               entry.target.classList.add("is-visible");
               observer?.unobserve(entry.target);
             });
@@ -71,8 +72,11 @@ export function ExperimentRuntime({ scope }: ExperimentRuntimeProps) {
       : null;
 
     revealTargets.forEach((target) => {
-      if (observer) observer.observe(target);
-      else target.classList.add("is-visible");
+      const beginsInViewport = target.getBoundingClientRect().top < window.innerHeight * 0.96;
+      if (observer && !beginsInViewport) {
+        target.classList.add("is-pending");
+        observer.observe(target);
+      } else target.classList.add("is-visible");
     });
 
     root.classList.add("is-ready");

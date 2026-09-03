@@ -7,6 +7,7 @@ import { kaiVoiceAssets } from "@/lib/kai-voice";
 type Point = { x: number; y: number };
 
 export function ExperimentKai() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const mascotRef = useRef<HTMLButtonElement>(null);
   const positionRef = useRef<Point>({ x: 0, y: 0 });
   const inertiaRef = useRef<number | null>(null);
@@ -168,8 +169,40 @@ export function ExperimentKai() {
     };
   });
 
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+    let frame = 0;
+
+    const updateDock = () => {
+      frame = 0;
+      if (!window.matchMedia("(max-width: 767px)").matches || open || intro) {
+        wrapper.classList.remove("is-docked");
+        return;
+      }
+      const safeZone = { left: window.innerWidth - 96, right: window.innerWidth, top: window.innerHeight - 116, bottom: window.innerHeight };
+      const collision = Array.from(document.querySelectorAll<HTMLElement>("[data-kai-avoid]")).some((node) => {
+        const box = node.getBoundingClientRect();
+        return box.right > safeZone.left && box.left < safeZone.right && box.bottom > safeZone.top && box.top < safeZone.bottom;
+      });
+      wrapper.classList.toggle("is-docked", collision);
+    };
+    const queueDock = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateDock);
+    };
+
+    updateDock();
+    window.addEventListener("scroll", queueDock, { passive: true });
+    window.addEventListener("resize", queueDock, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", queueDock);
+      window.removeEventListener("resize", queueDock);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [intro, open]);
+
   return (
-    <div className="exp-kai" data-voice-ready={Boolean(kaiVoiceAssets.kai_intro)}>
+    <div className="exp-kai" data-voice-ready={Boolean(kaiVoiceAssets.kai_intro)} ref={wrapperRef}>
       {intro || open ? (
         <aside className="exp-kai__intro" id="kai-experiment-intro" aria-label="Introduction from Kai">
           <button className="exp-kai__close" type="button" onClick={() => { setIntro(false); setOpen(false); }} aria-label="Close Kai introduction">×</button>

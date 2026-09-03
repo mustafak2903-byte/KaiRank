@@ -34,8 +34,21 @@ export default function PrismExperimentPage() {
             </div>
           </div>
 
-          <div className="prism-hero__notation" aria-hidden="true">
-            <span>QUERY</span><i /><span>SURFACES</span><i /><span>DISCOVERY</span>
+          <div className="prism-hero__beam" aria-hidden="true" data-kai-avoid>
+            <div className="prism-hero__beam-query">
+              <span>Patient query / Birmingham</span>
+              <strong>deep tissue massage</strong>
+            </div>
+            <svg viewBox="0 0 520 250" preserveAspectRatio="none">
+              <path className="prism-hero__beam-entry" d="M8 125H173" />
+              <path className="prism-hero__beam-face" d="m174 77 48 48-48 48-48-48Z" />
+              <path className="prism-hero__beam-google" d="M222 125 508 34" />
+              <path className="prism-hero__beam-maps" d="M222 125H508" />
+              <path className="prism-hero__beam-ai" d="m222 125 286 91" />
+              <circle cx="508" cy="34" r="4" /><circle cx="508" cy="125" r="4" /><circle cx="508" cy="216" r="4" />
+            </svg>
+            <div className="prism-hero__beam-labels"><span>Google</span><span>Maps</span><span>AI search</span></div>
+            <b>Clinic discovery / interpreted three ways</b>
           </div>
 
           <a className="exp-scroll-cue" href="#refraction">

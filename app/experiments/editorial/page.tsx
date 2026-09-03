@@ -38,7 +38,11 @@ export default function EditorialExperimentPage() {
             <small>Intent enters the search field before it enters your clinic.</small>
           </aside>
 
-          <div className="editorial-hero__support" data-exp-reveal>
+          <div className="editorial-hero__search-axis" aria-hidden="true">
+            <span>Patient query</span><i /><span>Result-entry threshold</span>
+          </div>
+
+          <div className="editorial-hero__support" data-exp-reveal data-kai-avoid>
             <p>KaiRank helps private clinics grow visibility across Google, Maps and AI search through healthcare SEO, technical SEO, local search and AI search optimisation.</p>
             <div className="exp-actions">
               <a className="exp-action exp-action--primary" href="/visual-system#audit">Check my clinic <span aria-hidden="true">↘</span></a>
@@ -59,7 +63,7 @@ export default function EditorialExperimentPage() {
               <p>Private-clinic search visibility is the route between patient intent and a credible option—across organic results, local discovery and AI search.</p>
             </div>
 
-            <div className="editorial-results" aria-label="Conceptual patient search sequence">
+            <div className="editorial-results" aria-label="Conceptual patient search sequence" data-kai-avoid>
               <article className="editorial-result editorial-result--query">
                 <span>Patient search</span><strong>deep tissue massage Birmingham</strong><small>01 / intent</small>
               </article>
@@ -77,7 +81,7 @@ export default function EditorialExperimentPage() {
               </article>
             </div>
 
-            <aside className="editorial-proof" aria-label="Verified case-study evidence">
+            <aside className="editorial-proof" aria-label="Verified case-study evidence" data-kai-avoid>
               <span>Verified case-study evidence</span>
               <dl>
                 <div><dt>+808%</dt><dd>Search impressions</dd></div>
