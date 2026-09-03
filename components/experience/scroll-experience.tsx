@@ -25,6 +25,7 @@ export function ScrollExperience() {
           (entries) => {
             entries.forEach((entry) => {
               if (entry.isIntersecting) {
+                entry.target.classList.remove("is-pending");
                 entry.target.classList.add("is-visible");
                 observer?.unobserve(entry.target);
               }
@@ -35,8 +36,11 @@ export function ScrollExperience() {
       : null;
 
     revealTargets.forEach((target) => {
-      if (observer) observer.observe(target);
-      else target.classList.add("is-visible");
+      const beginsInViewport = target.getBoundingClientRect().top < window.innerHeight * 0.96;
+      if (observer && !beginsInViewport) {
+        target.classList.add("is-pending");
+        observer.observe(target);
+      } else target.classList.add("is-visible");
     });
 
     updateProgress();

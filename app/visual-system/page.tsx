@@ -2,6 +2,7 @@ import { Wordmark } from "@/components/brand/wordmark";
 import { AnalyticsEvents } from "@/components/experience/analytics-events";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { CapabilityStage } from "@/components/experience/capability-stage";
+import { CinematicBackground } from "@/components/experience/cinematic-background";
 import { HeroSignal } from "@/components/experience/hero-signal";
 import { KaiAssistant } from "@/components/experience/kai-assistant";
 import { ProblemJourney } from "@/components/experience/problem-journey";
@@ -77,37 +78,55 @@ const structuredData = {
 
 export default function VisualSystemPage() {
   return (
-    <div className="v3-experience v6-experience">
+    <div className="v3-experience v6-experience v7-experience">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <ScrollExperience />
       <AnalyticsEvents />
       <SiteHeader />
 
       <main>
-        <section className="v3-hero" id="home" aria-labelledby="hero-title">
-          <div className="v3-hero__mesh" aria-hidden="true" />
-          <div className="container v3-hero__inner">
-            <div className="v3-hero__stage">
-              <div className="v3-hero__copy" data-reveal>
-                <p className="v3-eyebrow">Search visibility for private clinics</p>
-                <h1 id="hero-title">
-                  Be the clinic patients find
-                  <em>before they choose.</em>
-                </h1>
-                <p className="v3-hero__lead">
-                  KaiRank helps private clinics get found across Google, Maps and AI search — where commercially valuable patient decisions begin.
-                </p>
-                <div className="v3-actions">
-                  <a className="v3-action v3-action--solid" href="#audit">Check my clinic <span aria-hidden="true">↘</span></a>
-                  <a className="v3-action v3-action--text" href="#proof">See verified results <span aria-hidden="true">↓</span></a>
-                </div>
+        <section className="v3-hero v7-hero" id="home" aria-labelledby="hero-title">
+          <CinematicBackground />
+          <div className="container v7-hero__inner">
+            <div className="v7-hero__copy" data-reveal>
+              <p className="v3-eyebrow"><i aria-hidden="true" /> Search visibility for private clinics</p>
+              <h1 id="hero-title">
+                <span>Be the clinic</span>
+                <span>patients find</span>
+                <em>before they choose.</em>
+              </h1>
+              <p className="v3-hero__lead">
+                KaiRank engineers how private clinics are discovered across Google, Maps and AI search — before a patient decides who to trust.
+              </p>
+              <div className="v3-actions">
+                <a className="v3-action v3-action--solid" href="#audit">Check my clinic <span aria-hidden="true">↘</span></a>
+                <a className="v3-action v3-action--text" href="#proof">See verified results <span aria-hidden="true">↓</span></a>
               </div>
+            </div>
 
-              <HeroSignal />
+            <div className="v7-hero__evidence" aria-label="Verified Recovery Room case-study evidence" data-reveal>
+              <span className="data-label">Verified clinic evidence</span>
+              <dl>
+                <div><dt>+808%</dt><dd>Search impressions</dd></div>
+                <div><dt>+354%</dt><dd>Organic clicks</dd></div>
+                <div><dt>#1</dt><dd>Treatment query</dd></div>
+              </dl>
             </div>
-            <div className="v6-hero__continuity" aria-hidden="true">
-              <span className="data-label">The query continues</span><i />
+
+            <a className="v7-hero__scroll data-label" href="#surface-model">
+              <span>Follow one patient query</span><i aria-hidden="true" />
+            </a>
+          </div>
+        </section>
+
+        <section className="v7-surfaces" id="surface-model" aria-labelledby="surface-model-title">
+          <div className="container">
+            <div className="v3-section-index data-label"><span>01 / Search surface</span><span>One query · three systems</span></div>
+            <div className="v7-surfaces__intro" data-reveal>
+              <h2 id="surface-model-title">Patients search once.<br /><em>Discovery fragments.</em></h2>
+              <p>Google, Maps and AI systems interpret the same clinic through different signals. KaiRank connects the technical, local and evidential layers that help your clinic enter consideration.</p>
             </div>
+            <HeroSignal />
           </div>
         </section>
 
