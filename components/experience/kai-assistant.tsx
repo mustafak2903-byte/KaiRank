@@ -85,14 +85,13 @@ export function KaiRobot({ waving, surprised }: { waving: boolean; surprised: bo
 
 export function KaiAssistant() {
   const mascotRef = useRef<HTMLButtonElement>(null);
+  const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const positionRef = useRef<Point>({ x: 0, y: 0 });
   const physicsRef = useRef<number | null>(null);
   const reactionTimerRef = useRef<number | null>(null);
   const suppressClickRef = useRef(false);
   const dragRef = useRef({ active: false, moved: false, startX: 0, startY: 0, originX: 0, originY: 0, lastX: 0, lastY: 0, lastTime: 0, vx: 0, vy: 0 });
   const [open, setOpen] = useState(false);
-  const [intro, setIntro] = useState(false);
-  const [waving, setWaving] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [surprised, setSurprised] = useState(false);
   const [reaction, setReaction] = useState("");
@@ -104,6 +103,7 @@ export function KaiAssistant() {
   const [topic, setTopic] = useState<Topic>("about");
   const [context, setContext] = useState<Context>("hero");
   const [voiceSupported, setVoiceSupported] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
 
   const answer = useMemo(() => {
     if (mode === "facts") return facts[topic];
@@ -130,8 +130,8 @@ export function KaiAssistant() {
 
   function getBounds() {
     const node = mascotRef.current;
-    const width = node?.offsetWidth ?? 76;
-    const height = node?.offsetHeight ?? 88;
+    const width = node?.offsetWidth ?? 52;
+    const height = node?.offsetHeight ?? 52;
     const inset = 24;
     const baseX = window.innerWidth - inset - width;
     const baseY = window.innerHeight - inset - height;
@@ -219,17 +219,29 @@ export function KaiAssistant() {
   }
 
   useEffect(() => {
-    const supportFrame = window.requestAnimationFrame(() => setVoiceSupported("speechSynthesis" in window && "SpeechSynthesisUtterance" in window));
-    const seen = window.sessionStorage.getItem("kairank-kai-intro-v6") === "seen";
-    const timer = seen ? null : window.setTimeout(() => {
-      setIntro(true);
-      setWaving(true);
-      window.sessionStorage.setItem("kairank-kai-intro-v6", "seen");
-      window.setTimeout(() => setWaving(false), 1200);
-    }, 2200);
+    const speechAvailable = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+    const chooseVoice = () => {
+      if (!speechAvailable) return;
+      const score = (voice: SpeechSynthesisVoice) => {
+        const name = voice.name.toLowerCase();
+        let value = voice.lang.toLowerCase().startsWith("en-gb") ? 80 : voice.lang.toLowerCase().startsWith("en") ? 40 : 0;
+        if (voice.localService) value += 12;
+        if (/premium|enhanced|natural|neural/.test(name)) value += 36;
+        if (/daniel|serena|sonia|libby|ryan|oliver|jamie|ava/.test(name)) value += 24;
+        if (/compact|robot|espeak|festival/.test(name)) value -= 100;
+        return value;
+      };
+      voiceRef.current = [...window.speechSynthesis.getVoices()].sort((a, b) => score(b) - score(a))[0] ?? null;
+      setVoiceSupported(true);
+    };
+    const supportFrame = window.requestAnimationFrame(chooseVoice);
+    if (speechAvailable) window.speechSynthesis.addEventListener("voiceschanged", chooseVoice);
     return () => {
       window.cancelAnimationFrame(supportFrame);
-      if (timer !== null) window.clearTimeout(timer);
+      if (speechAvailable) {
+        window.speechSynthesis.removeEventListener("voiceschanged", chooseVoice);
+        window.speechSynthesis.cancel();
+      }
       stopPhysics();
       if (reactionTimerRef.current !== null) window.clearTimeout(reactionTimerRef.current);
     };
@@ -322,7 +334,6 @@ export function KaiAssistant() {
       if (next) trackEvent("kai_opened", { context });
       return next;
     });
-    setIntro(false);
   }
 
   function closePanel() {
@@ -341,31 +352,29 @@ export function KaiAssistant() {
     trackEvent("kai_action", { action: next, mode });
   }
 
-  function goTo(selector: string) {
-    setIntro(false);
-    document.querySelector(selector)?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-  }
-
   function speak() {
     if (!voiceSupported) return;
+    if (speaking) {
+      window.speechSynthesis.cancel();
+      setSpeaking(false);
+      return;
+    }
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(answer);
     utterance.lang = "en-GB";
+    if (voiceRef.current) utterance.voice = voiceRef.current;
+    utterance.rate = 0.92;
+    utterance.pitch = 0.98;
+    utterance.volume = 1;
+    utterance.onstart = () => setSpeaking(true);
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
     window.speechSynthesis.speak(utterance);
-    trackEvent("kai_voice_played", { topic, mode });
+    trackEvent("kai_voice_played", { topic, mode, voice: voiceRef.current?.name ?? "browser-default" });
   }
 
   return (
     <div className={`kai-assistant kai-assistant--v6${open ? " is-open" : ""}`}>
-      {intro && !open ? (
-        <aside className="kai-intro-v6" aria-label="Introduction from Kai">
-          <strong>Hi — I’m Kai.</strong>
-          <p>I find search problems for a living.</p>
-          <span>Want me to check yours?</span>
-          <div><button type="button" onClick={() => goTo("#audit")}>Check my clinic</button><button type="button" onClick={() => goTo("#proof")}>Show me proof</button><button type="button" onClick={toggle}>What can you do?</button></div>
-        </aside>
-      ) : null}
-
       {reaction && !open ? <div className="kai-reaction" role="status">{reaction}</div> : null}
 
       {open ? (
@@ -392,7 +401,7 @@ export function KaiAssistant() {
             <p>{answer}</p>
             <div>
               {activeTopic.href ? <a href={activeTopic.href} onClick={() => setOpen(false)}>Go there <span aria-hidden="true">↗</span></a> : null}
-              {voiceSupported ? <button type="button" onClick={speak}>Speak answer <span aria-hidden="true">◖</span></button> : null}
+              {voiceSupported ? <button type="button" onClick={speak}>{speaking ? "Stop" : "Listen"} <span aria-hidden="true">◖</span></button> : null}
             </div>
           </div>
           <p className="kai-panel__boundary">Search guidance only. Kai does not offer medical advice or live ranking claims.</p>
@@ -400,10 +409,10 @@ export function KaiAssistant() {
       ) : null}
 
       <button
-        className={`kai-mascot${dragging ? " is-dragging" : ""}`}
+        className={`kai-mascot${dragging ? " is-dragging" : ""}${surprised ? " is-surprised" : ""}`}
         ref={mascotRef}
         type="button"
-        aria-label="Open Kai search assistant. Drag Kai around the screen on desktop."
+        aria-label="Open Kai search assistant"
         aria-expanded={open}
         aria-controls="kai-panel"
         onClick={toggle}
@@ -412,7 +421,7 @@ export function KaiAssistant() {
         onPointerUp={releaseMascot}
         onPointerCancel={releaseMascot}
       >
-        <KaiRobot waving={waving} surprised={surprised} />
+        <span className="kai-launcher-signal" aria-hidden="true"><i /><i /><b /></span>
         <span className="kai-mascot__name">KAI</span>
       </button>
     </div>

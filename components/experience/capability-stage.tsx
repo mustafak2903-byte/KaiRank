@@ -8,36 +8,36 @@ const capabilities = [
     id: "technical",
     index: "01",
     title: "Technical SEO",
-    label: "Remove what blocks discovery.",
-    body: "Fix crawl, rendering, indexation, architecture and performance barriers before asking stronger content to compete.",
+    label: "Make every important page discoverable.",
+    body: "Make important pages discoverable, renderable and indexable before asking stronger content to compete.",
   },
   {
     id: "intent",
     index: "02",
     title: "Search strategy & on-page SEO",
-    label: "Compete for searches worth winning.",
-    body: "Align treatment, service and location pages with the searches most likely to matter commercially.",
+    label: "Target searches capable of creating meaningful demand.",
+    body: "Align treatment, service and location pages with the searches most likely to create qualified patient demand.",
   },
   {
     id: "local",
     index: "03",
     title: "Local SEO",
-    label: "Be easier to find nearby.",
-    body: "Strengthen the location, relevance and local-search signals that help nearby patients discover the clinic.",
+    label: "Help nearby patients find and evaluate the clinic.",
+    body: "Strengthen location, relevance and trust signals that support discovery in local search.",
   },
   {
     id: "content",
     index: "04",
     title: "Content & authority",
-    label: "Make expertise easier to trust.",
-    body: "Build useful treatment, practitioner and patient-focused content that clarifies expertise and strengthens topical authority.",
+    label: "Turn clinical expertise into evidence.",
+    body: "Build treatment, clinician and patient-focused content that search systems can understand and people can trust.",
   },
   {
     id: "entity",
     index: "05",
     title: "AI search optimisation",
-    label: "Help modern search systems understand your clinic.",
-    body: "Connect services, locations, expertise and evidence clearly enough for emerging search systems to interpret and potentially surface.",
+    label: "Clarify the clinic for emerging search systems.",
+    body: "Connect services, clinicians, locations and evidence clearly—without pretending citations can be guaranteed.",
   },
 ] as const;
 
@@ -151,6 +151,37 @@ export function CapabilityStage() {
             </div>
           ))}
         </div>
+      </div>
+      <div className="capability-stage__mobile" aria-label="KaiRank capabilities">
+        {capabilities.map((capability) => {
+          const selected = activeId === capability.id;
+          return (
+            <div className={selected ? "is-active" : ""} key={capability.id}>
+              <button
+                aria-controls={`capability-mobile-${capability.id}`}
+                aria-expanded={selected}
+                onClick={() => selectCapability(capability.id)}
+                type="button"
+              >
+                <span className="data-label">{capability.index}</span>
+                <strong>{capability.title}</strong>
+                <i aria-hidden="true">+</i>
+              </button>
+              {selected ? (
+                <div className="capability-stage__mobile-panel" id={`capability-mobile-${capability.id}`}>
+                  <div className="capability-stage__copy">
+                    <span className="data-label">Active search constraint / {capability.index}</span>
+                    <h3>{capability.label}</h3>
+                    <p>{capability.body}</p>
+                  </div>
+                  <div className="capability-stage__environment">
+                    <div className="capability-scene is-active"><CapabilityVisual capability={capability} /></div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

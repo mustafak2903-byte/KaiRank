@@ -8,21 +8,21 @@ const moments = [
     label: "Surface area",
     value: "+808%",
     title: "Search impressions",
-    body: "A much larger set of relevant searches could find the clinic.",
+    body: "Relevant search appearances expanded during the documented case-study period.",
   },
   {
     index: "02",
     label: "Organic discovery",
     value: "+354%",
     title: "Organic clicks",
-    body: "Expanded visibility became measurable organic visits.",
+    body: "Expanded visibility became measurable organic visits during the same period.",
   },
   {
     index: "03",
     label: "Commercial intent",
     value: "#1",
     title: "High-intent treatment search",
-    body: "“Deep tissue massage Birmingham” reached first position.",
+    body: "“Deep tissue massage Birmingham” reached first position during the documented case-study period.",
   },
 ] as const;
 
@@ -83,12 +83,12 @@ export function RecoveryProgress() {
           <dl>
             <div><dt>1.86K</dt><dd>organic clicks</dd></div>
             <div><dt>120K</dt><dd>search impressions</dd></div>
-            <div><dt>214</dt><dd>booking-intent clicks / 28 days</dd></div>
+            <div><dt>214</dt><dd>clicks from organic landing pages to booking actions / 28 days</dd></div>
           </dl>
           <details className="recovery-evidence-drawer">
             <summary data-event="evidence_opened" data-event-label="The Recovery Room case study">View verified case study <span aria-hidden="true">↗</span></summary>
             <div>
-              <p>Technical SEO, local search and treatment-page architecture turned a constrained search foundation into broader, measurable discovery. Booking-intent clicks record tracked actions—not completed bookings.</p>
+              <p>Technical SEO, local search and treatment-page architecture turned a constrained search foundation into broader, measurable discovery. The 214 figure records clicks to booking actions—not completed bookings.</p>
             </div>
           </details>
           <a className="recovery-source-link" data-event="evidence_opened" data-event-label="The Recovery Room source evidence" href="https://drive.google.com/file/d/1J4ZsFBqIM2yaaLEP7uJljvjyYRoD-cLO/view?usp=sharing" target="_blank" rel="noreferrer">View source evidence <span aria-hidden="true">↗</span></a>

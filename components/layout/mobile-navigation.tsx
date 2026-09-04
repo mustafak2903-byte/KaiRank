@@ -1,24 +1,44 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { siteConfig } from "@/lib/site";
 
 export function MobileNavigation() {
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.body.classList.toggle("has-menu-open", open);
 
     if (!open) return () => document.body.classList.remove("has-menu-open");
 
+    const focusFrame = window.requestAnimationFrame(() => panelRef.current?.querySelector<HTMLElement>("a, button")?.focus());
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+        window.requestAnimationFrame(() => triggerRef.current?.focus());
+        return;
+      }
+      if (event.key !== "Tab" || !panelRef.current) return;
+      const focusable = [...panelRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), [tabindex="0"]')];
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
 
     document.addEventListener("keydown", onKeyDown);
     return () => {
+      window.cancelAnimationFrame(focusFrame);
       document.removeEventListener("keydown", onKeyDown);
       document.body.classList.remove("has-menu-open");
     };
@@ -28,6 +48,7 @@ export function MobileNavigation() {
     <div className="mobile-navigation">
       <button
         className="mobile-navigation__trigger"
+        ref={triggerRef}
         type="button"
         aria-expanded={open}
         aria-controls="mobile-navigation-panel"
@@ -43,6 +64,7 @@ export function MobileNavigation() {
       <div
         className={`mobile-navigation__panel${open ? " is-open" : ""}`}
         id="mobile-navigation-panel"
+        ref={panelRef}
         aria-hidden={!open}
       >
         <div className="mobile-navigation__meta data-label">KaiRank / Visibility system</div>

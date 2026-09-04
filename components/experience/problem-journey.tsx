@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const stages = ["Patient need", "Search", "Google · Maps · AI", "Competitors surface", "Shortlist"] as const;
+const stages = ["Patient need", "Search surfaces", "Clinic shortlist"] as const;
 
 export function ProblemJourney() {
   const rootRef = useRef<HTMLElement>(null);
@@ -20,15 +20,15 @@ export function ProblemJourney() {
       const rect = root.getBoundingClientRect();
       const distance = Math.max(1, rect.height - window.innerHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / distance));
-      const phase = reduceMotion ? 4 : Math.min(4, Math.floor(progress * 5));
+      const phase = reduceMotion ? 2 : Math.min(2, Math.floor(progress * 3));
       const scene = root.querySelector<HTMLElement>(".v6-journey__scene");
       const token = root.querySelector<HTMLElement>(".v6-query-token");
       if (scene && token) {
         const mobile = window.innerWidth <= 768;
         const available = Math.max(0, scene.clientWidth - token.offsetWidth - 24);
-        const travel = Math.min(available, scene.clientWidth * (mobile ? 0.22 : 0.5));
+        const travel = Math.min(available, scene.clientWidth * (mobile ? 0.3 : 0.56));
         root.style.setProperty("--journey-x", `${reduceMotion ? travel : progress * travel}px`);
-        root.style.setProperty("--journey-y", `${reduceMotion ? (mobile ? 88 : 112) : progress * (mobile ? 88 : 112)}px`);
+        root.style.setProperty("--journey-y", `${reduceMotion ? (mobile ? 82 : 106) : progress * (mobile ? 82 : 106)}px`);
       }
       root.style.setProperty("--journey-progress", progress.toFixed(4));
       if (phase !== lastPhase) {
@@ -55,10 +55,10 @@ export function ProblemJourney() {
     <section className="problem-journey v6-journey" id="problem" aria-labelledby="problem-title" data-phase="0" ref={rootRef}>
       <div className="problem-journey__sticky">
         <div className="container">
-          <div className="v3-section-index data-label"><span>02 / Patient search journey</span><span>One query · one decision</span></div>
+          <div className="v3-section-index data-label"><span>Patient decision</span><span>One query · one shortlist</span></div>
           <div className="v6-journey__heading">
             <h2 id="problem-title">You can’t be chosen if you never enter the shortlist.</h2>
-            <p>A patient’s need becomes somebody else’s opportunity before your clinic is considered.</p>
+            <p>If your clinic does not enter the shortlist, clinical quality never gets the chance to matter.</p>
           </div>
 
           <div className="v6-journey__scene" aria-label="A patient query moves through search environments and forms a clinic shortlist">

@@ -177,7 +177,7 @@ function FullReviewForm({
       const payload = (await response.json()) as ApiError;
       if (!response.ok) throw new Error(payload.message ?? "The review request could not be confirmed.");
       setState("success");
-      setMessage("Request confirmed. KaiRank will review the deeper visibility picture.");
+      setMessage("Request confirmed. KaiRank will review your competitive search map.");
     } catch (error) {
       setState("error");
       setMessage(error instanceof Error ? error.message : "The review request could not be confirmed.");
@@ -187,7 +187,7 @@ function FullReviewForm({
   return (
     <div className="audit-review">
       <div>
-        <span className="data-label">Want the deeper visibility breakdown?</span>
+        <span className="data-label">Want the deeper search picture?</span>
         <strong>See which search constraints deserve attention first.</strong>
         <p>We’ll review treatment demand, nearby competition and the wider search landscape.</p>
       </div>
@@ -207,7 +207,8 @@ function FullReviewForm({
               <option value="21+">21+</option>
             </select>
           </label>
-          <button type="submit" disabled={state === "sending"}>{state === "sending" ? "Confirming…" : "Request deeper review"}<span aria-hidden="true">↗</span></button>
+          <button type="submit" disabled={state === "sending"}>{state === "sending" ? "Confirming…" : "Request my competitive search map"}<span aria-hidden="true">↗</span></button>
+          <p className="audit-review__privacy">Submitting sends these details to KaiRank so the requested review can be delivered.</p>
           {message ? <p className={`audit-review__message is-${state}`} role={state === "error" ? "alert" : "status"}>{message}</p> : null}
         </form>
       )}
@@ -326,7 +327,7 @@ export function VisibilityAudit() {
       <div className="visibility-audit__lead">
         <span className="data-label">Clinic search visibility diagnostic</span>
         <h2 id="audit-title">Let’s check your clinic.</h2>
-        <p>Start with the public technical signals. Then add your location and priority treatment to look deeper.</p>
+        <p>Enter your website. We’ll check the public technical signals that can help—or hinder—discovery.</p>
       </div>
 
       <form className="visibility-audit__form visibility-audit__form--technical" onSubmit={runAudit} noValidate>
@@ -347,7 +348,7 @@ export function VisibilityAudit() {
         </label>
         <button type="submit" disabled={isBusy}><span>{isBusy ? "Reading signal…" : "Run technical check"}</span><i aria-hidden="true">↗</i></button>
       </form>
-      <p className="visibility-audit__detail data-label" id="audit-detail">No account or website access required</p>
+      <p className="visibility-audit__detail data-label" id="audit-detail">Public signals only · no account or website access</p>
 
       {isBusy ? (
         <div className="audit-scan" aria-live="polite" role="status">
@@ -367,10 +368,11 @@ export function VisibilityAudit() {
 
       {hasResult ? (
         <div className="audit-next">
-          <div>
-            <span className="data-label">Add search context</span>
-            <strong>Technical foundation checked. Now frame the search landscape that matters.</strong>
-          </div>
+        <div>
+          <span className="data-label">Add search context</span>
+          <strong>Now see which clinics are winning the searches that matter.</strong>
+          <p>Add your location and priority treatment. KaiRank will frame the businesses appearing around that demand and where their visibility is stronger.</p>
+        </div>
           <form onSubmit={findVisibilityGap} noValidate>
             <label><span>Location</span><input name="location" type="text" autoComplete="address-level2" placeholder="Birmingham" value={location} onChange={(event) => { setLocation(event.target.value); setGapReady(false); }} /></label>
             <label><span>Priority treatment or service</span><input name="priorityService" type="text" placeholder="Deep tissue massage" value={priorityService} onChange={(event) => { setPriorityService(event.target.value); setGapReady(false); }} /></label>

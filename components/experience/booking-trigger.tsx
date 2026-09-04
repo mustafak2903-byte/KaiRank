@@ -29,6 +29,18 @@ let calInstance: CalApi | null = null;
 let modalCloseObserver: MutationObserver | null = null;
 let modalCloseTimer: number | null = null;
 
+function restoreBookingFocus() {
+  window.requestAnimationFrame(() => {
+    window.setTimeout(() => {
+      const fallback = document.querySelector<HTMLButtonElement>(".mobile-navigation__trigger");
+      const triggerIsVisible = activeBookingTrigger
+        && activeBookingTrigger.getClientRects().length > 0
+        && activeBookingTrigger.closest('[aria-hidden="true"]') === null;
+      (triggerIsVisible ? activeBookingTrigger : fallback)?.focus();
+    }, 50);
+  });
+}
+
 function isCalModalOpen() {
   return [...document.querySelectorAll<HTMLElement>("cal-modal-box")].some((modal) => {
     const style = window.getComputedStyle(modal);
@@ -91,6 +103,14 @@ function attributionConfig(prefill?: { name?: string; email?: string }) {
   return config;
 }
 
+function externalBookingUrl(config: Record<string, string>) {
+  const url = new URL(siteConfig.bookingUrl);
+  Object.entries(config).forEach(([key, value]) => {
+    if (key !== "theme" && value) url.searchParams.set(key, value);
+  });
+  return url.toString();
+}
+
 function prepareCal(cal: CalApi) {
   cal("init", calNamespace, { origin: "https://cal.com" });
   const api = cal.ns?.[calNamespace] ?? cal;
@@ -131,7 +151,8 @@ function prepareCal(cal: CalApi) {
       if (!isCalModalOpen() || !liveCal) return;
       const closeApi = liveCal.ns?.[calNamespace] ?? liveCal;
       closeApi("closeModal");
-      window.requestAnimationFrame(() => activeBookingTrigger?.focus());
+      document.body.classList.remove("has-booking-open");
+      restoreBookingFocus();
       window.setTimeout(() => {
         if (!isCalModalOpen()) document.body.style.overflow = "";
       }, 80);
@@ -165,6 +186,7 @@ function trackWhenModalOpens(source: string) {
   const check = () => {
     if (isCalModalOpen()) {
       trackEvent("booking_opened", { source, experience: "cal-popup" });
+      document.body.classList.add("has-booking-open");
       const modal = document.querySelector<HTMLElement>("cal-modal-box");
       modalCloseObserver?.disconnect();
       if (modal) {
@@ -173,8 +195,9 @@ function trackWhenModalOpens(source: string) {
           modalCloseObserver = null;
           if (modalCloseTimer !== null) window.clearTimeout(modalCloseTimer);
           modalCloseTimer = null;
+          document.body.classList.remove("has-booking-open");
           document.body.style.overflow = "";
-          window.requestAnimationFrame(() => activeBookingTrigger?.focus());
+          restoreBookingFocus();
         };
         modal.addEventListener("close", restoreAfterClose, { once: true });
         modalCloseObserver = new MutationObserver(() => {
@@ -232,6 +255,7 @@ export function BookingTrigger({
   const readyRef = useRef(false);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [fallbackHref, setFallbackHref] = useState<string>(siteConfig.bookingUrl);
 
   useEffect(() => {
     const handleFailure = (event: Event) => {
@@ -244,6 +268,7 @@ export function BookingTrigger({
 
   async function openBooking(event: MouseEvent<HTMLButtonElement>) {
     const config = attributionConfig(prefill);
+    setFallbackHref(externalBookingUrl(config));
     buttonRef.current?.setAttribute("data-cal-config", JSON.stringify(config));
     event.preventDefault();
     event.stopPropagation();
@@ -286,7 +311,7 @@ export function BookingTrigger({
       >
         {loading ? "Opening calendar…" : label} <span aria-hidden="true">↗</span>
       </button>
-      {failed ? <a className="booking-trigger__fallback" href={siteConfig.bookingUrl} target="_blank" rel="noreferrer">Calendar unavailable here. Open Cal.com instead ↗</a> : null}
+      {failed ? <a className="booking-trigger__fallback" href={fallbackHref} target="_blank" rel="noreferrer">Calendar unavailable here. Open Cal.com instead ↗</a> : null}
     </span>
   );
 }
