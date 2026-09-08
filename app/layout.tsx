@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { IBM_Plex_Mono, Instrument_Serif, Manrope } from "next/font/google";
 import type { ReactNode } from "react";
 import { siteConfig } from "@/lib/site";
@@ -6,6 +8,8 @@ import "@/styles/tokens.css";
 import "./globals.css";
 import "@/styles/v6.css";
 import "@/styles/v7.css";
+import "@/styles/v8.css";
+import "@/styles/marketing.css";
 
 const display = Instrument_Serif({
   subsets: ["latin"],
@@ -36,6 +40,7 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   applicationName: siteConfig.name,
   referrer: "origin-when-cross-origin",
+  robots: process.env.VERCEL_ENV === "preview" ? { index: false, follow: false } : undefined,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -71,7 +76,11 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${data.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   );
 }

@@ -1,12 +1,25 @@
 "use client";
 
 import { useEffect } from "react";
+import Lenis from "lenis";
 
 export function ScrollExperience() {
   useEffect(() => {
     const root = document.documentElement;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let frame = 0;
+    const lenis = reduceMotion
+      ? null
+      : new Lenis({
+          autoRaf: true,
+          anchors: true,
+          lerp: 0.095,
+          smoothWheel: true,
+          syncTouch: false,
+          touchMultiplier: 1,
+          wheelMultiplier: 0.9,
+          prevent: (node) => Boolean(node.closest("[data-lenis-prevent], [role='dialog']")),
+        });
 
     const updateProgress = () => {
       frame = 0;
@@ -48,6 +61,7 @@ export function ScrollExperience() {
     window.addEventListener("resize", onScroll, { passive: true });
 
     return () => {
+      lenis?.destroy();
       observer?.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);

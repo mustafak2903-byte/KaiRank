@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type KeyboardEvent } from "react";
+import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { trackEvent } from "@/lib/analytics";
 
 const capabilities = [
@@ -95,6 +95,7 @@ function CapabilityVisual({ capability }: { capability: Capability }) {
 
 export function CapabilityStage() {
   const [activeId, setActiveId] = useState<Capability["id"]>("technical");
+  const environmentRef = useRef<HTMLDivElement>(null);
   const active = capabilities.find((item) => item.id === activeId) ?? capabilities[0];
 
   function selectCapability(id: Capability["id"]) {
@@ -115,6 +116,14 @@ export function CapabilityStage() {
     const nextCapability = capabilities[next];
     selectCapability(nextCapability.id);
     window.requestAnimationFrame(() => document.getElementById(`capability-tab-${nextCapability.id}`)?.focus());
+  }
+
+  function moveSpotlight(event: PointerEvent<HTMLDivElement>) {
+    const node = environmentRef.current;
+    if (!node || window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)").matches) return;
+    const rect = node.getBoundingClientRect();
+    node.style.setProperty("--spot-x", `${event.clientX - rect.left}px`);
+    node.style.setProperty("--spot-y", `${event.clientY - rect.top}px`);
   }
 
   return (
@@ -144,7 +153,7 @@ export function CapabilityStage() {
           <h3>{active.label}</h3>
           <p>{active.body}</p>
         </div>
-        <div className="capability-stage__environment" aria-live="polite">
+        <div className="capability-stage__environment" aria-live="polite" onPointerMove={moveSpotlight} ref={environmentRef}>
           {capabilities.map((capability) => (
             <div className={`capability-scene${active.id === capability.id ? " is-active" : ""}`} key={capability.id} aria-hidden={active.id !== capability.id}>
               <CapabilityVisual capability={capability} />

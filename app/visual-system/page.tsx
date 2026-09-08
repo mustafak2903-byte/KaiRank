@@ -1,4 +1,4 @@
-import { Wordmark } from "@/components/brand/wordmark";
+import Link from "next/link";
 import { AnalyticsEvents } from "@/components/experience/analytics-events";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { CapabilityStage } from "@/components/experience/capability-stage";
@@ -6,9 +6,12 @@ import { CinematicBackground } from "@/components/experience/cinematic-backgroun
 import { HeroSignal } from "@/components/experience/hero-signal";
 import { KaiAssistant } from "@/components/experience/kai-assistant";
 import { ProblemJourney } from "@/components/experience/problem-journey";
+import { ProcessFlow } from "@/components/experience/process-flow";
 import { RecoveryProgress } from "@/components/experience/recovery-progress";
+import { SearchSignalField } from "@/components/experience/search-signal-field";
 import { ScrollExperience } from "@/components/experience/scroll-experience";
 import { VisibilityAudit } from "@/components/experience/visibility-audit";
+import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { createMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site";
@@ -52,6 +55,16 @@ const faqs = [
     answer:
       "No. KaiRank improves the signals search systems use, but rankings, Maps visibility and AI citations remain decisions made by third-party platforms.",
   },
+  {
+    question: "What happens in the first strategy conversation?",
+    answer:
+      "We start with one website, location and priority treatment, identify the constraint that most needs evidence and decide whether a focused review, implementation sequence or no further work is the right next step.",
+  },
+  {
+    question: "How is an engagement scoped?",
+    answer:
+      "Scope follows the diagnosis. KaiRank defines the priority pages, technical repairs, local evidence or measurement work required before agreeing deliverables, ownership and timing with your team.",
+  },
 ] as const;
 
 const structuredData = {
@@ -62,13 +75,20 @@ const structuredData = {
       "@id": `${siteConfig.url}/#organisation`,
       name: siteConfig.name,
       url: siteConfig.url,
+      logo: `${siteConfig.url}/icon.svg`,
+      email: siteConfig.contact.email,
       description: siteConfig.description,
-      founder: {
-        "@type": "Person",
-        name: siteConfig.founder.name,
-        sameAs: siteConfig.founder.linkedIn,
-      },
+      founder: { "@id": `${siteConfig.url}/#founder` },
       knowsAbout: ["Technical SEO", "Search strategy", "Local SEO", "Healthcare SEO", "AI search optimisation"],
+    },
+    {
+      "@type": "Person",
+      "@id": `${siteConfig.url}/#founder`,
+      name: siteConfig.founder.name,
+      jobTitle: "Founder and search strategist",
+      url: `${siteConfig.url}/about/`,
+      sameAs: [siteConfig.founder.linkedIn],
+      worksFor: { "@id": `${siteConfig.url}/#organisation` },
     },
     {
       "@type": "WebSite",
@@ -83,14 +103,14 @@ const structuredData = {
 
 export default function VisualSystemPage() {
   return (
-    <div className="v3-experience v6-experience v7-experience">
+    <div className="v3-experience v6-experience v7-experience v8-experience">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <ScrollExperience />
       <AnalyticsEvents />
       <SiteHeader />
 
-      <main>
-        <section className="v3-hero v7-hero" id="home" aria-labelledby="hero-title">
+      <main id="main-content">
+        <section className="v3-hero v7-hero" id="home" aria-labelledby="hero-title" data-kai-avoid>
           <CinematicBackground />
           <div className="container v7-hero__inner">
             <div className="v7-hero__copy" data-reveal>
@@ -101,10 +121,10 @@ export default function VisualSystemPage() {
                 <em>before they choose.</em>
               </h1>
               <p className="v3-hero__lead">
-                KaiRank identifies and repairs the search constraints keeping private clinics out of consideration across Google, Maps and AI.
+                KaiRank finds and fixes the technical, local and authority gaps keeping private clinics out of the shortlist across Google, Maps and AI search.
               </p>
               <div className="v3-actions">
-                <a className="v3-action v3-action--solid" href="#audit">Check my clinic <span aria-hidden="true">↘</span></a>
+                <a className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label="Hero: check my clinic" data-event-source="hero" href="#audit">Check my clinic <span aria-hidden="true">↘</span></a>
                 <a className="v3-action v3-action--text" href="#proof">See verified clinic results <span aria-hidden="true">↓</span></a>
               </div>
             </div>
@@ -148,7 +168,22 @@ export default function VisualSystemPage() {
           </div>
         </section>
 
-        <section className="v3-proof" id="proof" aria-labelledby="proof-title">
+        <section className="v9-outcomes" aria-labelledby="outcomes-title">
+          <div className="container">
+            <div className="v3-section-index data-label"><span>From visibility to action</span><span>Three distinct outcomes</span></div>
+            <div className="v9-outcomes__intro" data-reveal>
+              <h2 id="outcomes-title">Visibility only matters when it creates <em>a credible route to action.</em></h2>
+              <p>KaiRank keeps discovery, evaluation and patient intent separate—so the work is judged by what changed, not by one inflated number.</p>
+            </div>
+            <ol className="v9-outcomes__grid">
+              <li data-reveal><span className="data-label">01 / Discovered</span><strong>Enter the shortlist.</strong><p>Earn visibility for priority treatments in the locations and search surfaces that matter.</p><small>Measured with impressions, rankings and local discovery.</small></li>
+              <li data-reveal><span className="data-label">02 / Evaluated</span><strong>Make the decision easier.</strong><p>Give patients and search systems clear services, clinicians, locations and trustworthy evidence.</p><small>Measured with qualified landing-page and evidence engagement.</small></li>
+              <li data-reveal><span className="data-label">03 / Action</span><strong>Connect demand to the clinic.</strong><p>Build an observable route from organic discovery to calls, enquiries and booking intent.</p><small>Measured as actions—not automatically relabelled as patients or revenue.</small></li>
+            </ol>
+          </div>
+        </section>
+
+        <section className="v3-proof" id="proof" aria-labelledby="proof-title" data-kai-avoid>
           <div className="container">
             <div className="v3-section-index data-label"><span>Verified outcome</span><span>Evidence attached</span></div>
             <div className="v3-proof__intro" data-reveal>
@@ -163,27 +198,27 @@ export default function VisualSystemPage() {
                 <span className="data-label">Supporting proof / South City Hospital</span>
                 <h3>Scale without losing clinical structure.</h3>
                 <p>From roughly 250 ranking keywords in July 2025 to 3,900 in May 2026, a connected service-and-doctor architecture expanded discovery across specialties, services and individual doctor profiles.</p>
-                <a data-event="evidence_opened" data-event-label="South City Hospital case study" href="https://drive.google.com/file/d/1liDUyqtgXvZD8adj3Wanulkv70N5hLvY/view?usp=sharing" target="_blank" rel="noreferrer">View verified case study <span aria-hidden="true">↗</span></a>
+                <Link data-event="evidence_opened" data-event-label="South City Hospital case study" href="/case-studies/south-city-hospital/">Read verified case study <span aria-hidden="true">↗</span></Link>
               </div>
               <dl>
                 <div><dt>46K+</dt><dd>monthly organic visits</dd></div>
                 <div><dt>3,900</dt><dd>ranking keywords</dd></div>
                 <div><dt>194</dt><dd>doctor profiles in the top 10</dd></div>
-                <div><dt>8,076</dt><dd>patient calls in one month</dd></div>
+                <div><dt>8,076</dt><dd>Google profile call actions · one month</dd></div>
               </dl>
             </div>
 
             <div className="v7-proof-bridge" data-reveal>
               <div><span className="data-label">Apply the evidence</span><strong>Want to see which constraint applies to your clinic?</strong></div>
-              <a className="v3-action v3-action--solid" href="#audit">Check my clinic <span aria-hidden="true">↘</span></a>
+              <a className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label="Proof: check my clinic" data-event-source="proof" href="#audit">Check my clinic <span aria-hidden="true">↘</span></a>
             </div>
           </div>
         </section>
 
-        <section className="v7-founder" aria-labelledby="founder-title">
+        <section className="v7-founder" id="founder" aria-labelledby="founder-title">
           <div className="container">
             <div className="v3-section-index data-label"><span>Accountable specialist</span><span>One clear owner</span></div>
-            <div className="v7-founder__grid" data-reveal>
+            <div className="v7-founder__grid v8-founder__grid" data-reveal>
               <div>
                 <span className="data-label">{siteConfig.founder.role}</span>
                 <h2 id="founder-title">Specialist diagnosis.<br /><em>Accountable delivery.</em></h2>
@@ -191,6 +226,10 @@ export default function VisualSystemPage() {
               <div className="v7-founder__statement">
                 <p>Every engagement has a clear owner. {siteConfig.founder.name} leads the diagnosis, priorities and search strategy—working with your developers, writers or existing agency where needed.</p>
                 <a href={siteConfig.founder.linkedIn} target="_blank" rel="noreferrer">View founder profile <span aria-hidden="true">↗</span></a>
+              </div>
+              <div className="v8-founder__dossier" aria-label={`Founder profile for ${siteConfig.founder.name}`}>
+                <div aria-hidden="true"><span>MK</span><i /></div>
+                <p><span className="data-label">Your accountable lead</span><strong>{siteConfig.founder.name}</strong><small>Diagnosis, prioritisation and search strategy stay founder-led from first review to delivery.</small></p>
               </div>
               <ul aria-label="KaiRank working principles">
                 <li><span>01</span><strong>Evidence before activity</strong></li>
@@ -206,23 +245,21 @@ export default function VisualSystemPage() {
             <div className="v3-section-index data-label"><span>How we work</span><span>Three decisive stages</span></div>
             <div className="v3-process__intro" data-reveal>
               <h2 id="process-title">Diagnose. Engineer. Compound.</h2>
+              <p>One constraint at a time. Each stage produces a clear output before the next begins.</p>
             </div>
-            <ol className="v3-process__steps">
-              <li data-reveal><span>01</span><div><h3>Diagnose</h3><p>Find where patient demand is being blocked, misunderstood or surrendered to competitors.</p></div><small>Find the constraint</small></li>
-              <li data-reveal><span>02</span><div><h3>Engineer</h3><p>Repair the path and strengthen the signals that make the clinic relevant.</p></div><small>Fix the right layer</small></li>
-              <li data-reveal><span>03</span><div><h3>Compound</h3><p>Measure what surfaces, earns trust and creates action—then address the next highest-leverage constraint.</p></div><small>Strengthen what works</small></li>
-            </ol>
+            <ProcessFlow />
           </div>
         </section>
 
-        <div className="v6-diagnostic" aria-label="Clinic search visibility diagnostic">
+        <div className="v6-diagnostic" aria-label="Clinic search visibility diagnostic" data-kai-avoid>
+          <SearchSignalField />
           <div className="container">
             <div className="v3-section-index data-label"><span>Search visibility diagnostic</span><span>Start with public evidence</span></div>
             <VisibilityAudit />
           </div>
         </div>
 
-        <section className="v3-faq" id="faq" aria-labelledby="faq-title">
+        <section className="v3-faq" id="faq" aria-labelledby="faq-title" data-kai-avoid>
           <div className="container v3-faq__grid">
             <div data-reveal>
               <span className="data-label">Useful answers</span>
@@ -239,33 +276,21 @@ export default function VisualSystemPage() {
           </div>
         </section>
 
-        <section className="v3-conversion" id="contact" aria-labelledby="conversion-title">
+        <section className="v3-conversion" id="contact" aria-labelledby="conversion-title" data-kai-avoid>
           <div className="v3-conversion__signal" aria-hidden="true"><i /><i /><i /><i /></div>
           <div className="container v3-conversion__inner" data-reveal>
             <span className="data-label">Start with evidence</span>
             <h2 id="conversion-title">Find the gap between your clinic and the shortlist.</h2>
-            <p>Start with your website. Add your location and priority treatment for a deeper comparison.</p>
+            <p>Bring your website, location and priority treatment. The first conversation starts with the constraint—not a pre-filled deliverables list.</p>
             <div className="v3-actions">
-              <a className="v3-action v3-action--solid" href="#audit">Check my clinic <span aria-hidden="true">↗</span></a>
+              <a className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label="Final: check my clinic" data-event-source="final-cta" href="#audit">Check my clinic <span aria-hidden="true">↗</span></a>
               <BookingTrigger className="v3-action v3-action--text" label="Talk through my search strategy" source="final-cta" />
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="v3-footer">
-        <div className="container v3-footer__grid">
-          <div className="v3-footer__brand"><Wordmark href="/visual-system/" quiet /><p>Search visibility for private clinics across Google, Maps and AI search.</p></div>
-          <nav aria-label="Services"><strong>Services</strong><a href="#services">Technical SEO</a><a href="#services">Search strategy</a><a href="#services">Local SEO</a><a href="#services">AI search optimisation</a></nav>
-          <nav aria-label="Results"><strong>Results</strong><a href="#proof">The Recovery Room</a><a href="#proof">South City Hospital</a><a href="#audit">Visibility Diagnostic</a></nav>
-          <nav aria-label="Company"><strong>Company</strong><a href="#process">How We Work</a><a href="#faq">FAQ</a><a href={siteConfig.founder.linkedIn} target="_blank" rel="noreferrer">Founder profile</a><a href={`mailto:${siteConfig.contact.email}`}>Contact</a></nav>
-        </div>
-        <div className="container v7-footer__privacy" id="privacy">
-          <span className="data-label">Privacy note</span>
-          <p>The diagnostic reads public website signals. If you request a deeper review, your contact and clinic details are sent to KaiRank so the requested review can be delivered. Booking details are handled by Cal.com.</p>
-        </div>
-        <div className="container v3-footer__base data-label"><span>© 2026 KaiRank</span><a href="#privacy">Privacy</a><span>{siteConfig.contact.email}</span><span>Search visibility for private clinics</span></div>
-      </footer>
+      <SiteFooter />
 
       <KaiAssistant />
     </div>

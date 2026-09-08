@@ -1,28 +1,27 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 
-type Mode = "straight" | "explain" | "humour" | "facts";
+type Mode = "straight" | "explain" | "facts";
 type Topic = "about" | "diagnostic" | "results" | "local" | "ai" | "compare" | "next" | "talk";
 type Context = "hero" | "journey" | "services" | "proof" | "diagnostic" | "final";
 
 const modes: Array<{ id: Mode; label: string; note: string }> = [
-  { id: "straight", label: "Straight to it", note: "The shortest useful answer." },
-  { id: "explain", label: "Explain it", note: "Add the reasoning." },
-  { id: "humour", label: "Add a little humour", note: "Search jokes. Carefully." },
-  { id: "facts", label: "Give me facts", note: "One precise search fact." },
+  { id: "straight", label: "Quick answer", note: "The shortest useful answer." },
+  { id: "explain", label: "Explain the reasoning", note: "Add the strategic context." },
+  { id: "facts", label: "Evidence first", note: "One precise search fact." },
 ];
 
 const topics: Array<{ id: Topic; label: string; href?: string }> = [
-  { id: "about", label: "What does KaiRank do?", href: "#services" },
-  { id: "diagnostic", label: "What does the diagnostic check?", href: "#audit" },
-  { id: "results", label: "Show me verified results", href: "#proof" },
-  { id: "local", label: "What is Local SEO?", href: "#services" },
-  { id: "ai", label: "What is AI Search Optimisation?", href: "#services" },
-  { id: "compare", label: "Can you compare my clinic?", href: "#audit" },
-  { id: "next", label: "What happens after the diagnostic?", href: "#process" },
-  { id: "talk", label: "Can I talk to someone?", href: "#contact" },
+  { id: "about", label: "What does KaiRank do?", href: "/#services" },
+  { id: "diagnostic", label: "What does the diagnostic check?", href: "/#audit" },
+  { id: "results", label: "Show me verified results", href: "/#proof" },
+  { id: "local", label: "What is Local SEO?", href: "/local-seo/" },
+  { id: "ai", label: "What is AI Search Optimisation?", href: "/ai-search-optimisation/" },
+  { id: "compare", label: "Can you compare my clinic?", href: "/#audit" },
+  { id: "next", label: "What happens after the diagnostic?", href: "/#process" },
+  { id: "talk", label: "Can I talk to someone?", href: "/contact/" },
 ];
 
 const answers: Record<Topic, string> = {
@@ -56,8 +55,6 @@ const contextPrompts: Record<Context, string> = {
   final: "Start with the website, location and priority treatment.",
 };
 
-type Point = { x: number; y: number };
-
 export function KaiRobot({ waving, surprised }: { waving: boolean; surprised: boolean }) {
   return (
     <svg className={`kai-robot${waving ? " is-waving" : ""}${surprised ? " is-surprised" : ""}`} viewBox="0 0 92 104" aria-hidden="true">
@@ -86,14 +83,8 @@ export function KaiRobot({ waving, surprised }: { waving: boolean; surprised: bo
 export function KaiAssistant() {
   const mascotRef = useRef<HTMLButtonElement>(null);
   const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
-  const positionRef = useRef<Point>({ x: 0, y: 0 });
-  const physicsRef = useRef<number | null>(null);
   const reactionTimerRef = useRef<number | null>(null);
-  const suppressClickRef = useRef(false);
-  const dragRef = useRef({ active: false, moved: false, startX: 0, startY: 0, originX: 0, originY: 0, lastX: 0, lastY: 0, lastTime: 0, vx: 0, vy: 0 });
   const [open, setOpen] = useState(false);
-  const [dragging, setDragging] = useState(false);
-  const [surprised, setSurprised] = useState(false);
   const [reaction, setReaction] = useState("");
   const [mode, setMode] = useState<Mode>(() => {
     if (typeof window === "undefined") return "straight";
@@ -104,118 +95,21 @@ export function KaiAssistant() {
   const [context, setContext] = useState<Context>("hero");
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [speaking, setSpeaking] = useState(false);
+  const [cleared, setCleared] = useState(false);
 
   const answer = useMemo(() => {
     if (mode === "facts") return facts[topic];
     const base = answers[topic];
     if (mode === "explain") return `${base} The useful next step is to inspect the evidence behind the status before turning it into a plan.`;
-    if (mode === "humour") {
-      const ending = topic === "diagnostic"
-        ? " The robots can keep their paperwork."
-        : topic === "results"
-          ? " Evidence first; victory lap second."
-          : " Search engines are remarkably fond of tidy explanations.";
-      return `${base}${ending}`;
-    }
     return base;
   }, [mode, topic]);
 
   const activeTopic = topics.find((item) => item.id === topic) ?? topics[0];
 
-  function setMascotPosition(point: Point) {
-    positionRef.current = point;
-    mascotRef.current?.style.setProperty("--kai-x", `${point.x}px`);
-    mascotRef.current?.style.setProperty("--kai-y", `${point.y}px`);
-  }
-
-  function getBounds() {
-    const node = mascotRef.current;
-    const width = node?.offsetWidth ?? 52;
-    const height = node?.offsetHeight ?? 52;
-    const inset = 24;
-    const baseX = window.innerWidth - inset - width;
-    const baseY = window.innerHeight - inset - height;
-    return { minX: 8 - baseX, maxX: window.innerWidth - 8 - width - baseX, minY: 76 - baseY, maxY: window.innerHeight - 8 - height - baseY };
-  }
-
-  function clampPoint(point: Point) {
-    const bounds = getBounds();
-    return { x: Math.min(bounds.maxX, Math.max(bounds.minX, point.x)), y: Math.min(bounds.maxY, Math.max(bounds.minY, point.y)) };
-  }
-
-  function stopPhysics() {
-    if (physicsRef.current !== null) window.cancelAnimationFrame(physicsRef.current);
-    physicsRef.current = null;
-  }
-
   function showReaction(message: string, duration = 2600) {
     setReaction(message);
     if (reactionTimerRef.current !== null) window.clearTimeout(reactionTimerRef.current);
     reactionTimerRef.current = window.setTimeout(() => setReaction(""), duration);
-  }
-
-  function releaseMascot() {
-    const drag = dragRef.current;
-    if (!drag.active) return;
-    drag.active = false;
-    setDragging(false);
-    if (!drag.moved) return;
-
-    suppressClickRef.current = true;
-    trackEvent("kai_dragged", { x: Math.round(positionRef.current.x), y: Math.round(positionRef.current.y) });
-
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const speed = Math.hypot(drag.vx, drag.vy);
-    if (reduceMotion || speed < 1.1) return;
-
-    trackEvent("kai_thrown", { speed: Math.round(speed * 10) / 10 });
-    setSurprised(true);
-    let velocityX = drag.vx;
-    let velocityY = drag.vy;
-    let bounces = 0;
-    const tick = () => {
-      const bounds = getBounds();
-      const next = { x: positionRef.current.x + velocityX, y: positionRef.current.y + velocityY };
-      if (next.x <= bounds.minX || next.x >= bounds.maxX) { velocityX *= -0.54; next.x = Math.min(bounds.maxX, Math.max(bounds.minX, next.x)); bounces += 1; }
-      if (next.y <= bounds.minY || next.y >= bounds.maxY) { velocityY *= -0.54; next.y = Math.min(bounds.maxY, Math.max(bounds.minY, next.y)); bounces += 1; }
-      velocityX *= 0.955;
-      velocityY *= 0.955;
-      setMascotPosition(next);
-      if (Math.hypot(velocityX, velocityY) > 0.16) physicsRef.current = window.requestAnimationFrame(tick);
-      else {
-        physicsRef.current = null;
-        setSurprised(false);
-        const throwCount = Number(window.sessionStorage.getItem("kairank-kai-throws") ?? "0") + 1;
-        window.sessionStorage.setItem("kairank-kai-throws", String(throwCount));
-        if (throwCount % 4 === 0 || bounces > 3) showReaction(throwCount % 8 === 0 ? "Google has been less hostile." : "Interesting CRO strategy.");
-      }
-    };
-    physicsRef.current = window.requestAnimationFrame(tick);
-  }
-
-  function pointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
-    if (window.matchMedia("(max-width: 767px), (pointer: coarse)").matches) return;
-    stopPhysics();
-    const now = performance.now();
-    dragRef.current = { active: true, moved: false, startX: event.clientX, startY: event.clientY, originX: positionRef.current.x, originY: positionRef.current.y, lastX: event.clientX, lastY: event.clientY, lastTime: now, vx: 0, vy: 0 };
-    event.currentTarget.setPointerCapture(event.pointerId);
-    setDragging(true);
-  }
-
-  function pointerMove(event: ReactPointerEvent<HTMLButtonElement>) {
-    const drag = dragRef.current;
-    if (!drag.active) return;
-    const dx = event.clientX - drag.startX;
-    const dy = event.clientY - drag.startY;
-    if (!drag.moved && Math.hypot(dx, dy) > 4) drag.moved = true;
-    const now = performance.now();
-    const elapsed = Math.max(4, now - drag.lastTime);
-    drag.vx = ((event.clientX - drag.lastX) / elapsed) * 16.67;
-    drag.vy = ((event.clientY - drag.lastY) / elapsed) * 16.67;
-    drag.lastX = event.clientX;
-    drag.lastY = event.clientY;
-    drag.lastTime = now;
-    setMascotPosition(clampPoint({ x: drag.originX + dx, y: drag.originY + dy }));
   }
 
   useEffect(() => {
@@ -242,7 +136,6 @@ export function KaiAssistant() {
         window.speechSynthesis.removeEventListener("voiceschanged", chooseVoice);
         window.speechSynthesis.cancel();
       }
-      stopPhysics();
       if (reactionTimerRef.current !== null) window.clearTimeout(reactionTimerRef.current);
     };
   }, []);
@@ -254,22 +147,8 @@ export function KaiAssistant() {
         window.requestAnimationFrame(() => mascotRef.current?.focus());
       }
     };
-    const onResize = () => {
-      const node = mascotRef.current;
-      if (!node) return;
-      const inset = 24;
-      const baseX = window.innerWidth - inset - node.offsetWidth;
-      const baseY = window.innerHeight - inset - node.offsetHeight;
-      const next = {
-        x: Math.min(window.innerWidth - 8 - node.offsetWidth - baseX, Math.max(8 - baseX, positionRef.current.x)),
-        y: Math.min(window.innerHeight - 8 - node.offsetHeight - baseY, Math.max(76 - baseY, positionRef.current.y)),
-      };
-      positionRef.current = next;
-      node.style.setProperty("--kai-x", `${next.x}px`);
-      node.style.setProperty("--kai-y", `${next.y}px`);
-    };
     const onPointerProximity = (event: PointerEvent) => {
-      if (dragRef.current.active || !mascotRef.current) return;
+      if (!mascotRef.current) return;
       const rect = mascotRef.current.getBoundingClientRect();
       const dx = event.clientX - (rect.left + rect.width / 2);
       const dy = event.clientY - (rect.top + rect.height / 2);
@@ -279,11 +158,9 @@ export function KaiAssistant() {
       mascotRef.current.style.setProperty("--kai-look-y", `${Math.max(-2, Math.min(2, dy / 35)) * strength}px`);
     };
     document.addEventListener("keydown", onKeyDown);
-    window.addEventListener("resize", onResize, { passive: true });
     window.addEventListener("pointermove", onPointerProximity, { passive: true });
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointerProximity);
     };
   }, [open]);
@@ -306,16 +183,16 @@ export function KaiAssistant() {
 
     const onService = (event: Event) => {
       const service = (event as CustomEvent<{ service: string }>).detail.service;
-      const message = service === "technical" ? "Tiny wrench. Large consequences." : service === "local" ? "Location signal acquired." : service === "content" ? "Those nodes are finally talking." : service === "entity" ? "Antenna up. Entity connected." : "Useful demand beats noisy demand.";
+      const message = service === "technical" ? "Technical access is the active layer." : service === "local" ? "Local relevance is the active layer." : service === "content" ? "Authority evidence is the active layer." : service === "entity" ? "Entity clarity is the active layer." : "Qualified search demand is the active layer.";
       showReaction(message);
     };
     const onSuccess = (event: Event) => {
       const checks = (event as CustomEvent<{ checks: Array<{ id: string; status: string }> }>).detail.checks;
       const robots = checks.some((check) => check.id === "robots" && check.status === "pass");
       const sitemap = checks.some((check) => check.id === "sitemap" && check.status === "pass");
-      showReaction(robots && sitemap ? "The robots have paperwork. Google has directions." : "Well. That was suspiciously tidy.", 3400);
+      showReaction(robots && sitemap ? "Public crawl signals are in place. Review the remaining evidence." : "The public scan is complete. Review the signals below.", 3400);
     };
-    const onError = () => showReaction("Found something. I knew I wasn’t here just for decoration.", 3400);
+    const onError = () => showReaction("The public scan could not complete. Check the address or try again.", 3400);
     window.addEventListener("kairank:service-context", onService);
     window.addEventListener("kairank:diagnostic-complete", onSuccess);
     window.addEventListener("kairank:diagnostic-error", onError);
@@ -327,8 +204,22 @@ export function KaiAssistant() {
     };
   }, []);
 
+  useEffect(() => {
+    const targets = [...document.querySelectorAll("[data-kai-avoid]")];
+    if (!targets.length || !("IntersectionObserver" in window)) return;
+    const visible = new Map<Element, boolean>();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => visible.set(entry.target, entry.isIntersecting));
+      setCleared([...visible.values()].some(Boolean));
+    }, { threshold: 0 });
+    targets.forEach((target) => {
+      visible.set(target, false);
+      observer.observe(target);
+    });
+    return () => observer.disconnect();
+  }, []);
+
   function toggle() {
-    if (suppressClickRef.current) { suppressClickRef.current = false; return; }
     setOpen((current) => {
       const next = !current;
       if (next) trackEvent("kai_opened", { context });
@@ -363,8 +254,8 @@ export function KaiAssistant() {
     const utterance = new SpeechSynthesisUtterance(answer);
     utterance.lang = "en-GB";
     if (voiceRef.current) utterance.voice = voiceRef.current;
-    utterance.rate = 0.92;
-    utterance.pitch = 0.98;
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
     utterance.volume = 1;
     utterance.onstart = () => setSpeaking(true);
     utterance.onend = () => setSpeaking(false);
@@ -374,7 +265,7 @@ export function KaiAssistant() {
   }
 
   return (
-    <div className={`kai-assistant kai-assistant--v6${open ? " is-open" : ""}`}>
+    <div className={`kai-assistant kai-assistant--v6${open ? " is-open" : ""}${cleared ? " is-cleared" : ""}`}>
       {reaction && !open ? <div className="kai-reaction" role="status">{reaction}</div> : null}
 
       {open ? (
@@ -409,17 +300,13 @@ export function KaiAssistant() {
       ) : null}
 
       <button
-        className={`kai-mascot${dragging ? " is-dragging" : ""}${surprised ? " is-surprised" : ""}`}
+        className="kai-mascot"
         ref={mascotRef}
         type="button"
         aria-label="Open Kai search assistant"
         aria-expanded={open}
         aria-controls="kai-panel"
         onClick={toggle}
-        onPointerDown={pointerDown}
-        onPointerMove={pointerMove}
-        onPointerUp={releaseMascot}
-        onPointerCancel={releaseMascot}
       >
         <span className="kai-launcher-signal" aria-hidden="true"><i /><i /><b /></span>
         <span className="kai-mascot__name">KAI</span>

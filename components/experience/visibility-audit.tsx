@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { FastVisibilitySurface } from "@/lib/competitors/types";
 import { trackEvent } from "@/lib/analytics";
+import { siteConfig } from "@/lib/site";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
 
 type AuditState =
@@ -148,13 +150,23 @@ function FullReviewForm({
   const [state, setState] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const emailRef = useRef<HTMLInputElement>(null);
 
   async function submitReview(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setState("sending");
     setMessage("");
-    trackEvent("full_review_requested", { source: "search-context" });
+    setEmailError("");
     const form = new FormData(event.currentTarget);
+    const submittedEmail = String(form.get("email") ?? "").trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(submittedEmail) || submittedEmail.length > 254) {
+      setEmailError("Add a valid email address so we can deliver the review.");
+      window.requestAnimationFrame(() => emailRef.current?.focus());
+      return;
+    }
+
+    setState("sending");
+    trackEvent("full_review_requested", { source: "search-context" });
 
     try {
       const response = await fetch("/api/visibility-review", {
@@ -164,9 +176,10 @@ function FullReviewForm({
           website,
           location,
           priorityService,
-          email: String(form.get("email") ?? ""),
+          email: submittedEmail,
           businessName: String(form.get("businessName") ?? ""),
           numberOfLocations: String(form.get("numberOfLocations") ?? ""),
+          companyWebsite: String(form.get("companyWebsite") ?? ""),
           auditResults: {
             statusCode: auditResults.statusCode,
             responseMs: auditResults.responseMs,
@@ -178,9 +191,11 @@ function FullReviewForm({
       if (!response.ok) throw new Error(payload.message ?? "The review request could not be confirmed.");
       setState("success");
       setMessage("Request confirmed. KaiRank will review your competitive search map.");
+      trackEvent("full_review_confirmed", { source: "search-context" });
     } catch (error) {
       setState("error");
       setMessage(error instanceof Error ? error.message : "The review request could not be confirmed.");
+      trackEvent("full_review_failed", { source: "search-context" });
     }
   }
 
@@ -195,7 +210,8 @@ function FullReviewForm({
         <p className="audit-review__success" role="status">{message}</p>
       ) : (
         <form onSubmit={submitReview} noValidate>
-          <label><span>Email</span><input name="email" type="email" autoComplete="email" placeholder="you@yourclinic.com" required value={email} onChange={(event) => setEmail(event.target.value)} /></label>
+          <label><span>Email</span><input ref={emailRef} name="email" type="email" autoComplete="email" placeholder="you@yourclinic.com" required value={email} aria-invalid={Boolean(emailError)} aria-describedby={emailError ? "review-email-error" : undefined} onChange={(event) => { setEmail(event.target.value); setEmailError(""); }} /></label>
+          <label className="audit-review__honeypot" aria-hidden="true"><span>Company website</span><input name="companyWebsite" type="text" autoComplete="off" tabIndex={-1} /></label>
           <label><span>Clinic <i>optional</i></span><input name="businessName" type="text" autoComplete="organization" placeholder="Clinic name" /></label>
           <label>
             <span>Number of locations <i>optional</i></span>
@@ -208,8 +224,9 @@ function FullReviewForm({
             </select>
           </label>
           <button type="submit" disabled={state === "sending"}>{state === "sending" ? "Confirming…" : "Request my competitive search map"}<span aria-hidden="true">↗</span></button>
-          <p className="audit-review__privacy">Submitting sends these details to KaiRank so the requested review can be delivered.</p>
-          {message ? <p className={`audit-review__message is-${state}`} role={state === "error" ? "alert" : "status"}>{message}</p> : null}
+          <p className="audit-review__privacy">Submitting sends these details to KaiRank so the requested review can be delivered. <Link href="/privacy/">Read the privacy notice.</Link></p>
+          {emailError ? <p className="audit-review__message is-error" id="review-email-error" role="alert">{emailError}</p> : null}
+          {message ? <p className={`audit-review__message is-${state}`} role={state === "error" ? "alert" : "status"}>{message}{state === "error" ? <> <a href={`mailto:${siteConfig.contact.email}`}>Email KaiRank instead <span aria-hidden="true">↗</span></a></> : null}</p> : null}
         </form>
       )}
       <BookingTrigger className="audit-review__booking" label="Talk through my findings" source="post-diagnostic" prefill={{ email }} />
@@ -228,6 +245,9 @@ export function VisibilityAudit() {
   const [gapReady, setGapReady] = useState(false);
   const [fastResult, setFastResult] = useState<FastResponse | null>(null);
   const [performance, setPerformance] = useState<PageSpeed | null>(null);
+  const websiteRef = useRef<HTMLInputElement>(null);
+  const locationRef = useRef<HTMLInputElement>(null);
+  const serviceRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     window.dispatchEvent(new CustomEvent("kairank:diagnostic-context", {
@@ -267,6 +287,7 @@ export function VisibilityAudit() {
     if (!url) {
       setError("Add your website address—for example, yourclinic.com.");
       setState("error");
+      window.requestAnimationFrame(() => websiteRef.current?.focus());
       return;
     }
 
@@ -312,6 +333,7 @@ export function VisibilityAudit() {
     trackEvent("visibility_gap_started", { source: "post-diagnostic" });
     if (!clinicLocation || !service) {
       setGapError("Add your clinic location and priority treatment or service.");
+      window.requestAnimationFrame(() => (!clinicLocation ? locationRef.current : serviceRef.current)?.focus());
       return;
     }
     setGapError("");
@@ -334,6 +356,7 @@ export function VisibilityAudit() {
         <label>
           <span>Step 1 / Website</span>
           <input
+            ref={websiteRef}
             name="url"
             type="text"
             inputMode="url"
@@ -341,6 +364,7 @@ export function VisibilityAudit() {
             spellCheck="false"
             placeholder="yourclinic.com"
             aria-describedby={state === "error" || state === "timeout" ? "audit-error" : "audit-detail"}
+            aria-invalid={state === "error" || state === "timeout"}
             value={website}
             onChange={(event) => setWebsite(event.target.value)}
             onFocus={() => state === "idle" && setState("focus")}
@@ -374,11 +398,11 @@ export function VisibilityAudit() {
           <p>Add your location and priority treatment. KaiRank will frame the businesses appearing around that demand and where their visibility is stronger.</p>
         </div>
           <form onSubmit={findVisibilityGap} noValidate>
-            <label><span>Location</span><input name="location" type="text" autoComplete="address-level2" placeholder="Birmingham" value={location} onChange={(event) => { setLocation(event.target.value); setGapReady(false); }} /></label>
-            <label><span>Priority treatment or service</span><input name="priorityService" type="text" placeholder="Deep tissue massage" value={priorityService} onChange={(event) => { setPriorityService(event.target.value); setGapReady(false); }} /></label>
+            <label><span>Location</span><input ref={locationRef} name="location" type="text" autoComplete="address-level2" placeholder="Birmingham" value={location} aria-invalid={Boolean(gapError && !location.trim())} aria-describedby={gapError ? "audit-gap-error" : undefined} onChange={(event) => { setLocation(event.target.value); setGapReady(false); setGapError(""); }} /></label>
+            <label><span>Priority treatment or service</span><input ref={serviceRef} name="priorityService" type="text" placeholder="Deep tissue massage" value={priorityService} aria-invalid={Boolean(gapError && !priorityService.trim())} aria-describedby={gapError ? "audit-gap-error" : undefined} onChange={(event) => { setPriorityService(event.target.value); setGapReady(false); setGapError(""); }} /></label>
             <button type="submit">Add search context <span aria-hidden="true">↗</span></button>
           </form>
-          {gapError ? <p className="audit-next__error" role="alert">{gapError}</p> : null}
+          {gapError ? <p className="audit-next__error" id="audit-gap-error" role="alert">{gapError}</p> : null}
         </div>
       ) : null}
 

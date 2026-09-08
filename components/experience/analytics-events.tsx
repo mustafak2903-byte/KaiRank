@@ -9,7 +9,10 @@ export function AnalyticsEvents() {
       const target = event.target instanceof Element ? event.target.closest<HTMLElement>("[data-event]") : null;
       const name = target?.dataset.event as AnalyticsEventName | undefined;
       if (!target || !name) return;
-      trackEvent(name, { label: target.dataset.eventLabel ?? target.textContent?.trim().slice(0, 80) });
+      trackEvent(name, {
+        label: target.dataset.eventLabel ?? target.textContent?.trim().slice(0, 80),
+        source: target.dataset.eventSource,
+      });
     };
 
     document.addEventListener("click", record);

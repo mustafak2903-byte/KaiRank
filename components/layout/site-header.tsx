@@ -18,9 +18,11 @@ export function SiteHeader() {
   }, []);
 
   return (
-    <header className={`site-header${scrolled ? " is-scrolled" : ""}`}>
+    <>
+      <a className="skip-link" href="#main-content">Skip to main content</a>
+      <header className={`site-header${scrolled ? " is-scrolled" : ""}`}>
       <div className="site-header__inner">
-        <Wordmark href="/visual-system/" />
+        <Wordmark href="/" />
         <nav className="site-header__navigation" aria-label="Primary navigation">
           {siteConfig.navigation.map((item) => (
             <Link href={item.href} key={item.href}>{item.label}</Link>
@@ -28,12 +30,13 @@ export function SiteHeader() {
         </nav>
         <div className="site-header__actions">
           <BookingTrigger className="site-header__strategy" label="Talk through my search strategy" source="navigation" />
-          <Link className="site-header__contact" href="#audit">
+          <Link className="site-header__contact" data-event="primary_cta_clicked" data-event-label="Navigation: check my clinic" data-event-source="navigation" href="/#audit">
             Check my clinic <span aria-hidden="true">↘</span>
           </Link>
         </div>
         <MobileNavigation />
       </div>
-    </header>
+      </header>
+    </>
   );
 }

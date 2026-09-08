@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ExperimentFrame } from "@/components/experiments/experiment-frame";
 import { ExperimentKai } from "@/components/experiments/experiment-kai";
 import { ExperimentRuntime } from "@/components/experiments/experiment-runtime";
@@ -29,8 +30,8 @@ export default function PrismExperimentPage() {
             </h1>
             <p className="exp-lead">KaiRank helps private clinics grow visibility across Google, Maps and AI search through healthcare SEO, technical SEO, local search and AI search optimisation.</p>
             <div className="exp-actions">
-              <a className="exp-action exp-action--primary" href="/visual-system#audit">Check my clinic <span aria-hidden="true">↘</span></a>
-              <a className="exp-action exp-action--quiet" href="/visual-system#proof">See verified results <span aria-hidden="true">↓</span></a>
+              <Link className="exp-action exp-action--primary" href="/#audit">Check my clinic <span aria-hidden="true">↘</span></Link>
+              <Link className="exp-action exp-action--quiet" href="/#proof">See verified results <span aria-hidden="true">↓</span></Link>
             </div>
           </div>
 

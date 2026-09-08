@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { KaiRobot } from "@/components/experience/kai-assistant";
 import { kaiVoiceAssets } from "@/lib/kai-voice";
@@ -210,8 +211,8 @@ export function ExperimentKai() {
           <p>I find search problems<br />for a living.</p>
           <span>Want me to check yours?</span>
           <div>
-            <a href="/visual-system#audit">Check my clinic</a>
-            <a href="/visual-system#proof">Show me proof</a>
+            <Link href="/#audit">Check my clinic</Link>
+            <Link href="/#proof">Show me proof</Link>
           </div>
         </aside>
       ) : null}

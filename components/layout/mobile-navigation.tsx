@@ -81,7 +81,7 @@ export function MobileNavigation() {
               <span aria-hidden="true">↗</span>
             </Link>
           ))}
-          <Link className="mobile-navigation__audit" href="#audit" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
+          <Link className="mobile-navigation__audit" data-event="primary_cta_clicked" data-event-label="Mobile navigation: check my clinic" data-event-source="mobile-navigation" href="/#audit" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
             <span className="data-label">05</span>
             <span>Check my clinic</span>
             <span aria-hidden="true">↘</span>

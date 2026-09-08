@@ -1,3 +1,5 @@
+import { track as trackVercelEvent } from "@vercel/analytics";
+
 export type AnalyticsEventName =
   | "diagnostic_started"
   | "diagnostic_completed"
@@ -9,11 +11,12 @@ export type AnalyticsEventName =
   | "evidence_opened"
   | "kai_opened"
   | "kai_mode_selected"
-  | "kai_dragged"
-  | "kai_thrown"
   | "kai_action"
   | "kai_voice_played"
+  | "primary_cta_clicked"
   | "full_review_requested"
+  | "full_review_confirmed"
+  | "full_review_failed"
   | "booking_opened"
   | "booking_clicked"
   | "booking_completed"
@@ -27,5 +30,18 @@ export function trackEvent(name: AnalyticsEventName, payload: AnalyticsPayload =
   window.dispatchEvent(new CustomEvent("kairank:analytics", { detail }));
 
   const analyticsWindow = window as Window & { dataLayer?: Array<Record<string, unknown>> };
-  analyticsWindow.dataLayer?.push(detail);
+  analyticsWindow.dataLayer = analyticsWindow.dataLayer ?? [];
+  analyticsWindow.dataLayer.push(detail);
+
+  const eventData = Object.fromEntries(
+    Object.entries(payload)
+      .filter((entry): entry is [string, string | number | boolean | null] => entry[1] !== undefined)
+      .slice(0, 2)
+      .map(([key, value]) => [key, typeof value === "string" ? value.slice(0, 255) : value]),
+  );
+  try {
+    trackVercelEvent(name, eventData);
+  } catch {
+    // The local data layer remains available when Vercel Analytics is disabled.
+  }
 }

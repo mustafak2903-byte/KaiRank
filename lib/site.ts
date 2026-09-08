@@ -1,10 +1,12 @@
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, "");
+
 export const siteConfig = {
   name: "KaiRank",
   legalName: "KaiRank",
   title: "KaiRank — Search visibility, engineered.",
   description:
     "Search visibility engineered for clinics across Google, Maps and AI discovery.",
-  url: "https://kairank.com",
+  url: configuredSiteUrl || "https://kairank.com",
   locale: "en_GB",
   contact: {
     email: "hello@kairank.com",
@@ -17,16 +19,17 @@ export const siteConfig = {
     aboutUrl: null,
   },
   bookingUrl: "https://cal.com/mustafa-reuzwm",
-  heroVideoUrl: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4",
+  heroVideoUrl: "/kairank-hero-v1-720.mp4",
+  heroPosterUrl: "/kairank-hero-v1-poster.jpg",
   social: {
     linkedIn: "https://www.linkedin.com/in/muhammad-mustafa-khan/",
     x: null,
   },
   navigation: [
-    { label: "Services", href: "#services" },
-    { label: "Results", href: "#proof" },
-    { label: "How We Work", href: "#process" },
-    { label: "FAQ", href: "#faq" },
+    { label: "Services", href: "/#services" },
+    { label: "Results", href: "/#proof" },
+    { label: "How We Work", href: "/#process" },
+    { label: "FAQ", href: "/#faq" },
   ],
   serviceRoutes: [
     { label: "SEO", href: "/seo/" },
@@ -35,13 +38,13 @@ export const siteConfig = {
     { label: "AI search optimisation", href: "/ai-search-optimisation/" },
     { label: "Healthcare SEO", href: "/healthcare-seo/" },
   ],
-  futureRoutes: [
+  publicRoutes: [
     "/case-studies/",
     "/case-studies/south-city-hospital/",
     "/case-studies/the-recovery-room/",
     "/about/",
-    "/insights/",
     "/contact/",
+    "/privacy/",
   ],
 } as const;
 

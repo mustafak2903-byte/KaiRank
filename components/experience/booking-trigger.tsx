@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { siteConfig } from "@/lib/site";
 
-type CalEvent = CustomEvent<{ type?: string; data?: Record<string, unknown>; namespace?: string }>;
 type CalApi = ((...args: unknown[]) => void) & {
   loaded?: boolean;
   ns?: Record<string, CalApi>;
@@ -130,10 +129,7 @@ function prepareCal(cal: CalApi) {
   if (!listenersReady) {
     api("on", {
       action: "bookingSuccessfulV2",
-      callback: (event: CalEvent) => {
-        const data = event.detail?.data ?? {};
-        trackEvent("booking_completed", { source: "cal-embed", uid: typeof data.uid === "string" ? data.uid : null });
-      },
+      callback: () => trackEvent("booking_completed", { source: "cal-embed" }),
     });
     api("on", {
       action: "linkFailed",

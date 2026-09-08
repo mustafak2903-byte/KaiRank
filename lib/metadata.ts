@@ -17,7 +17,7 @@ export function createMetadata({
   absoluteTitle = false,
 }: MetadataInput = {}): Metadata {
   const documentTitle = title ?? siteConfig.title;
-  const socialTitle = title ? `${title} — ${siteConfig.name}` : siteConfig.title;
+  const socialTitle = absoluteTitle ? documentTitle : title ? `${title} — ${siteConfig.name}` : siteConfig.title;
 
   return {
     title: absoluteTitle ? { absolute: documentTitle } : documentTitle,

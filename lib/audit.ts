@@ -301,18 +301,103 @@ export type FastCheck = {
   h1Count: number;
   viewport: boolean;
   structuredDataCount: number;
-  robotsTxt: { found: boolean; status: number | null };
-  sitemap: { found: boolean; status: number | null; url: string };
+  structuredDataValidCount: number;
+  robotsTxt: { found: boolean; status: number | null; allowsPage: boolean | null };
+  sitemap: { found: boolean; valid: boolean; status: number | null; url: string };
   checks: Array<{ id: string; label: string; status: CheckStatus; value: string }>;
 };
 
 async function inspectSupportFile(url: string) {
   try {
     const result = await safeFetch(url, { timeoutMs: 4_500, maxBytes: MAX_SUPPORT_BYTES });
-    return { found: result.status >= 200 && result.status < 400 && result.body.trim().length > 0, status: result.status };
+    return {
+      body: result.body,
+      found: result.status >= 200 && result.status < 400 && result.body.trim().length > 0,
+      finalUrl: result.finalUrl,
+      status: result.status,
+    };
   } catch {
-    return { found: false, status: null };
+    return { body: "", found: false, finalUrl: url, status: null };
   }
+}
+
+function comparableUrl(input: string) {
+  try {
+    const url = new URL(input);
+    url.hash = "";
+    if (url.pathname !== "/") url.pathname = url.pathname.replace(/\/+$/, "");
+    return url.toString();
+  } catch {
+    return input;
+  }
+}
+
+function validStructuredDataCount(html: string) {
+  const scripts = [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  return scripts.reduce((count, script) => {
+    try {
+      JSON.parse(script[1].trim());
+      return count + 1;
+    } catch {
+      return count;
+    }
+  }, 0);
+}
+
+function robotsRuleMatches(rulePath: string, requestedPath: string) {
+  const anchored = rulePath.endsWith("$");
+  const source = (anchored ? rulePath.slice(0, -1) : rulePath)
+    .replace(/[.+?^${}()|[\]\\]/g, "\\$&")
+    .replace(/\*/g, ".*");
+  try {
+    return new RegExp(`^${source}${anchored ? "$" : ""}`).test(requestedPath);
+  } catch {
+    return requestedPath.startsWith(rulePath.replace(/\$$/, ""));
+  }
+}
+
+function robotsAllowsPage(body: string, pageUrl: string): boolean | null {
+  const groups: Array<{ agents: string[]; rules: Array<{ allow: boolean; path: string }> }> = [];
+  let agents: string[] = [];
+  let rules: Array<{ allow: boolean; path: string }> = [];
+
+  const flush = () => {
+    if (agents.length) groups.push({ agents, rules });
+    agents = [];
+    rules = [];
+  };
+
+  for (const rawLine of body.split(/\r?\n/)) {
+    const line = rawLine.replace(/#.*$/, "").trim();
+    if (!line) continue;
+    const separator = line.indexOf(":");
+    if (separator < 0) continue;
+    const directive = line.slice(0, separator).trim().toLowerCase();
+    const value = line.slice(separator + 1).trim();
+    if (directive === "user-agent") {
+      if (rules.length) flush();
+      agents.push(value.toLowerCase());
+    } else if ((directive === "allow" || directive === "disallow") && agents.length) {
+      if (directive === "disallow" && !value) continue;
+      rules.push({ allow: directive === "allow", path: value });
+    }
+  }
+  flush();
+
+  const applicable = groups.filter((group) => group.agents.includes("*")).flatMap((group) => group.rules);
+  if (!groups.length) return null;
+  if (!applicable.length) return true;
+  const requested = new URL(pageUrl);
+  const path = `${requested.pathname}${requested.search}`;
+  const matches = applicable
+    .filter((rule) => robotsRuleMatches(rule.path, path))
+    .sort((a, b) => b.path.replace(/[\*$]/g, "").length - a.path.replace(/[\*$]/g, "").length || Number(b.allow) - Number(a.allow));
+  return matches[0]?.allow ?? true;
+}
+
+function isValidSitemap(body: string) {
+  const value = body.trim();
+  return /<(?:urlset|sitemapindex)\b/i.test(value) && /<loc>\s*https?:\/\//i.test(value);
 }
 
 export async function runFastCheck(url: string): Promise<FastCheck> {
@@ -325,26 +410,33 @@ export async function runFastCheck(url: string): Promise<FastCheck> {
   const viewport = Boolean(findMeta(page.body, "viewport"));
   const h1Count = page.body.match(/<h1\b[^>]*>/gi)?.length ?? 0;
   const structuredDataCount = (page.body.match(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>/gi) ?? []).length;
+  const structuredDataValidCount = validStructuredDataCount(page.body);
   const sitemapLink = findLink(page.body, "sitemap", page.finalUrl);
   const origin = new URL(page.finalUrl).origin;
   const sitemapUrl = sitemapLink ?? new URL("/sitemap.xml", origin).toString();
-  const [robotsTxt, sitemap] = await Promise.all([
+  const [robotsFile, sitemapFile] = await Promise.all([
     inspectSupportFile(new URL("/robots.txt", origin).toString()),
     inspectSupportFile(sitemapUrl),
   ]);
 
   const okStatus = page.status >= 200 && page.status < 400;
+  const canonicalMatches = canonical ? comparableUrl(canonical) === comparableUrl(page.finalUrl) : false;
+  const metaBlocksIndexing = /(?:^|[\s,])noindex(?:$|[\s,])/i.test(robotsMeta ?? "");
+  const robotsAllows = robotsFile.found ? robotsAllowsPage(robotsFile.body, page.finalUrl) : null;
+  const sitemapValid = sitemapFile.found && isValidSitemap(sitemapFile.body);
+  const robotsTxt = { found: robotsFile.found, status: robotsFile.status, allowsPage: robotsAllows };
+  const sitemap = { found: sitemapFile.found, valid: sitemapValid, status: sitemapFile.status, url: sitemapUrl };
   const checks: FastCheck["checks"] = [
     { id: "response", label: "Public response", status: okStatus ? "pass" : "fail", value: `${page.status} · ${page.responseMs} ms` },
     { id: "https", label: "HTTPS", status: page.finalUrl.startsWith("https://") ? "pass" : "attention", value: page.finalUrl.startsWith("https://") ? "Secure" : "Not secure" },
-    { id: "title", label: "Page title", status: title ? "pass" : "fail", value: title ? `${title.length} characters` : "Missing" },
-    { id: "description", label: "Meta description", status: metaDescription ? "pass" : "attention", value: metaDescription ? `${metaDescription.length} characters` : "Missing" },
-    { id: "canonical", label: "Canonical URL", status: canonical ? "pass" : "attention", value: canonical ? "Declared" : "Not declared" },
+    { id: "title", label: "Page title", status: !title ? "fail" : title.length >= 10 && title.length <= 65 ? "pass" : "attention", value: title ? `${title.length} characters` : "Missing" },
+    { id: "description", label: "Meta description", status: !metaDescription ? "attention" : metaDescription.length >= 70 && metaDescription.length <= 170 ? "pass" : "attention", value: metaDescription ? `${metaDescription.length} characters` : "Missing" },
+    { id: "canonical", label: "Canonical URL", status: canonicalMatches ? "pass" : "attention", value: !canonical ? "Not declared" : canonicalMatches ? "Self-referencing" : "Points elsewhere" },
     { id: "h1", label: "Primary heading", status: h1Count === 1 ? "pass" : h1Count === 0 ? "fail" : "attention", value: h1Count === 1 ? "One H1" : `${h1Count} H1 elements` },
     { id: "viewport", label: "Mobile viewport", status: viewport ? "pass" : "fail", value: viewport ? "Declared" : "Missing" },
-    { id: "structured", label: "Structured data", status: structuredDataCount > 0 ? "pass" : "info", value: structuredDataCount > 0 ? `${structuredDataCount} JSON-LD block${structuredDataCount === 1 ? "" : "s"}` : "Not detected" },
-    { id: "robots", label: "robots.txt", status: robotsTxt.found ? "pass" : "attention", value: robotsTxt.found ? "Found" : "Not found" },
-    { id: "sitemap", label: "Sitemap", status: sitemap.found ? "pass" : "attention", value: sitemap.found ? "Found" : "Not found" },
+    { id: "structured", label: "Structured data", status: structuredDataValidCount > 0 ? "pass" : structuredDataCount > 0 ? "attention" : "info", value: structuredDataValidCount > 0 ? `${structuredDataValidCount} valid JSON-LD block${structuredDataValidCount === 1 ? "" : "s"}` : structuredDataCount > 0 ? "JSON-LD could not be parsed" : "Not detected" },
+    { id: "robots", label: "Indexing permission", status: metaBlocksIndexing || robotsAllows === false ? "fail" : robotsTxt.found && robotsAllows === true ? "pass" : "attention", value: metaBlocksIndexing ? "Page declares noindex" : robotsAllows === false ? "Blocked by robots.txt" : robotsTxt.found ? "Allowed by robots.txt" : "robots.txt not found" },
+    { id: "sitemap", label: "Sitemap", status: sitemapValid ? "pass" : "attention", value: sitemapValid ? "Valid XML sitemap" : sitemapFile.found ? "File is not a valid sitemap" : "Not found" },
   ];
 
   return {
@@ -361,8 +453,9 @@ export async function runFastCheck(url: string): Promise<FastCheck> {
     h1Count,
     viewport,
     structuredDataCount,
+    structuredDataValidCount,
     robotsTxt,
-    sitemap: { ...sitemap, url: sitemapUrl },
+    sitemap,
     checks,
   };
 }
