@@ -63,6 +63,7 @@ export function MobileNavigation() {
 
       <div
         className={`mobile-navigation__panel${open ? " is-open" : ""}`}
+        data-lenis-prevent
         id="mobile-navigation-panel"
         ref={panelRef}
         aria-hidden={!open}

@@ -22,6 +22,146 @@ html.lenis body {
   --v8-shadow: 0 2rem 7rem rgba(0, 0, 0, 0.22);
 }
 
+/* Mobile command menu: a restrained "visibility sweep" for pointer and keyboard intent. */
+@media (max-width: 62rem) {
+  .v8-experience .mobile-navigation__panel {
+    height: 100svh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a,
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      border-color 240ms ease,
+      box-shadow 320ms ease,
+      color 220ms ease;
+  }
+
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap {
+    overflow: visible;
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a::before,
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(116, 136, 255, 0.2), rgba(130, 212, 178, 0.075) 58%, transparent 94%),
+      radial-gradient(circle at 12% 50%, rgba(200, 208, 255, 0.12), transparent 38%);
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-14%) scaleX(0.72);
+    transform-origin: left center;
+    transition:
+      opacity 240ms ease,
+      transform 420ms var(--ease-signal);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a > span,
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap > button {
+    position: relative;
+    z-index: 1;
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a > span:first-child {
+    transition: color 220ms ease, transform 360ms var(--ease-signal);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a > span:nth-child(2),
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap > button {
+    transition: color 220ms ease, transform 360ms var(--ease-signal);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a > span:last-child,
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap > button > span {
+    transition:
+      color 220ms ease,
+      text-shadow 260ms ease,
+      transform 360ms var(--ease-signal);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a:focus-visible,
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap > button:focus-visible {
+    outline: 2px solid var(--v7-mint);
+    outline-offset: -3px;
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a:focus-visible,
+  .v8-experience .mobile-navigation__panel nav > a:active,
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap:focus-within {
+    border-color: rgba(200, 208, 255, 0.38);
+    box-shadow: inset 0 1px rgba(200, 208, 255, 0.04), 0 0 2.5rem rgba(116, 136, 255, 0.08);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a:focus-visible::before,
+  .v8-experience .mobile-navigation__panel nav > a:active::before,
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap:focus-within::before {
+    opacity: 1;
+    transform: translateX(0) scaleX(1);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a:focus-visible > span:first-child,
+  .v8-experience .mobile-navigation__panel nav > a:active > span:first-child {
+    color: var(--v7-mint);
+    transform: translateX(0.15rem);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a:focus-visible > span:nth-child(2),
+  .v8-experience .mobile-navigation__panel nav > a:active > span:nth-child(2),
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap:focus-within > button {
+    color: #fff;
+    transform: translateX(0.48rem);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a:focus-visible > span:last-child,
+  .v8-experience .mobile-navigation__panel nav > a:active > span:last-child,
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap:focus-within > button > span {
+    color: var(--v7-mint);
+    text-shadow: 0 0 1.2rem rgba(130, 212, 178, 0.46);
+    transform: translate(0.34rem, -0.22rem);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (max-width: 62rem) {
+  .v8-experience .mobile-navigation__panel nav > a:hover,
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap:hover {
+    border-color: rgba(200, 208, 255, 0.38);
+    box-shadow: inset 0 1px rgba(200, 208, 255, 0.04), 0 0 2.5rem rgba(116, 136, 255, 0.08);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a:hover::before,
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap:hover::before {
+    opacity: 1;
+    transform: translateX(0) scaleX(1);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a:hover > span:first-child {
+    color: var(--v7-mint);
+    transform: translateX(0.15rem);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a:hover > span:nth-child(2),
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap:hover > button {
+    color: #fff;
+    transform: translateX(0.48rem);
+  }
+
+  .v8-experience .mobile-navigation__panel nav > a:hover > span:last-child,
+  .v8-experience .mobile-navigation__panel nav > .booking-trigger-wrap:hover > button > span {
+    color: var(--v7-mint);
+    text-shadow: 0 0 1.2rem rgba(130, 212, 178, 0.46);
+    transform: translate(0.34rem, -0.22rem);
+  }
+}
+
 /* The command bar becomes quieter once the opening statement has done its job. */
 @media (min-width: 769px) {
   .v8-experience .site-header.is-scrolled .site-header__inner {
