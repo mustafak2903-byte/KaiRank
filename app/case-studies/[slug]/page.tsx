@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return createMetadata({
     title: `${study.client} SEO case study`,
     description: study.description,
-    path: `/case-studies/${study.slug}/`,
+    path: `/case-studies/${study.slug}`,
   });
 }
 

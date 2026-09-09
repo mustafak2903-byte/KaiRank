@@ -43,6 +43,7 @@ type ReviewPayload = {
   numberOfLocations?: unknown;
   auditResults?: unknown;
   companyWebsite?: unknown;
+  attribution?: unknown;
 };
 
 export async function POST(request: NextRequest) {
@@ -103,6 +104,13 @@ export async function POST(request: NextRequest) {
         })
       : [],
   } : null;
+  const rawAttribution = payload.attribution && typeof payload.attribution === "object"
+    ? payload.attribution as Record<string, unknown>
+    : null;
+  const attribution = rawAttribution ? Object.fromEntries(
+    ["landingPath", "referrerHost", "utmSource", "utmMedium", "utmCampaign", "utmContent", "utmTerm"]
+      .map((key) => [key, typeof rawAttribution[key] === "string" ? rawAttribution[key].slice(0, 200) : null]),
+  ) : null;
 
   const webhook = process.env.AUDIT_LEAD_WEBHOOK_URL;
   if (!webhook) {
@@ -138,6 +146,7 @@ export async function POST(request: NextRequest) {
         businessName: businessName || null,
         numberOfLocations: numberOfLocations || null,
         auditResults,
+        attribution,
         source: "kairank-visibility-diagnostic",
         createdAt: new Date().toISOString(),
       }),

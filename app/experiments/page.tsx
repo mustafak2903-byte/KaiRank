@@ -6,7 +6,7 @@ import { createMetadata } from "@/lib/metadata";
 export const metadata: Metadata = createMetadata({
   title: "Art direction lab",
   description: "Internal KaiRank art-direction experiments for search visibility.",
-  path: "/experiments/",
+  path: "/experiments",
   noIndex: true,
 });
 

@@ -15,13 +15,13 @@ const modes: Array<{ id: Mode; label: string; note: string }> = [
 
 const topics: Array<{ id: Topic; label: string; href?: string }> = [
   { id: "about", label: "What does KaiRank do?", href: "/#services" },
-  { id: "diagnostic", label: "What does the diagnostic check?", href: "/#audit" },
+  { id: "diagnostic", label: "What does the diagnostic check?", href: "/search-visibility-diagnostic" },
   { id: "results", label: "Show me verified results", href: "/#proof" },
-  { id: "local", label: "What is Local SEO?", href: "/local-seo/" },
-  { id: "ai", label: "What is AI Search Optimisation?", href: "/ai-search-optimisation/" },
-  { id: "compare", label: "Can you compare my clinic?", href: "/#audit" },
+  { id: "local", label: "What is Local SEO?", href: "/local-seo" },
+  { id: "ai", label: "What is AI Search Optimisation?", href: "/ai-search-optimisation" },
+  { id: "compare", label: "Can you compare my clinic?", href: "/search-visibility-diagnostic" },
   { id: "next", label: "What happens after the diagnostic?", href: "/#process" },
-  { id: "talk", label: "Can I talk to someone?", href: "/contact/" },
+  { id: "talk", label: "Can I talk to someone?", href: "/contact" },
 ];
 
 const answers: Record<Topic, string> = {

@@ -1,6 +1,8 @@
 export type ServiceDefinition = {
   slug: string;
   navLabel: string;
+  seoTitle: string;
+  seoDescription: string;
   eyebrow: string;
   title: string;
   accent: string;
@@ -17,6 +19,8 @@ export const services: readonly ServiceDefinition[] = [
   {
     slug: "seo",
     navLabel: "SEO",
+    seoTitle: "SEO for clinics and private healthcare",
+    seoDescription: "SEO for clinics that connects technical access, treatment demand, local evidence and measurable patient action across Google, Maps and AI search.",
     eyebrow: "Search visibility system",
     title: "Turn clinic expertise into",
     accent: "discoverable demand.",
@@ -48,6 +52,8 @@ export const services: readonly ServiceDefinition[] = [
   {
     slug: "technical-seo",
     navLabel: "Technical SEO",
+    seoTitle: "Technical SEO audit service for private clinics",
+    seoDescription: "A technical SEO audit service for private clinics covering crawling, rendering, indexation, canonicalisation, internal architecture and mobile performance.",
     eyebrow: "Access before amplification",
     title: "Make every valuable clinic page",
     accent: "reachable and interpretable.",
@@ -79,6 +85,8 @@ export const services: readonly ServiceDefinition[] = [
   {
     slug: "local-seo",
     navLabel: "Local SEO",
+    seoTitle: "Local SEO for medical clinics",
+    seoDescription: "Local SEO for medical clinics that connects treatments, locations, clinicians, Google Business Profile signals and evidence patients can evaluate.",
     eyebrow: "Location meets treatment intent",
     title: "Help nearby patients understand",
     accent: "why this clinic is relevant.",
@@ -110,6 +118,8 @@ export const services: readonly ServiceDefinition[] = [
   {
     slug: "ai-search-optimisation",
     navLabel: "AI search optimisation",
+    seoTitle: "AI search optimisation for healthcare",
+    seoDescription: "AI search optimisation for healthcare built on clear entities, clinical expertise, services, locations, citations and useful first-party evidence.",
     eyebrow: "Entity and evidence clarity",
     title: "Make the clinic easier for",
     accent: "emerging search systems to interpret.",
@@ -141,6 +151,8 @@ export const services: readonly ServiceDefinition[] = [
   {
     slug: "healthcare-seo",
     navLabel: "Healthcare SEO",
+    seoTitle: "SEO for healthcare and medical clinics",
+    seoDescription: "Healthcare SEO for private clinics that makes expertise, authorship, clinical clarity and patient comprehension part of the search experience.",
     eyebrow: "High-consideration search",
     title: "Build visibility with the level of",
     accent: "trust healthcare demands.",

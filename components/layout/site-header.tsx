@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Wordmark } from "@/components/brand/wordmark";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
@@ -8,7 +9,11 @@ import { MobileNavigation } from "@/components/layout/mobile-navigation";
 import { siteConfig } from "@/lib/site";
 
 export function SiteHeader() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const isCurrent = (href: string) => pathname === href
+    || pathname.startsWith(`${href}/`)
+    || (href === "/services" && siteConfig.serviceRoutes.some((route) => route.href === pathname));
 
   useEffect(() => {
     const update = () => setScrolled(window.scrollY > 28);
@@ -25,12 +30,12 @@ export function SiteHeader() {
         <Wordmark href="/" />
         <nav className="site-header__navigation" aria-label="Primary navigation">
           {siteConfig.navigation.map((item) => (
-            <Link href={item.href} key={item.href}>{item.label}</Link>
+            <Link aria-current={isCurrent(item.href) ? "page" : undefined} href={item.href} key={item.href}>{item.label}</Link>
           ))}
         </nav>
         <div className="site-header__actions">
           <BookingTrigger className="site-header__strategy" label="Talk through my search strategy" source="navigation" />
-          <Link className="site-header__contact" data-event="primary_cta_clicked" data-event-label="Navigation: check my clinic" data-event-source="navigation" href="/#audit">
+          <Link className="site-header__contact" data-event="primary_cta_clicked" data-event-label="Navigation: check my clinic" data-event-source="navigation" href="/search-visibility-diagnostic">
             Check my clinic <span aria-hidden="true">↘</span>
           </Link>
         </div>

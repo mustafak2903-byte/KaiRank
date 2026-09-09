@@ -27,6 +27,8 @@ let activeBookingTrigger: HTMLButtonElement | null = null;
 let calInstance: CalApi | null = null;
 let modalCloseObserver: MutationObserver | null = null;
 let modalCloseTimer: number | null = null;
+let modalOpenObserver: MutationObserver | null = null;
+let modalOpenTimer: number | null = null;
 
 function restoreBookingFocus() {
   window.requestAnimationFrame(() => {
@@ -119,10 +121,6 @@ function prepareCal(cal: CalApi) {
       light: { "cal-brand": "#6e84ff" },
       dark: { "cal-brand": "#aab7ff" },
     },
-    styles: {
-      body: { background: "#080b10" },
-      eventTypeListItem: { background: "#10141b" },
-    },
   });
   api("preload", { calLink });
 
@@ -178,43 +176,59 @@ async function loadCalEmbed() {
 }
 
 function trackWhenModalOpens(source: string) {
-  const startedAt = performance.now();
-  const check = () => {
-    if (isCalModalOpen()) {
-      trackEvent("booking_opened", { source, experience: "cal-popup" });
-      document.body.classList.add("has-booking-open");
-      const modal = document.querySelector<HTMLElement>("cal-modal-box");
-      modalCloseObserver?.disconnect();
-      if (modal) {
-        const restoreAfterClose = () => {
-          modalCloseObserver?.disconnect();
-          modalCloseObserver = null;
-          if (modalCloseTimer !== null) window.clearTimeout(modalCloseTimer);
-          modalCloseTimer = null;
-          document.body.classList.remove("has-booking-open");
-          document.body.style.overflow = "";
-          restoreBookingFocus();
-        };
-        modal.addEventListener("close", restoreAfterClose, { once: true });
-        modalCloseObserver = new MutationObserver(() => {
-          if (isCalModalOpen()) return;
-          restoreAfterClose();
-        });
-        modalCloseObserver.observe(modal, { attributes: true, attributeFilter: ["state", "style"] });
-        const checkForClose = () => {
-          if (!isCalModalOpen()) {
-            restoreAfterClose();
-            return;
-          }
-          modalCloseTimer = window.setTimeout(checkForClose, 120);
-        };
-        modalCloseTimer = window.setTimeout(checkForClose, 120);
-      }
-      return;
-    }
-    if (performance.now() - startedAt < 5000) window.requestAnimationFrame(check);
+  modalOpenObserver?.disconnect();
+  modalOpenObserver = null;
+  if (modalOpenTimer !== null) window.clearTimeout(modalOpenTimer);
+  modalOpenTimer = null;
+
+  const stopWatching = () => {
+    modalOpenObserver?.disconnect();
+    modalOpenObserver = null;
+    if (modalOpenTimer !== null) window.clearTimeout(modalOpenTimer);
+    modalOpenTimer = null;
   };
-  window.requestAnimationFrame(check);
+
+  const check = () => {
+    if (!isCalModalOpen()) return;
+    stopWatching();
+    trackEvent("booking_opened", { source, experience: "cal-popup" });
+    document.body.classList.add("has-booking-open");
+    const modal = document.querySelector<HTMLElement>("cal-modal-box");
+    modalCloseObserver?.disconnect();
+    if (!modal) return;
+
+    const restoreAfterClose = () => {
+      modalCloseObserver?.disconnect();
+      modalCloseObserver = null;
+      if (modalCloseTimer !== null) window.clearTimeout(modalCloseTimer);
+      modalCloseTimer = null;
+      document.body.classList.remove("has-booking-open");
+      document.body.style.overflow = "";
+      restoreBookingFocus();
+    };
+    modal.addEventListener("close", restoreAfterClose, { once: true });
+    modalCloseObserver = new MutationObserver(() => {
+      if (isCalModalOpen()) return;
+      restoreAfterClose();
+    });
+    modalCloseObserver.observe(modal, { attributes: true, attributeFilter: ["state", "style"] });
+    const checkForClose = () => {
+      if (!isCalModalOpen()) {
+        restoreAfterClose();
+        return;
+      }
+      modalCloseTimer = window.setTimeout(checkForClose, 120);
+    };
+    modalCloseTimer = window.setTimeout(checkForClose, 120);
+  };
+
+  modalOpenObserver = new MutationObserver(check);
+  modalOpenObserver.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ["state", "style"] });
+  modalOpenTimer = window.setTimeout(() => {
+    stopWatching();
+    window.dispatchEvent(new CustomEvent("kairank:cal-link-failed", { detail: { source } }));
+  }, 30000);
+  check();
 }
 
 function openCalModal(config: Record<string, string>) {

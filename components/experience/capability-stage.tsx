@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { trackEvent } from "@/lib/analytics";
 
 const capabilities = [
   {
     id: "technical",
+    href: "/technical-seo",
     index: "01",
     title: "Technical SEO",
     label: "Make every important page discoverable.",
@@ -13,6 +15,7 @@ const capabilities = [
   },
   {
     id: "intent",
+    href: "/seo",
     index: "02",
     title: "Search strategy & on-page SEO",
     label: "Target searches capable of creating meaningful demand.",
@@ -20,6 +23,7 @@ const capabilities = [
   },
   {
     id: "local",
+    href: "/local-seo",
     index: "03",
     title: "Local SEO",
     label: "Help nearby patients find and evaluate the clinic.",
@@ -27,6 +31,7 @@ const capabilities = [
   },
   {
     id: "content",
+    href: "/healthcare-seo",
     index: "04",
     title: "Content & authority",
     label: "Turn clinical expertise into evidence.",
@@ -34,6 +39,7 @@ const capabilities = [
   },
   {
     id: "entity",
+    href: "/ai-search-optimisation",
     index: "05",
     title: "AI search optimisation",
     label: "Clarify the clinic for emerging search systems.",
@@ -192,6 +198,10 @@ export function CapabilityStage() {
           );
         })}
       </div>
+      <nav className="capability-stage__routes" aria-label="Explore KaiRank services">
+        {capabilities.map((capability) => <Link href={capability.href} key={capability.href}><span>{capability.title}</span><i aria-hidden="true">↗</i></Link>)}
+        <Link className="capability-stage__routes-all" href="/services"><span>View all services</span><i aria-hidden="true">↗</i></Link>
+      </nav>
     </div>
   );
 }

@@ -2,9 +2,9 @@ import VisualSystemPage from "@/app/visual-system/page";
 import { createMetadata } from "@/lib/metadata";
 
 export const metadata = createMetadata({
-  title: "Search visibility for private clinics — KaiRank",
+  title: "KaiRank | SEO & Search Visibility for Private Clinics",
   description:
-    "KaiRank helps private clinics improve discovery across Google, Maps and AI search through technical SEO, local SEO, search strategy and evidence-led content.",
+    "Healthcare SEO, technical SEO, local search and AI search optimisation for private clinics. Become easier to find across Google, Maps and AI search.",
   path: "/",
   absoluteTitle: true,
 });

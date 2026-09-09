@@ -13,9 +13,9 @@ export async function generateMetadata({ params }: { params: Promise<{ service: 
   const service = getService(slug);
   if (!service) return {};
   return createMetadata({
-    title: `${service.navLabel} for private clinics`,
-    description: service.description,
-    path: `/${service.slug}/`,
+    title: service.seoTitle,
+    description: service.seoDescription,
+    path: `/${service.slug}`,
   });
 }
 

@@ -1,12 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { siteConfig } from "@/lib/site";
 
 export function MobileNavigation() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const isCurrent = (href: string) => pathname === href
+    || pathname.startsWith(`${href}/`)
+    || (href === "/services" && siteConfig.serviceRoutes.some((route) => route.href === pathname));
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -72,6 +77,7 @@ export function MobileNavigation() {
         <nav aria-label="Mobile navigation">
           {siteConfig.navigation.map((item, index) => (
             <Link
+              aria-current={isCurrent(item.href) ? "page" : undefined}
               href={item.href}
               key={item.href}
               onClick={() => setOpen(false)}
@@ -82,7 +88,7 @@ export function MobileNavigation() {
               <span aria-hidden="true">↗</span>
             </Link>
           ))}
-          <Link className="mobile-navigation__audit" data-event="primary_cta_clicked" data-event-label="Mobile navigation: check my clinic" data-event-source="mobile-navigation" href="/#audit" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
+          <Link className="mobile-navigation__audit" data-event="primary_cta_clicked" data-event-label="Mobile navigation: check my clinic" data-event-source="mobile-navigation" href="/search-visibility-diagnostic" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
             <span className="data-label">05</span>
             <span>Check my clinic</span>
             <span aria-hidden="true">↘</span>

@@ -46,7 +46,7 @@ export function RecoveryProgress() {
           </dl>
           <p className="v8-recovery__method">Technical repairs, local search work and treatment-page architecture expanded measurable discovery. The 214 figure records clicks to booking actions—not completed bookings.</p>
           <div className="v9-recovery__links">
-            <Link className="recovery-source-link" data-event="evidence_opened" data-event-label="The Recovery Room case study" href="/case-studies/the-recovery-room/">Read the evidence ledger <span aria-hidden="true">↗</span></Link>
+            <Link className="recovery-source-link" data-event="evidence_opened" data-event-label="The Recovery Room case study" href="/case-studies/the-recovery-room">Read the evidence ledger <span aria-hidden="true">↗</span></Link>
             <a className="recovery-source-link recovery-source-link--quiet" data-event="evidence_opened" data-event-label="The Recovery Room source report" href="https://drive.google.com/file/d/1J4ZsFBqIM2yaaLEP7uJljvjyYRoD-cLO/view?usp=sharing" target="_blank" rel="noreferrer">Open source report <span aria-hidden="true">↗</span></a>
           </div>
         </div>

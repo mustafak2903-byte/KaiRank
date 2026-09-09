@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
+import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
-import type { CaseStudyDefinition } from "@/lib/marketing-content";
+import { services, type CaseStudyDefinition, type ServiceDefinition } from "@/lib/marketing-content";
 import { siteConfig } from "@/lib/site";
 
 export function CaseStudyPage({ study }: { study: CaseStudyDefinition }) {
-  const url = `${siteConfig.url}/case-studies/${study.slug}/`;
+  const url = `${siteConfig.url}/case-studies/${study.slug}`;
+  const relatedSlugs = study.slug === "the-recovery-room"
+    ? ["technical-seo", "local-seo", "seo"]
+    : ["healthcare-seo", "technical-seo", "ai-search-optimisation"];
+  const relatedServices = relatedSlugs.map((slug) => services.find((service) => service.slug === slug)).filter((service): service is ServiceDefinition => Boolean(service));
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -27,6 +32,7 @@ export function CaseStudyPage({ study }: { study: CaseStudyDefinition }) {
           <div className="case-hero__grid" aria-hidden="true" />
           <div className="container case-hero__inner">
             <div className="case-hero__copy" data-reveal>
+              <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Case Studies", href: "/case-studies" }, { label: study.client, href: `/case-studies/${study.slug}` }]} />
               <span className="data-label">Verified case study · {study.period}</span>
               <p className="case-hero__client">{study.client} · {study.market}</p>
               <h1>{study.title}<br /><em>{study.accent}</em></h1>
@@ -66,12 +72,20 @@ export function CaseStudyPage({ study }: { study: CaseStudyDefinition }) {
           </div>
         </section>
 
+        <section className="case-services" aria-labelledby="case-services-title">
+          <div className="container">
+            <div className="marketing-section__index data-label"><span>Relevant capability</span><span>Follow the work behind the result</span></div>
+            <h2 id="case-services-title">Explore the connected service layers.</h2>
+            <div>{relatedServices.map((service) => <Link href={`/${service.slug}`} key={service.slug}><span className="data-label">{service.eyebrow}</span><strong>{service.navLabel}</strong><i aria-hidden="true">↗</i></Link>)}</div>
+          </div>
+        </section>
+
         <section className="marketing-conversion" aria-labelledby="case-conversion-title" data-kai-avoid>
           <div className="container marketing-conversion__inner">
             <span className="data-label">Apply the evidence</span>
             <h2 id="case-conversion-title">Which constraint is limiting your clinic?</h2>
             <p>Start with public technical evidence, or talk through one priority treatment and location.</p>
-            <div className="v3-actions"><Link className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label={`${study.slug}: diagnostic`} data-event-source="case-study-final" href="/#audit">Check my clinic <span aria-hidden="true">↗</span></Link><BookingTrigger className="v3-action v3-action--text" label="Talk through my search strategy" source={`${study.slug}-final`} /></div>
+            <div className="v3-actions"><Link className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label={`${study.slug}: diagnostic`} data-event-source="case-study-final" href="/search-visibility-diagnostic">Check my clinic <span aria-hidden="true">↗</span></Link><BookingTrigger className="v3-action v3-action--text" label="Talk through my search strategy" source={`${study.slug}-final`} /></div>
           </div>
         </section>
       </article>

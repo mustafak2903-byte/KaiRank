@@ -20,7 +20,7 @@ export const metadata = createMetadata({
   title: "Search visibility for private clinics",
   description:
     "KaiRank helps private clinics improve discovery across Google, Maps and AI search through technical SEO, local SEO, search strategy, content and AI-search optimisation.",
-  path: "/visual-system/",
+  path: "/visual-system",
   noIndex: true,
 });
 
@@ -86,7 +86,7 @@ const structuredData = {
       "@id": `${siteConfig.url}/#founder`,
       name: siteConfig.founder.name,
       jobTitle: "Founder and search strategist",
-      url: `${siteConfig.url}/about/`,
+      url: `${siteConfig.url}/about`,
       sameAs: [siteConfig.founder.linkedIn],
       worksFor: { "@id": `${siteConfig.url}/#organisation` },
     },
@@ -198,7 +198,7 @@ export default function VisualSystemPage() {
                 <span className="data-label">Supporting proof / South City Hospital</span>
                 <h3>Scale without losing clinical structure.</h3>
                 <p>From roughly 250 ranking keywords in July 2025 to 3,900 in May 2026, a connected service-and-doctor architecture expanded discovery across specialties, services and individual doctor profiles.</p>
-                <Link data-event="evidence_opened" data-event-label="South City Hospital case study" href="/case-studies/south-city-hospital/">Read verified case study <span aria-hidden="true">↗</span></Link>
+                <Link data-event="evidence_opened" data-event-label="South City Hospital case study" href="/case-studies/south-city-hospital">Read verified case study <span aria-hidden="true">↗</span></Link>
               </div>
               <dl>
                 <div><dt>46K+</dt><dd>monthly organic visits</dd></div>

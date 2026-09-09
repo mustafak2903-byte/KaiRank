@@ -49,6 +49,25 @@ type PageSpeedResponse = {
 
 type ApiError = { code?: string; message?: string };
 
+function reviewAttribution() {
+  const params = new URLSearchParams(window.location.search);
+  let referrerHost: string | null = null;
+  try {
+    referrerHost = document.referrer ? new URL(document.referrer).hostname : null;
+  } catch {
+    referrerHost = null;
+  }
+  return {
+    landingPath: window.location.pathname,
+    referrerHost,
+    utmSource: params.get("utm_source"),
+    utmMedium: params.get("utm_medium"),
+    utmCampaign: params.get("utm_campaign"),
+    utmContent: params.get("utm_content"),
+    utmTerm: params.get("utm_term"),
+  };
+}
+
 const resultGroups = [
   { title: "Technical access", ids: ["response", "https"] },
   { title: "Page fundamentals", ids: ["title", "description", "h1"] },
@@ -185,6 +204,7 @@ function FullReviewForm({
             responseMs: auditResults.responseMs,
             checks: auditResults.checks.map(({ id, status }) => ({ id, status })),
           },
+          attribution: reviewAttribution(),
         }),
       });
       const payload = (await response.json()) as ApiError;
@@ -224,7 +244,7 @@ function FullReviewForm({
             </select>
           </label>
           <button type="submit" disabled={state === "sending"}>{state === "sending" ? "Confirming…" : "Request my competitive search map"}<span aria-hidden="true">↗</span></button>
-          <p className="audit-review__privacy">Submitting sends these details to KaiRank so the requested review can be delivered. <Link href="/privacy/">Read the privacy notice.</Link></p>
+          <p className="audit-review__privacy">Submitting sends these details and limited campaign attribution to KaiRank so the requested review can be delivered. <Link href="/privacy">Read the privacy notice.</Link></p>
           {emailError ? <p className="audit-review__message is-error" id="review-email-error" role="alert">{emailError}</p> : null}
           {message ? <p className={`audit-review__message is-${state}`} role={state === "error" ? "alert" : "status"}>{message}{state === "error" ? <> <a href={`mailto:${siteConfig.contact.email}`}>Email KaiRank instead <span aria-hidden="true">↗</span></a></> : null}</p> : null}
         </form>

@@ -2,7 +2,7 @@
 
 The production Next.js website for KaiRank: a founder-led search visibility practice for private clinics across Google, Maps and AI discovery.
 
-The production homepage is `/`. It combines the approved editorial system with a continuous patient-search journey, five service routes, verified healthcare evidence, a progressive Search Visibility Diagnostic, the Kai site guide and a lazy Cal.com booking modal. `/visual-system` and `/experiments/*` remain non-indexable review routes.
+The production homepage is `/`. It combines the approved editorial system with a continuous patient-search journey, five focused service routes, verified healthcare evidence, a progressive Search Visibility Diagnostic, the Kai site guide and a lazy Cal.com booking modal. Crawlable Services, Case Studies and Insights hubs connect the wider search architecture. `/visual-system` and `/experiments/*` remain non-indexable review routes.
 
 ## Run locally
 
@@ -40,6 +40,19 @@ npm run build
 - Enable Vercel Web Analytics and Speed Insights.
 - Update the Cal.com profile and event names to match KaiRank's private-clinic positioning.
 - Run the full diagnostic, visibility-review delivery and Cal.com booking flow on the deployed Preview URL before promoting it.
+- Add a Google Search Console Domain property after DNS is active, submit `/sitemap.xml` and inspect the homepage, service hub, service pages, case-study hub and diagnostic.
+- Keep one canonical convention: production URLs do not use a trailing slash, and slash variants redirect to the canonical URL.
+
+## Search architecture
+
+- `/services` — crawlable service hub
+- `/seo`, `/healthcare-seo`, `/technical-seo`, `/local-seo`, `/ai-search-optimisation` — distinct commercial query clusters
+- `/case-studies` and `/case-studies/*` — verified evidence with source and limitation context
+- `/search-visibility-diagnostic` — standalone acquisition and diagnostic route
+- `/insights` and `/insights/*` — founder-authored, evidence-led field notes
+- `/about`, `/contact`, `/privacy` — accountability, contact and legal context
+
+Do not create city, treatment or clinic-specialty variants unless each page represents a real audience need, distinct expertise and useful evidence. The homepage positions the entity and routes authority; dedicated pages own the commercial and informational query clusters.
 
 ## Structure
 
@@ -72,3 +85,5 @@ See `docs/v3-implementation-notes.md` for the creative rationale, verified evide
 See `docs/v5-implementation-notes.md` for the final homepage/product architecture, live audit verification, Kai ownership finding, competitor-provider boundary and remaining integrations.
 
 See `docs/v6-implementation-notes.md` for the corrective journey, interaction bug fix, evolved Kai physics, lazy Cal.com popup and final QA boundaries.
+
+See `docs/launch-runbook.md` for search ownership, account actions, release gates and the live launch sequence.

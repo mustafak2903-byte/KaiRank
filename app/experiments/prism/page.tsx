@@ -9,7 +9,7 @@ import { createMetadata } from "@/lib/metadata";
 export const metadata: Metadata = createMetadata({
   title: "KaiRank | SEO & Search Visibility for Private Clinics",
   description: "Healthcare SEO, technical SEO, local search and AI search optimisation for private clinics. KaiRank helps healthcare businesses become easier to find across Google, Maps and AI search.",
-  path: "/experiments/prism/",
+  path: "/experiments/prism",
   noIndex: true,
   absoluteTitle: true,
 });
