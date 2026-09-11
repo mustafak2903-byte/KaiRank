@@ -33,11 +33,18 @@ export function InsightPage({ insight }: { insight: InsightDefinition }) {
       <article className="insight-article">
         <header className="insight-hero">
           <div className="insight-hero__grid" aria-hidden="true" />
-          <div className="container insight-hero__inner">
-            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: insight.category, href: `/insights/${insight.slug}` }]} />
-            <div className="insight-hero__meta data-label"><span>{insight.category}</span><span>{displayDate(insight.published)}</span><span>{insight.readTime}</span></div>
-            <h1>{insight.title}<br /><em>{insight.accent}</em></h1>
-            <p>{insight.description}</p>
+          <div className="container insight-hero__inner insight-hero__layout">
+            <div className="insight-hero__copy">
+              <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }, { label: insight.category, href: `/insights/${insight.slug}` }]} />
+              <div className="insight-hero__meta data-label"><span>{insight.category}</span><span>{displayDate(insight.published)}</span><span>{insight.readTime}</span></div>
+              <h1>{insight.title}<br /><em>{insight.accent}</em></h1>
+              <p>{insight.description}</p>
+            </div>
+            <aside className="insight-hero__register" aria-label="Article outline">
+              <header><span className="data-label">Field note register</span><span>{insight.sections.length} observations</span></header>
+              <p>{insight.takeaway}</p>
+              <nav aria-label="On this page">{insight.sections.map((section, index) => <a href={`#insight-section-${index + 1}`} key={section.title}><span>0{index + 1}</span>{section.title}<i aria-hidden="true">↓</i></a>)}</nav>
+            </aside>
           </div>
         </header>
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SearchSignalField } from "@/components/experience/search-signal-field";
 import { VisibilityAudit } from "@/components/experience/visibility-audit";
 import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
+import { DiagnosticSignalInstrument } from "@/components/marketing/hero-instruments";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { createMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site";
@@ -27,22 +28,19 @@ export default function SearchVisibilityDiagnosticPage() {
   return (
     <MarketingShell structuredData={structuredData}>
       <section className="diagnostic-hero" aria-labelledby="diagnostic-page-title">
-        <div className="container diagnostic-hero__inner">
-          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Search Visibility Diagnostic", href: "/search-visibility-diagnostic" }]} />
-          <div className="diagnostic-hero__copy">
+        <div className="container diagnostic-hero__inner observatory-hero__grid">
+          <div className="diagnostic-hero__copy observatory-hero__copy">
+            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Search Visibility Diagnostic", href: "/search-visibility-diagnostic" }]} />
             <span className="data-label">Public evidence · no account access</span>
             <h1 id="diagnostic-page-title">See what search systems encounter<br /><em>before a patient finds you.</em></h1>
             <p>Start with the public technical surface. Then add one clinic location and priority treatment to frame the competitive search landscape that matters commercially.</p>
+            <a className="v3-action v3-action--solid" href="#diagnostic">Run the public check <span aria-hidden="true">↓</span></a>
           </div>
-          <ol className="diagnostic-hero__steps" aria-label="Diagnostic stages">
-            <li><span className="data-label">01 / Technical surface</span><strong>Access, selection and mobile signals</strong></li>
-            <li><span className="data-label">02 / Search context</span><strong>One location and priority treatment</strong></li>
-            <li><span className="data-label">03 / Deeper review</span><strong>Requested only when you choose</strong></li>
-          </ol>
+          <DiagnosticSignalInstrument />
         </div>
       </section>
 
-      <div className="v6-diagnostic diagnostic-page-tool" aria-label="Clinic search visibility diagnostic" data-kai-avoid>
+      <div className="v6-diagnostic diagnostic-page-tool" id="diagnostic" aria-label="Clinic search visibility diagnostic" data-kai-avoid>
         <SearchSignalField />
         <div className="container">
           <div className="v3-section-index data-label"><span>Search visibility diagnostic</span><span>Start with public evidence</span></div>

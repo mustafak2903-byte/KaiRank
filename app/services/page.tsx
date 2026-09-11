@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
+import { SearchSystemInstrument } from "@/components/marketing/hero-instruments";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { services } from "@/lib/marketing-content";
 import { createMetadata } from "@/lib/metadata";
@@ -42,16 +43,20 @@ export default function ServicesPage() {
 
   return (
     <MarketingShell structuredData={structuredData}>
-      <section className="marketing-index-hero services-index-hero" aria-labelledby="services-index-title">
-        <div className="container">
-          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Services", href: "/services" }]} />
-          <span className="data-label">One search system · five points of intervention</span>
-          <h1 id="services-index-title">Fix the constraint.<br /><em>Then compound visibility.</em></h1>
-          <p>KaiRank does not begin with a standard deliverables list. The work starts by locating where a private clinic is losing discoverability, patient confidence or a measurable route to action.</p>
+      <section className="marketing-index-hero services-index-hero observatory-hero" aria-labelledby="services-index-title">
+        <div className="container observatory-hero__grid">
+          <div className="observatory-hero__copy">
+            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Services", href: "/services" }]} />
+            <span className="data-label">One search system · five points of intervention</span>
+            <h1 id="services-index-title">Fix the constraint.<br /><em>Then compound visibility.</em></h1>
+            <p>KaiRank does not begin with a standard deliverables list. The work starts by locating where a private clinic is losing discoverability, patient confidence or a measurable route to action.</p>
+            <div className="v3-actions"><Link className="v3-action v3-action--solid" href="#service-map">Explore the service system <span aria-hidden="true">↓</span></Link><Link className="v3-action v3-action--text" href="/search-visibility-diagnostic">Start with my clinic <span aria-hidden="true">↗</span></Link></div>
+          </div>
+          <SearchSystemInstrument />
         </div>
       </section>
 
-      <section className="service-map" aria-labelledby="service-map-title">
+      <section className="service-map" id="service-map" aria-labelledby="service-map-title">
         <div className="container">
           <div className="marketing-section__index data-label"><span>Service architecture</span><span>Choose by constraint—not trend</span></div>
           <div className="service-map__intro">

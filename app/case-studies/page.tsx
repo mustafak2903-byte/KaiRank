@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
+import { EvidenceSignalInstrument } from "@/components/marketing/hero-instruments";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { caseStudies } from "@/lib/marketing-content";
 import { createMetadata } from "@/lib/metadata";
@@ -13,15 +14,19 @@ export const metadata = createMetadata({
 export default function CaseStudiesIndex() {
   return (
     <MarketingShell>
-      <section className="marketing-index-hero" aria-labelledby="case-index-title">
-        <div className="container">
-          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Case Studies", href: "/case-studies" }]} />
-          <span className="data-label">Verified project evidence</span>
-          <h1 id="case-index-title">Results with the<br /><em>boundaries attached.</em></h1>
-          <p>Every headline metric is separated by source, period and meaning. Traffic estimates are not analytics. Booking-intent clicks are not appointments. Rankings are time-sensitive.</p>
+      <section className="marketing-index-hero evidence-index-hero observatory-hero" aria-labelledby="case-index-title">
+        <div className="container observatory-hero__grid">
+          <div className="observatory-hero__copy">
+            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Case Studies", href: "/case-studies" }]} />
+            <span className="data-label">Verified project evidence</span>
+            <h1 id="case-index-title">Results with the<br /><em>boundaries attached.</em></h1>
+            <p>Every headline metric is separated by source, period and meaning. Traffic estimates are not analytics. Booking-intent clicks are not appointments. Rankings are time-sensitive.</p>
+            <a className="observatory-hero__jump" href="#case-evidence">Inspect the evidence <span aria-hidden="true">↓</span></a>
+          </div>
+          <EvidenceSignalInstrument studies={caseStudies} />
         </div>
       </section>
-      <section className="case-index" aria-label="KaiRank case studies">
+      <section className="case-index" id="case-evidence" aria-label="KaiRank case studies">
         <div className="container">
           {caseStudies.map((study, index) => (
             <article key={study.slug}>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
+import { InsightSignalInstrument } from "@/components/marketing/hero-instruments";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { insights } from "@/lib/insights-content";
 import { createMetadata } from "@/lib/metadata";
@@ -24,15 +25,19 @@ export default function InsightsPage() {
 
   return (
     <MarketingShell structuredData={structuredData}>
-      <section className="marketing-index-hero insights-index-hero" aria-labelledby="insights-title">
-        <div className="container">
-          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }]} />
-          <span className="data-label">Search field notes · evidence before volume</span>
-          <h1 id="insights-title">Useful thinking for<br /><em>high-consideration search.</em></h1>
-          <p>Frameworks for clinic teams that need to understand what is changing, what can be controlled and which search work deserves priority.</p>
+      <section className="marketing-index-hero insights-index-hero observatory-hero" aria-labelledby="insights-title">
+        <div className="container observatory-hero__grid">
+          <div className="observatory-hero__copy">
+            <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Insights", href: "/insights" }]} />
+            <span className="data-label">Search field notes · evidence before volume</span>
+            <h1 id="insights-title">Useful thinking for<br /><em>high-consideration search.</em></h1>
+            <p>Frameworks for clinic teams that need to understand what is changing, what can be controlled and which search work deserves priority.</p>
+            <a className="observatory-hero__jump" href="#field-notes">Read the latest field notes <span aria-hidden="true">↓</span></a>
+          </div>
+          <InsightSignalInstrument insights={insights} />
         </div>
       </section>
-      <section className="insights-index" aria-label="KaiRank search insights">
+      <section className="insights-index" id="field-notes" aria-label="KaiRank search insights">
         <div className="container">
           {insights.map((insight, index) => (
             <article key={insight.slug} data-reveal>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
+import { ServiceSignalInstrument } from "@/components/marketing/hero-instruments";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { services, type ServiceDefinition } from "@/lib/marketing-content";
 import { siteConfig } from "@/lib/site";
@@ -22,7 +23,7 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
 
   return (
     <MarketingShell structuredData={structuredData}>
-      <section className="marketing-hero" aria-labelledby="marketing-title">
+      <section className={`marketing-hero service-hero service-hero--${service.slug}`} aria-labelledby="marketing-title">
         <div className="marketing-hero__grid" aria-hidden="true" />
         <div className="container marketing-hero__inner">
           <div className="marketing-hero__copy" data-reveal>
@@ -35,11 +36,7 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
               <BookingTrigger className="v3-action v3-action--text" label="Talk through my search strategy" source={`${service.slug}-hero`} />
             </div>
           </div>
-          <aside className="marketing-hero__instrument" aria-label="The diagnostic question">
-            <span className="data-label">Diagnostic question</span>
-            <strong>{service.diagnosticQuestion}</strong>
-            <div aria-hidden="true"><i /><i /><i /></div>
-          </aside>
+          <ServiceSignalInstrument service={service} />
         </div>
       </section>
 
