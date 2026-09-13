@@ -3,12 +3,17 @@ import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
 import { ServiceSignalInstrument } from "@/components/marketing/hero-instruments";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
+import { insights } from "@/lib/insights-content";
 import { services, type ServiceDefinition } from "@/lib/marketing-content";
 import { siteConfig } from "@/lib/site";
 
 export function ServicePage({ service }: { service: ServiceDefinition }) {
   const url = `${siteConfig.url}/${service.slug}`;
   const relatedServices = services.filter((item) => item.slug !== service.slug).slice(0, 3);
+  const directInsights = [...insights]
+    .filter((insight) => insight.serviceSlug === service.slug)
+    .sort((a, b) => b.published.localeCompare(a.published));
+  const relatedInsights = (directInsights.length ? directInsights : [...insights].sort((a, b) => b.published.localeCompare(a.published))).slice(0, 2);
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -16,6 +21,7 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
     name: service.navLabel,
     serviceType: service.navLabel,
     description: service.description,
+    keywords: [service.primaryKeyword, ...service.supportingKeywords].join(", "),
     url,
     provider: { "@id": `${siteConfig.url}/#organisation` },
     audience: { "@type": "Audience", audienceType: "Private clinics and high-consideration healthcare businesses" },
@@ -79,6 +85,16 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
         <div className="container marketing-measurement">
           <div><span className="data-label">Measurement</span><h2 id="measurement-title">Visibility is separated from meaningful action.</h2></div>
           <dl>{service.measures.map((measure) => <div key={measure.label}><dt>{measure.label}</dt><dd>{measure.value}</dd></div>)}</dl>
+        </div>
+      </section>
+
+      <section className="service-insights" aria-labelledby="service-insights-title">
+        <div className="container">
+          <div className="marketing-section__index data-label"><span>Search intelligence</span><span>Supporting field notes</span></div>
+          <div className="service-insights__grid">
+            <div><h2 id="service-insights-title">Understand the decision behind the work.</h2><p>Use the evidence-led guides to evaluate the problem before choosing a tactic or deliverable.</p><Link href="/insights">Explore the healthcare SEO blog <span aria-hidden="true">↗</span></Link></div>
+            <ol>{relatedInsights.map((insight, index) => <li key={insight.slug}><Link href={`/insights/${insight.slug}`}><span className="data-label">0{index + 1} / {insight.category}</span><strong>{insight.title} {insight.accent}</strong><small>{insight.readTime}</small><i aria-hidden="true">↗</i></Link></li>)}</ol>
+          </div>
         </div>
       </section>
 

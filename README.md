@@ -2,7 +2,7 @@
 
 The production Next.js website for KaiRank: a founder-led search visibility practice for private clinics across Google, Maps and AI discovery.
 
-The production homepage is `/`. It combines the approved editorial system with a continuous patient-search journey, five focused service routes, verified healthcare evidence, a progressive Search Visibility Diagnostic, the Kai site guide and a lazy Cal.com booking modal. Crawlable Services, Case Studies and Insights hubs connect the wider search architecture. `/visual-system` and `/experiments/*` remain non-indexable review routes.
+The production homepage is `/`. It combines the approved editorial system with a continuous patient-search journey, five focused service routes, verified healthcare evidence, a progressive Search Visibility Diagnostic, the Kai site guide and a lazy Cal.com booking modal. Crawlable Services, Case Studies and healthcare SEO Insights hubs connect the wider search architecture. `/visual-system` and `/experiments/*` remain non-indexable review routes.
 
 ## Run locally
 
@@ -49,7 +49,7 @@ npm run build
 - `/seo`, `/healthcare-seo`, `/technical-seo`, `/local-seo`, `/ai-search-optimisation` — distinct commercial query clusters
 - `/case-studies` and `/case-studies/*` — verified evidence with source and limitation context
 - `/search-visibility-diagnostic` — standalone acquisition and diagnostic route
-- `/insights` and `/insights/*` — founder-authored, evidence-led field notes
+- `/insights` and `/insights/*` — the founder-authored healthcare SEO blog, with article metadata, internal service routes and an RSS feed at `/insights/feed.xml`
 - `/about`, `/contact`, `/privacy` — accountability, contact and legal context
 
 Do not create city, treatment or clinic-specialty variants unless each page represents a real audience need, distinct expertise and useful evidence. The homepage positions the entity and routes authority; dedicated pages own the commercial and informational query clusters.
@@ -87,3 +87,5 @@ See `docs/v5-implementation-notes.md` for the final homepage/product architectur
 See `docs/v6-implementation-notes.md` for the corrective journey, interaction bug fix, evolved Kai physics, lazy Cal.com popup and final QA boundaries.
 
 See `docs/launch-runbook.md` for search ownership, account actions, release gates and the live launch sequence.
+
+See `docs/seo-content-map.md` for the Drive-research-backed keyword ownership, article map and publishing gate.

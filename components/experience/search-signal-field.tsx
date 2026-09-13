@@ -18,10 +18,12 @@ const lineCount = 9;
 export function SearchSignalField() {
   const fieldRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const targetLabelRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const field = fieldRef.current;
     const canvas = canvasRef.current;
+    const targetLabel = targetLabelRef.current;
     const section = field?.closest<HTMLElement>(".v6-diagnostic");
     const context = canvas?.getContext("2d");
     if (!field || !canvas || !section || !context) return;
@@ -43,6 +45,15 @@ export function SearchSignalField() {
     const setMode = (nextMode: SignalMode) => {
       mode = nextMode;
       field.dataset.signalMode = nextMode;
+      if (targetLabel) {
+        targetLabel.textContent = nextMode === "context"
+          ? "Search context connected"
+          : nextMode === "resolved"
+            ? "Public signal resolved"
+            : nextMode === "scanning"
+              ? "Reading visibility terrain"
+              : "Public signal surface";
+      }
       if (reducedMotion.matches) draw(performance.now());
     };
 
@@ -87,6 +98,58 @@ export function SearchSignalField() {
       context.fill();
     };
 
+    const drawTerrain = (time: number, energy: number) => {
+      const ridges = 8;
+      const steps = 72;
+      context.save();
+      context.globalCompositeOperation = "screen";
+
+      for (let ridge = 0; ridge < ridges; ridge += 1) {
+        const depth = ridge / (ridges - 1);
+        const baseline = height * (0.27 + depth * 0.077);
+        const amplitude = height * (0.012 + depth * 0.01);
+        context.beginPath();
+
+        for (let step = 0; step <= steps; step += 1) {
+          const progress = step / steps;
+          const focus = Math.exp(-Math.pow((progress - 0.79) / 0.16, 2));
+          const drift = reducedMotion.matches ? 0 : time * (0.000045 + ridge * 0.000002);
+          const wave = Math.sin(progress * 9.2 + ridge * 0.82 + drift) * amplitude;
+          const detail = Math.sin(progress * 27 + ridge * 1.7 - drift * 1.4) * amplitude * 0.24;
+          const resolvedLift = (mode === "resolved" || mode === "context" ? -height * 0.018 : 0) * focus * energy;
+          const x = width * (0.04 + progress * 0.9) + pointerX * width * 0.006 * depth;
+          const y = baseline + wave + detail + resolvedLift + pointerY * height * 0.004 * depth;
+          if (step === 0) context.moveTo(x, y);
+          else context.lineTo(x, y);
+        }
+
+        context.strokeStyle = ridge === 4
+          ? `rgba(143, 205, 181, ${0.1 * energy})`
+          : `rgba(116, 136, 255, ${(0.045 + depth * 0.035) * energy})`;
+        context.lineWidth = ridge === 4 ? 0.95 : 0.65;
+        context.stroke();
+
+        if (ridge % 2 === 0) {
+          for (let step = 9; step < steps; step += 9) {
+            const progress = step / steps;
+            const focus = Math.exp(-Math.pow((progress - 0.79) / 0.16, 2));
+            const drift = reducedMotion.matches ? 0 : time * (0.000045 + ridge * 0.000002);
+            const wave = Math.sin(progress * 9.2 + ridge * 0.82 + drift) * amplitude;
+            const detail = Math.sin(progress * 27 + ridge * 1.7 - drift * 1.4) * amplitude * 0.24;
+            const resolvedLift = (mode === "resolved" || mode === "context" ? -height * 0.018 : 0) * focus * energy;
+            drawNode(
+              width * (0.04 + progress * 0.9) + pointerX * width * 0.006 * depth,
+              baseline + wave + detail + resolvedLift + pointerY * height * 0.004 * depth,
+              0.8 + depth * 0.45,
+              `rgba(200, 208, 255, ${0.1 + depth * 0.05})`,
+            );
+          }
+        }
+      }
+
+      context.restore();
+    };
+
     const draw = (time: number) => {
       if (!width || !height) return;
       context.clearRect(0, 0, width, height);
@@ -104,6 +167,8 @@ export function SearchSignalField() {
       atmosphere.addColorStop(1, "rgba(5, 7, 11, 0)");
       context.fillStyle = atmosphere;
       context.fillRect(0, 0, width, height);
+
+      drawTerrain(time, modeEnergy);
 
       for (let line = 0; line < lineCount; line += 1) {
         context.beginPath();
@@ -262,7 +327,7 @@ export function SearchSignalField() {
       <div className="search-signal-field__legend">
         <span>Technical</span><i /><span>Local</span><i /><span>Authority</span>
       </div>
-      <div className="search-signal-field__target"><i /><span>Public signal surface</span></div>
+      <div className="search-signal-field__target"><i /><span ref={targetLabelRef}>Public signal surface</span></div>
     </div>
   );
 }

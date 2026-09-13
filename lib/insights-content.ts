@@ -7,6 +7,8 @@ export type InsightSection = {
 export type InsightDefinition = {
   slug: string;
   category: string;
+  primaryKeyword: string;
+  supportingKeywords: readonly string[];
   seoTitle: string;
   title: string;
   accent: string;
@@ -25,7 +27,9 @@ export const insights: readonly InsightDefinition[] = [
   {
     slug: "prioritise-technical-seo-audit-private-clinic",
     category: "Technical SEO",
-    seoTitle: "Technical SEO audit priorities for private clinics",
+    primaryKeyword: "technical SEO audit for clinics",
+    supportingKeywords: ["technical SEO audit checklist", "clinic technical SEO", "technical website audit"],
+    seoTitle: "Prioritising a Clinic Technical SEO Audit",
     title: "A clinic technical audit should protect",
     accent: "the patient journey—not the report.",
     description: "A practical framework for prioritising technical SEO issues around treatment demand, indexation and the actions a private clinic needs patients to take.",
@@ -84,6 +88,8 @@ export const insights: readonly InsightDefinition[] = [
   {
     slug: "clinic-location-pages-without-doorway-content",
     category: "Local SEO",
+    primaryKeyword: "clinic location pages",
+    supportingKeywords: ["local SEO for clinics", "medical clinic location pages", "healthcare local SEO"],
     seoTitle: "Clinic location pages without doorway content",
     title: "A clinic location page should represent",
     accent: "a real patient decision.",
@@ -139,7 +145,9 @@ export const insights: readonly InsightDefinition[] = [
   {
     slug: "what-ai-search-changes-for-healthcare-websites",
     category: "AI search",
-    seoTitle: "AI search optimisation for healthcare websites",
+    primaryKeyword: "medical content for AI search",
+    supportingKeywords: ["medical content AI discoverability", "AI discoverability for healthcare websites", "AI search content structure"],
+    seoTitle: "How to Structure Medical Content for AI Search",
     title: "AI search changes the retrieval layer.",
     accent: "It does not remove the need for evidence.",
     description: "How healthcare websites can prepare for AI search through clearer entities, expertise and original evidence—without making citation guarantees.",
@@ -189,6 +197,233 @@ export const insights: readonly InsightDefinition[] = [
       { label: "Google: AI-generated content guidance", href: "https://developers.google.com/search/docs/fundamentals/using-gen-ai-content" },
       { label: "Google: structured data principles", href: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data" },
       { label: "Google: people-first content", href: "https://developers.google.com/search/docs/fundamentals/creating-helpful-content" },
+    ],
+  },
+  {
+    slug: "healthcare-website-optimisation",
+    category: "Technical SEO",
+    primaryKeyword: "optimizing healthcare websites",
+    supportingKeywords: ["healthcare website optimisation", "healthcare website optimization", "on-page SEO services healthcare"],
+    seoTitle: "Healthcare Website Optimisation Framework",
+    title: "A healthcare website should make",
+    accent: "the right page unmistakable.",
+    description: "A practical framework for optimising healthcare websites around technical access, clear page ownership, patient comprehension and measurable action.",
+    published: "2026-09-13",
+    updated: "2026-09-13",
+    readTime: "8 minute read",
+    serviceSlug: "technical-seo",
+    serviceLabel: "Technical SEO audit service",
+    takeaway: "Healthcare website optimisation works when technical access, page purpose and the patient decision are improved together—not when a score is treated as the outcome.",
+    sections: [
+      {
+        title: "Give each high-value question one clear destination",
+        paragraphs: [
+          "Start with the clinic’s real search journeys: a treatment, a clinician, a location and the evidence a patient needs before taking the next step. Assign one useful page to each distinct intent before revising titles or producing more copy.",
+          "When several URLs compete for the same question, internal links, canonicals and content signals become harder to interpret. Consolidate overlap where it improves the patient journey, and keep separate pages only when each one resolves a genuinely different need.",
+        ],
+        points: [
+          "One primary intent and useful next step per page",
+          "Clear relationships between services, clinicians and locations",
+          "Internal links that explain those relationships in ordinary language",
+        ],
+      },
+      {
+        title: "Verify access before asking the page to compete",
+        paragraphs: [
+          "The preferred URL should return a reliable response, render its critical content, remain indexable and declare a consistent canonical. Important pages should be reachable through standard links rather than depending on a search box, script or orphaned sitemap entry.",
+          "Crawling and rendering checks belong beside the content review. A persuasive page cannot earn dependable visibility if search systems receive a different, incomplete or duplicated version of it.",
+        ],
+      },
+      {
+        title: "Reduce uncertainty in the patient decision",
+        paragraphs: [
+          "Useful healthcare pages explain who provides the service, where it is available, what the process involves and which evidence supports the claims. Clear authorship and review context matter more than repeating a target phrase.",
+          "Mobile performance supports that comprehension. Protect the main heading, essential explanation and next step from late-loading assets, unstable layouts and interaction delays that interrupt evaluation.",
+        ],
+      },
+      {
+        title: "Measure the whole route, not one score",
+        paragraphs: [
+          "Track indexation and search visibility, then connect them to engagement with treatment, clinician and evidence content. Calls, enquiries and booking-intent clicks should remain separate from confirmed appointments and revenue.",
+          "Use those observations to find the next constraint. Optimisation becomes a repeatable operating loop when every change has a page, a reason and a measurable patient action attached.",
+        ],
+      },
+    ],
+    sources: [
+      { label: "Google: creating helpful, reliable content", href: "https://developers.google.com/search/docs/fundamentals/creating-helpful-content" },
+      { label: "Google: URL structure best practices", href: "https://developers.google.com/search/docs/crawling-indexing/url-structure" },
+      { label: "Google: Core Web Vitals", href: "https://developers.google.com/search/docs/appearance/core-web-vitals" },
+    ],
+  },
+  {
+    slug: "why-local-seo-matters-medical-practices",
+    category: "Local SEO",
+    primaryKeyword: "importance of local SEO for medical practices",
+    supportingKeywords: ["local SEO for doctors", "local SEO medical practice", "healthcare directory optimisation"],
+    seoTitle: "Why Local SEO Matters for Medical Practices",
+    title: "Local search decides whether proximity",
+    accent: "becomes consideration.",
+    description: "Why local SEO matters for medical practices, and how website, Google Business Profile and location evidence work together to support patient discovery.",
+    published: "2026-09-13",
+    updated: "2026-09-13",
+    readTime: "7 minute read",
+    serviceSlug: "local-seo",
+    serviceLabel: "Local SEO for medical clinics",
+    takeaway: "Local SEO matters because nearby demand still needs a credible route from a location-sensitive search to the right service, clinician and next step.",
+    sections: [
+      {
+        title: "Nearby does not automatically mean relevant",
+        paragraphs: [
+          "A patient may search with a town, neighbourhood, ‘near me’ phrase or no location at all. Search platforms infer local intent, then compare proximity with the service, prominence and evidence they can understand.",
+          "A medical practice therefore needs more than an address. Its public footprint must make the relationship between place, treatment and practitioner clear enough for a patient to evaluate.",
+        ],
+      },
+      {
+        title: "The website and profile need one version of reality",
+        paragraphs: [
+          "Names, addresses, telephone numbers, opening hours, categories and service availability should agree across the website and the profiles the practice legitimately controls. Consistency helps discovery, but accuracy is the real requirement.",
+          "The website carries the depth a profile cannot: treatment explanations, clinician expertise, location-specific facilities, evidence and a considered next step. Local SEO works when those surfaces reinforce rather than contradict one another.",
+        ],
+        points: [
+          "Accurate Google Business Profile information",
+          "Useful location and service relationships on the website",
+          "Authentic reviews and evidence connected to the relevant place",
+          "A clear call, enquiry or booking route on mobile",
+        ],
+      },
+      {
+        title: "Build coverage from real operations",
+        paragraphs: [
+          "Create a location page when it represents a genuine clinic, service area or patient decision. Avoid producing near-identical city pages that change the place name but offer no distinct people, services, evidence or instructions.",
+          "For multi-location groups, a useful architecture shows which services and clinicians belong to each location. For a single practice, strong service pages can often carry local context without a large set of thin URLs.",
+        ],
+      },
+      {
+        title: "Read local performance with the right boundaries",
+        paragraphs: [
+          "Measure profile discovery, calls, direction requests, local landing-page engagement and qualified enquiries together. Grid rankings and isolated screenshots can add context, but they change with distance, query and searcher conditions.",
+          "A profile interaction is not automatically a patient outcome. Keeping those stages distinct makes local reporting more credible and makes the next improvement easier to choose.",
+        ],
+      },
+    ],
+    sources: [
+      { label: "Google: Business Profile eligibility", href: "https://support.google.com/business/answer/13763036" },
+      { label: "Google: creating helpful, reliable content", href: "https://developers.google.com/search/docs/fundamentals/creating-helpful-content" },
+      { label: "Google: link best practices", href: "https://developers.google.com/search/docs/crawling-indexing/links-crawlable" },
+    ],
+  },
+  {
+    slug: "healthcare-answer-engine-optimisation",
+    category: "AI search",
+    primaryKeyword: "healthcare answer engine optimisation",
+    supportingKeywords: ["healthcare answer engine optimization", "AI search optimisation for medical websites", "healthcare visibility in AI search engines"],
+    seoTitle: "Healthcare Answer Engine Optimisation",
+    title: "Answer engines need a source",
+    accent: "people can still verify.",
+    description: "What healthcare answer engine optimisation involves: clearer entities, retrievable medical content, credible evidence and honest AI-search measurement.",
+    published: "2026-09-13",
+    updated: "2026-09-13",
+    readTime: "8 minute read",
+    serviceSlug: "ai-search-optimisation",
+    serviceLabel: "AI search optimisation for healthcare",
+    takeaway: "Answer engine optimisation should make real healthcare expertise easier to retrieve and verify. It cannot guarantee that a third-party system will cite or recommend a clinic.",
+    sections: [
+      {
+        title: "Start with the question an answer must resolve",
+        paragraphs: [
+          "Answer engines assemble responses around questions, entities and supporting passages. A healthcare site should therefore organise useful explanations around real patient decisions instead of publishing disconnected keyword pages.",
+          "State what the service is, who provides it, where it is available and which evidence supports the explanation. The page should remain useful even when a visitor arrives directly at the relevant passage.",
+        ],
+      },
+      {
+        title: "Make entity relationships visible",
+        paragraphs: [
+          "Connect the organisation, locations, clinicians, specialties and services through visible copy and crawlable internal links. Structured data can reinforce those relationships after the page expresses them clearly.",
+          "Do not use markup to imply credentials, reviews or service relationships that a visitor cannot verify. In healthcare, retrieval quality and trust depend on the same underlying facts.",
+        ],
+        points: [
+          "Named authors and qualified clinical reviewers",
+          "Explicit service, clinician and location relationships",
+          "Original evidence with dates, methods and limitations",
+          "One canonical source for each distinct subject",
+        ],
+      },
+      {
+        title: "Write passages that stand on their own",
+        paragraphs: [
+          "Clear headings, direct definitions, concise answers and supporting detail make information easier for both people and retrieval systems to navigate. That is an editorial discipline, not a licence to strip nuance from medical information.",
+          "Keep important caveats close to the claim they qualify. Link to deeper service, clinician and evidence pages where the answer requires more context than a short passage can carry.",
+        ],
+      },
+      {
+        title: "Treat citations as observations",
+        paragraphs: [
+          "Track where the clinic appears, which pages are cited and whether visitors arrive from AI interfaces. Compare those observations with branded search, assisted journeys and qualified enquiries without assigning revenue that cannot be demonstrated.",
+          "Platform behaviour changes. A durable programme improves the source material and information architecture first, then reviews emerging visibility as one part of the wider search system.",
+        ],
+      },
+    ],
+    sources: [
+      { label: "Google: AI-generated content guidance", href: "https://developers.google.com/search/docs/fundamentals/using-gen-ai-content" },
+      { label: "Google: structured data principles", href: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data" },
+      { label: "Google: people-first content", href: "https://developers.google.com/search/docs/fundamentals/creating-helpful-content" },
+    ],
+  },
+  {
+    slug: "healthcare-content-strategy",
+    category: "Healthcare content",
+    primaryKeyword: "healthcare content strategy",
+    supportingKeywords: ["healthcare website content", "content marketing workflow healthcare", "healthcare content SEO"],
+    seoTitle: "Healthcare Content Strategy for Search",
+    title: "A healthcare content strategy should follow",
+    accent: "the patient’s decision—not a calendar.",
+    description: "A healthcare content strategy for connecting patient questions, clinical expertise, service pages and measurable search journeys without commodity publishing.",
+    published: "2026-09-13",
+    updated: "2026-09-13",
+    readTime: "8 minute read",
+    serviceSlug: "healthcare-seo",
+    serviceLabel: "SEO for healthcare",
+    takeaway: "The strongest healthcare content system starts with patient decisions and accountable expertise, then publishes only what improves comprehension, discovery or action.",
+    sections: [
+      {
+        title: "Map decisions before topics",
+        paragraphs: [
+          "List the questions a patient needs to resolve before, during and after evaluating a treatment. Connect each question to the most useful service, clinician, location or evidence page rather than defaulting every topic to a new article.",
+          "This creates a content architecture with a job to do. Core pages explain the clinic’s offer; supporting articles resolve deeper questions and return the reader to the appropriate next step.",
+        ],
+      },
+      {
+        title: "Make clinical ownership explicit",
+        paragraphs: [
+          "Define who writes, reviews and updates information that depends on clinical expertise. Show that context where it helps a reader judge the material, and keep sources and limitations close to consequential claims.",
+          "Search optimisation cannot replace clinical governance. The content workflow should make expert review easier to complete and easier for the public to understand.",
+        ],
+        points: [
+          "A named owner for each medically consequential page",
+          "A review standard matched to the risk of the subject",
+          "Source, update and limitation fields in the publishing workflow",
+          "A clear route for correcting outdated information",
+        ],
+      },
+      {
+        title: "Build subject depth without manufacturing pages",
+        paragraphs: [
+          "Use search demand to reveal language and unanswered questions, then test whether the clinic has distinct expertise or evidence to contribute. Combine overlapping topics when one stronger page would serve the reader better.",
+          "Internal links should describe the relationship between an article and the relevant service, clinician or location. Generic ‘read more’ links waste an opportunity to clarify the site’s subject model.",
+        ],
+      },
+      {
+        title: "Measure usefulness across the journey",
+        paragraphs: [
+          "Review impressions and clicks alongside engagement with evidence, service exploration and qualified actions. A high-traffic article can be useful, but volume alone does not prove that it supports the clinic’s commercial or patient objectives.",
+          "Refresh or consolidate content when real query data reveals a clearer need. A publishing cadence is valuable only when it keeps useful information accurate and strengthens the routes patients actually use.",
+        ],
+      },
+    ],
+    sources: [
+      { label: "Google: creating helpful, reliable content", href: "https://developers.google.com/search/docs/fundamentals/creating-helpful-content" },
+      { label: "Google: link best practices", href: "https://developers.google.com/search/docs/crawling-indexing/links-crawlable" },
+      { label: "Google: structured data principles", href: "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data" },
     ],
   },
 ] as const;

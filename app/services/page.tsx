@@ -8,8 +8,8 @@ import { createMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site";
 
 export const metadata = createMetadata({
-  title: "Healthcare SEO services for private clinics",
-  description: "Explore KaiRank's healthcare SEO, technical SEO, local SEO and AI search optimisation services for private clinics.",
+  title: "Healthcare SEO Services for Private Clinics",
+  description: "Explore SEO for clinics, technical SEO audits, local SEO for medical practices and AI search optimisation for healthcare.",
   path: "/services",
 });
 
@@ -49,7 +49,7 @@ export default function ServicesPage() {
             <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Services", href: "/services" }]} />
             <span className="data-label">One search system · five points of intervention</span>
             <h1 id="services-index-title">Fix the constraint.<br /><em>Then compound visibility.</em></h1>
-            <p>KaiRank does not begin with a standard deliverables list. The work starts by locating where a private clinic is losing discoverability, patient confidence or a measurable route to action.</p>
+            <p>KaiRank’s healthcare SEO services do not begin with a standard deliverables list. The work starts by locating where a private clinic is losing discoverability, patient confidence or a measurable route to action.</p>
             <div className="v3-actions"><Link className="v3-action v3-action--solid" href="#service-map">Explore the service system <span aria-hidden="true">↓</span></Link><Link className="v3-action v3-action--text" href="/search-visibility-diagnostic">Start with my clinic <span aria-hidden="true">↗</span></Link></div>
           </div>
           <SearchSystemInstrument />

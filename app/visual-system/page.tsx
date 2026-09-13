@@ -3,6 +3,7 @@ import { AnalyticsEvents } from "@/components/experience/analytics-events";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { CapabilityStage } from "@/components/experience/capability-stage";
 import { CinematicBackground } from "@/components/experience/cinematic-background";
+import { ConversionSignal } from "@/components/experience/conversion-signal";
 import { HeroSignal } from "@/components/experience/hero-signal";
 import { KaiAssistant } from "@/components/experience/kai-assistant";
 import { ProblemJourney } from "@/components/experience/problem-journey";
@@ -13,6 +14,7 @@ import { ScrollExperience } from "@/components/experience/scroll-experience";
 import { VisibilityAudit } from "@/components/experience/visibility-audit";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { insights } from "@/lib/insights-content";
 import { createMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site";
 
@@ -101,6 +103,8 @@ const structuredData = {
   ],
 };
 
+const homepageInsights = [...insights].sort((a, b) => b.published.localeCompare(a.published)).slice(0, 3);
+
 export default function VisualSystemPage() {
   return (
     <div className="v3-experience v6-experience v7-experience v8-experience">
@@ -121,7 +125,7 @@ export default function VisualSystemPage() {
                 <em>before they choose.</em>
               </h1>
               <p className="v3-hero__lead">
-                KaiRank finds and fixes the technical, local and authority gaps keeping private clinics out of the shortlist across Google, Maps and AI search.
+                KaiRank is a healthcare SEO agency that finds and fixes the technical, local and authority gaps keeping private clinics out of the shortlist across Google, Maps and AI search.
               </p>
               <div className="v3-actions">
                 <a className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label="Hero: check my clinic" data-event-source="hero" href="#audit">Check my clinic <span aria-hidden="true">↘</span></a>
@@ -251,6 +255,29 @@ export default function VisualSystemPage() {
           </div>
         </section>
 
+        <section className="v9-insight-bridge" aria-labelledby="insight-bridge-title">
+          <div className="container">
+            <div className="v3-section-index data-label"><span>Healthcare SEO insights</span><span>Questions before tactics</span></div>
+            <div className="v9-insight-bridge__intro" data-reveal>
+              <h2 id="insight-bridge-title">Read the decision behind <em>the search work.</em></h2>
+              <p>Practical guidance for clinic owners and marketing teams evaluating technical SEO, local visibility, healthcare content and AI search.</p>
+              <Link href="/insights">Explore the healthcare SEO blog <span aria-hidden="true">↗</span></Link>
+            </div>
+            <ol className="v9-insight-bridge__list">
+              {homepageInsights.map((insight, index) => (
+                <li key={insight.slug} data-reveal>
+                  <Link href={`/insights/${insight.slug}`}>
+                    <span className="data-label">0{index + 1} / {insight.category}</span>
+                    <strong>{insight.title} <em>{insight.accent}</em></strong>
+                    <small>{insight.readTime}</small>
+                    <i aria-hidden="true">↗</i>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
         <div className="v6-diagnostic" aria-label="Clinic search visibility diagnostic" data-kai-avoid>
           <SearchSignalField />
           <div className="container">
@@ -277,7 +304,7 @@ export default function VisualSystemPage() {
         </section>
 
         <section className="v3-conversion" id="contact" aria-labelledby="conversion-title" data-kai-avoid>
-          <div className="v3-conversion__signal" aria-hidden="true"><i /><i /><i /><i /></div>
+          <ConversionSignal />
           <div className="container v3-conversion__inner" data-reveal>
             <span className="data-label">Start with evidence</span>
             <h2 id="conversion-title">Find the gap between your clinic and the shortlist.</h2>

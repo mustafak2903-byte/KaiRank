@@ -26,7 +26,7 @@ export function SiteFooter() {
         <nav aria-label="Company">
           <strong>Company</strong>
           <Link href="/about">About</Link>
-          <Link href="/insights">Insights</Link>
+          <Link href="/insights">Healthcare SEO blog</Link>
           <Link href="/#process">How We Work</Link>
           <Link href="/#faq">FAQ</Link>
           <Link href="/contact">Contact</Link>

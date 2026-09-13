@@ -305,7 +305,7 @@ export function KaiAssistant() {
         type="button"
         aria-label="Open Kai search assistant"
         aria-expanded={open}
-        aria-controls="kai-panel"
+        aria-controls={open ? "kai-panel" : undefined}
         onClick={toggle}
       >
         <span className="kai-launcher-signal" aria-hidden="true"><i /><i /><b /></span>

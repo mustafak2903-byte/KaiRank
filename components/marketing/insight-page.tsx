@@ -22,10 +22,14 @@ export function InsightPage({ insight }: { insight: InsightDefinition }) {
     url,
     datePublished: insight.published,
     dateModified: insight.updated,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
     author: { "@id": `${siteConfig.url}/#founder` },
     publisher: { "@id": `${siteConfig.url}/#organisation` },
     isPartOf: { "@id": `${siteConfig.url}/#website` },
     about: insight.category,
+    keywords: [insight.primaryKeyword, ...insight.supportingKeywords].join(", "),
+    inLanguage: "en-GB",
+    image: `${siteConfig.url}/og.png`,
   };
 
   return (

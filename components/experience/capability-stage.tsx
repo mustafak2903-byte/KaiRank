@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { trackEvent } from "@/lib/analytics";
 
 const capabilities = [
@@ -103,9 +103,14 @@ export function CapabilityStage() {
   const [activeId, setActiveId] = useState<Capability["id"]>("technical");
   const environmentRef = useRef<HTMLDivElement>(null);
   const active = capabilities.find((item) => item.id === activeId) ?? capabilities[0];
+  const activeIndex = capabilities.findIndex((item) => item.id === active.id);
+
+  function previewCapability(id: Capability["id"]) {
+    setActiveId(id);
+  }
 
   function selectCapability(id: Capability["id"]) {
-    setActiveId(id);
+    previewCapability(id);
     trackEvent("service_selected", { service: id });
     window.dispatchEvent(new CustomEvent("kairank:service-context", { detail: { service: id } }));
   }
@@ -120,7 +125,7 @@ export function CapabilityStage() {
     else return;
     event.preventDefault();
     const nextCapability = capabilities[next];
-    selectCapability(nextCapability.id);
+    previewCapability(nextCapability.id);
     window.requestAnimationFrame(() => document.getElementById(`capability-tab-${nextCapability.id}`)?.focus());
   }
 
@@ -133,16 +138,23 @@ export function CapabilityStage() {
   }
 
   return (
-    <div className="capability-stage">
+    <div className="capability-stage" style={{ "--active-capability": activeIndex } as CSSProperties}>
+      <div className="capability-stage__signal-rail" aria-hidden="true">
+        <span className="data-label">Patient query</span>
+        <div><i /><b /></div>
+        <small>Constraint routing / {active.index}</small>
+      </div>
       <div className="capability-stage__tabs" role="tablist" aria-label="KaiRank capabilities">
         {capabilities.map((capability) => (
           <button
-            aria-controls={`capability-${capability.id}`}
+            aria-controls="capability-panel"
             aria-selected={activeId === capability.id}
             id={`capability-tab-${capability.id}`}
             key={capability.id}
             onClick={() => selectCapability(capability.id)}
+            onFocus={() => previewCapability(capability.id)}
             onKeyDown={(event) => moveTab(event, capability.id)}
+            onPointerEnter={() => previewCapability(capability.id)}
             role="tab"
             tabIndex={activeId === capability.id ? 0 : -1}
             type="button"
@@ -153,7 +165,7 @@ export function CapabilityStage() {
           </button>
         ))}
       </div>
-      <div className="capability-stage__panel" id={`capability-${active.id}`} role="tabpanel" aria-labelledby={`capability-tab-${active.id}`}>
+      <div className="capability-stage__panel" id="capability-panel" role="tabpanel" aria-labelledby={`capability-tab-${active.id}`}>
         <div className="capability-stage__copy">
           <span className="data-label">Active search constraint / {active.index}</span>
           <h3>{active.label}</h3>
@@ -182,8 +194,7 @@ export function CapabilityStage() {
                 <strong>{capability.title}</strong>
                 <i aria-hidden="true">+</i>
               </button>
-              {selected ? (
-                <div className="capability-stage__mobile-panel" id={`capability-mobile-${capability.id}`}>
+              <div className="capability-stage__mobile-panel" hidden={!selected} id={`capability-mobile-${capability.id}`}>
                   <div className="capability-stage__copy">
                     <span className="data-label">Active search constraint / {capability.index}</span>
                     <h3>{capability.label}</h3>
@@ -192,8 +203,7 @@ export function CapabilityStage() {
                   <div className="capability-stage__environment">
                     <div className="capability-scene is-active"><CapabilityVisual capability={capability} /></div>
                   </div>
-                </div>
-              ) : null}
+              </div>
             </div>
           );
         })}

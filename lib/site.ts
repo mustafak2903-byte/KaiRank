@@ -3,9 +3,9 @@ const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$
 export const siteConfig = {
   name: "KaiRank",
   legalName: "KaiRank",
-  title: "KaiRank | SEO & Search Visibility for Private Clinics",
+  title: "Healthcare SEO Agency for Private Clinics | KaiRank",
   description:
-    "Healthcare SEO, technical SEO, local search and AI search optimisation for private clinics across Google, Maps and AI discovery.",
+    "A healthcare SEO agency for private clinics, connecting technical SEO, local search, medical content and AI search visibility to patient demand.",
   url: configuredSiteUrl || "https://kairank.com",
   locale: "en_GB",
   contact: {

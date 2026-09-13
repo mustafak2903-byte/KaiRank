@@ -4,7 +4,7 @@ This runbook is the production hand-off for the `kairank-rebuild` branch. Do not
 
 ## Search ownership
 
-- `/` — brand, proposition and routing authority
+- `/` — healthcare SEO agency proposition, brand and routing authority
 - `/services` — service discovery hub
 - `/seo` — SEO for clinics / clinic SEO
 - `/healthcare-seo` — SEO for healthcare and healthcare SEO consultants
@@ -13,7 +13,7 @@ This runbook is the production hand-off for the `kairank-rebuild` branch. Do not
 - `/ai-search-optimisation` — AI search optimisation for healthcare
 - `/case-studies` — verified healthcare SEO evidence
 - `/search-visibility-diagnostic` — public diagnostic and lead acquisition
-- `/insights` — evidence-led informational search hub
+- `/insights` — healthcare SEO blog and evidence-led informational search hub
 
 Do not add city, treatment or clinic-specialty pages until each proposed page has a distinct search intent, real audience need, original material and relevant evidence.
 
@@ -58,7 +58,7 @@ Production builds fail closed if the canonical origin or lead webhook is missing
 3. Re-run the full route, form, booking, security-header and mobile QA against `https://kairank.com`.
 4. Verify a Google Search Console Domain property through DNS.
 5. Submit `https://kairank.com/sitemap.xml`.
-6. Inspect the homepage, service hub, five commercial service pages, case-study hub and diagnostic URL.
+6. Inspect the homepage, service hub, five commercial service pages, case-study hub, healthcare SEO blog and diagnostic URL.
 7. Request indexing only after the live canonical, rendered HTML and indexation status are correct.
 8. Record the launch date and the initial Search Console, analytics and qualified-lead baseline.
 
@@ -67,6 +67,6 @@ Production builds fail closed if the canonical origin or lead webhook is missing
 - Review qualified diagnostic requests and booked conversations weekly.
 - Review Search Console query/page performance every two weeks after data begins to accumulate.
 - Improve titles and introductions from real impressions and click-through behaviour, not rank-tracker volatility alone.
-- Publish evidence-led field notes from actual clinic questions, audits and project methods.
+- Publish evidence-led field notes from actual clinic questions, audits and project methods. Follow `docs/seo-content-map.md` so new articles support rather than cannibalise commercial pages.
 - Add specialist clinic pages only when demand and proof support a materially different page.
 - Keep impressions, clicks, enquiries, booking intent, completed bookings and won revenue as separate measures.
