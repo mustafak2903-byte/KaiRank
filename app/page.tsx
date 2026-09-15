@@ -2,9 +2,9 @@ import VisualSystemPage from "@/app/visual-system/page";
 import { createMetadata } from "@/lib/metadata";
 
 export const metadata = createMetadata({
-  title: "Healthcare SEO Agency for Private Clinics | KaiRank",
+  title: "UK Healthcare SEO Agency for Private Clinics | KaiRank",
   description:
-    "A healthcare SEO agency for private clinics, connecting technical SEO, local search, medical content and AI search visibility to patient demand.",
+    "A UK healthcare SEO agency for private clinics, connecting technical SEO, local search, medical content and AI visibility to qualified patient demand.",
   path: "/",
   absoluteTitle: true,
 });

@@ -4,7 +4,7 @@ import { caseStudies, services } from "@/lib/marketing-content";
 import { siteConfig } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUpdated = "2026-09-13";
+  const siteUpdated = "2026-09-15";
   const routes = [
     { path: "/", priority: 1, changeFrequency: "monthly" as const, lastModified: siteUpdated },
     { path: "/services", priority: 0.9, changeFrequency: "monthly" as const, lastModified: siteUpdated },

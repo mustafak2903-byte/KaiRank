@@ -12,6 +12,15 @@ export type ServiceDefinition = {
   description: string;
   promise: string;
   diagnosticQuestion: string;
+  headings: {
+    principle: string;
+    symptoms: string;
+    work: string;
+    workIntro: string;
+    measurement: string;
+    insights: string;
+    insightsIntro: string;
+  };
   symptoms: readonly string[];
   work: readonly { index: string; title: string; body: string; output: string }[];
   measures: readonly { label: string; value: string }[];
@@ -21,18 +30,27 @@ export type ServiceDefinition = {
 export const services: readonly ServiceDefinition[] = [
   {
     slug: "seo",
-    navLabel: "SEO",
-    primaryKeyword: "SEO for clinics",
-    supportingKeywords: ["clinic SEO", "SEO for private clinics", "private clinic SEO services"],
-    updated: "2026-09-13",
-    seoTitle: "SEO for Clinics | Private Clinic SEO Services",
-    seoDescription: "SEO for clinics that connects technical access, treatment demand, local evidence and patient action across Google, Maps and AI search.",
-    eyebrow: "SEO for clinics · connected search visibility",
-    title: "Turn clinic expertise into",
-    accent: "discoverable demand.",
-    description: "SEO for clinics that finds the constraint suppressing discovery, then connects technical access, treatment relevance, local evidence and measurable patient action.",
+    navLabel: "Clinic SEO strategy",
+    primaryKeyword: "SEO for private clinics",
+    supportingKeywords: ["SEO for clinics", "clinic SEO", "UK clinic SEO", "private clinic SEO services"],
+    updated: "2026-09-15",
+    seoTitle: "SEO for Private Clinics | UK Clinic SEO Strategy",
+    seoDescription: "UK SEO for private clinics, connecting treatment demand, page strategy, local evidence and patient action across Google, Maps and AI search.",
+    eyebrow: "UK clinic SEO strategy · demand before deliverables",
+    title: "Connect patient demand to",
+    accent: "the right clinic pages.",
+    description: "A UK clinic SEO strategy that maps valuable treatment and location demand to the pages, evidence and patient actions capable of converting it.",
     promise: "The goal is not more activity. It is a clearer route from valuable treatment demand to a clinic patients can find, evaluate and contact.",
     diagnosticQuestion: "Where does qualified patient demand lose the route to your clinic?",
+    headings: {
+      principle: "Map demand before multiplying output.",
+      symptoms: "Where clinic SEO usually loses qualified demand.",
+      work: "A clinic search strategy your team can inspect.",
+      workIntro: "Each stage connects a defined treatment opportunity to an owned page, an implementation decision and a measurable patient action.",
+      measurement: "Rankings are read alongside patient intent.",
+      insights: "See the reasoning behind clinic SEO decisions.",
+      insightsIntro: "Use the field notes to distinguish page, demand and measurement problems before choosing a tactic.",
+    },
     symptoms: [
       "High-value treatments are buried beneath directories or competitors.",
       "Organic traffic exists, but it does not reach treatment or contact pages.",
@@ -60,15 +78,24 @@ export const services: readonly ServiceDefinition[] = [
     navLabel: "Technical SEO",
     primaryKeyword: "technical SEO audit service",
     supportingKeywords: ["technical SEO for healthcare", "healthcare website optimisation", "optimising healthcare websites"],
-    updated: "2026-09-13",
-    seoTitle: "Technical SEO Audit Service for Private Clinics",
-    seoDescription: "A technical SEO audit service for clinics covering crawling, rendering, indexation, canonicalisation, site architecture and mobile performance.",
+    updated: "2026-09-15",
+    seoTitle: "Technical SEO Audit Service for UK Private Clinics",
+    seoDescription: "A technical SEO audit service for UK clinics covering crawling, rendering, indexation, canonicalisation, site architecture and mobile performance.",
     eyebrow: "Technical SEO audit service · access before amplification",
     title: "Make every valuable clinic page",
     accent: "reachable and interpretable.",
-    description: "A technical SEO audit service for private clinics that removes crawling, indexation, rendering, duplication and performance constraints before content is asked to compete.",
+    description: "A technical SEO audit service for UK private clinics that removes crawling, indexation, rendering, duplication and performance constraints before content is asked to compete.",
     promise: "If search systems cannot reliably access, select and understand the right page, stronger copy and authority are being built on a compromised foundation.",
     diagnosticQuestion: "Can search systems consistently reach, select and render the pages patients need?",
+    headings: {
+      principle: "Repair access before adding authority.",
+      symptoms: "Where technical failures become commercial losses.",
+      work: "A repair sequence engineers can verify.",
+      workIntro: "Findings are ordered by affected patient demand, translated into implementation requirements and checked again in production.",
+      measurement: "Technical progress is verified after release.",
+      insights: "Read the evidence behind each technical priority.",
+      insightsIntro: "Use the field notes to separate urgent access and selection problems from lower-value audit noise.",
+    },
     symptoms: [
       "Priority treatment pages are excluded, duplicated or inconsistently canonicalised.",
       "JavaScript, redirects or templates obscure the main content and page purpose.",
@@ -96,15 +123,24 @@ export const services: readonly ServiceDefinition[] = [
     navLabel: "Local SEO",
     primaryKeyword: "local SEO for medical clinics",
     supportingKeywords: ["local SEO for medical practices UK", "local SEO for doctors", "healthcare directory optimisation"],
-    updated: "2026-09-13",
+    updated: "2026-09-15",
     seoTitle: "Local SEO for Medical Clinics | UK",
     seoDescription: "Local SEO for UK medical clinics and practices that connects services, locations, clinicians, Google Business Profiles and trusted evidence.",
     eyebrow: "Local SEO for medical clinics · location meets intent",
     title: "Help nearby patients understand",
     accent: "why this clinic is relevant.",
-    description: "Local SEO for medical clinics and practices that connects services, locations, clinicians and trusted evidence across the website and Google Business Profile.",
+    description: "Local SEO for UK medical clinics and practices that connects services, locations, clinicians and trusted evidence across the website and Google Business Profile.",
     promise: "Local visibility is earned through a coherent footprint: the right service in the right place, supported by consistent information and evidence a patient can evaluate.",
     diagnosticQuestion: "Does every location make its services, people and evidence unmistakably clear?",
+    headings: {
+      principle: "Model the real footprint before expanding it.",
+      symptoms: "Where local relevance usually becomes unclear.",
+      work: "A local system grounded in real clinic operations.",
+      workIntro: "Each stage aligns the locations, services, clinicians and proof that patients and local search systems need to evaluate.",
+      measurement: "Maps visibility is read with real patient actions.",
+      insights: "Understand the decisions behind local growth.",
+      insightsIntro: "Use the field notes to build genuine local usefulness without thin city pages or ranking promises.",
+    },
     symptoms: [
       "One location page is expected to rank for every treatment and service area.",
       "Website and Google Business Profile information disagree or remain incomplete.",
@@ -132,15 +168,24 @@ export const services: readonly ServiceDefinition[] = [
     navLabel: "AI search optimisation",
     primaryKeyword: "AI search optimisation for healthcare",
     supportingKeywords: ["AI search optimization for healthcare", "healthcare answer engine optimisation", "medical content AI discoverability"],
-    updated: "2026-09-13",
-    seoTitle: "AI Search Optimisation for Healthcare",
-    seoDescription: "AI search optimisation for healthcare using clear entities, clinical expertise, citations and first-party evidence across AI answers and search.",
+    updated: "2026-09-15",
+    seoTitle: "AI Search Optimisation for UK Healthcare",
+    seoDescription: "AI search optimisation for UK healthcare using clear entities, clinical expertise, citations and first-party evidence across AI answers and search.",
     eyebrow: "AI search optimisation for healthcare · entity clarity",
     title: "Make the clinic easier for",
     accent: "emerging search systems to interpret.",
-    description: "AI search optimisation for healthcare built on clear entities, services, locations, expertise, citations and useful first-party evidence.",
+    description: "AI search optimisation for UK healthcare built on clear entities, services, locations, expertise, citations and useful first-party evidence.",
     promise: "There is no shortcut that guarantees a citation. The defensible work is to make the clinic's real expertise and relationships explicit, useful and consistently evidenced.",
     diagnosticQuestion: "Can a search system confidently connect this clinic, clinician, service, place and proof?",
+    headings: {
+      principle: "Clarify real entities before chasing citations.",
+      symptoms: "Where AI retrieval loses confidence in the clinic.",
+      work: "An evidence system people can verify.",
+      workIntro: "The sequence makes real expertise easier to retrieve while keeping visible content, source evidence and structured data aligned.",
+      measurement: "Observe retrieval signals without inventing certainty.",
+      insights: "Read the principles behind AI discoverability.",
+      insightsIntro: "Use the field notes to strengthen retrieval, authorship and evidence without treating third-party citations as guaranteed outcomes.",
+    },
     symptoms: [
       "Services and clinical expertise are described without clear entity relationships.",
       "Important claims lack first-party evidence, authorship or source context.",
@@ -165,18 +210,27 @@ export const services: readonly ServiceDefinition[] = [
   },
   {
     slug: "healthcare-seo",
-    navLabel: "Healthcare SEO",
-    primaryKeyword: "SEO for healthcare",
-    supportingKeywords: ["SEO for medical clinics", "medical clinic SEO", "healthcare SEO consultants", "healthcare SEO agency"],
-    updated: "2026-09-13",
-    seoTitle: "SEO for Healthcare & Medical Clinics",
-    seoDescription: "SEO for healthcare and medical clinics that combines technical clarity, clinical expertise, authorship and patient-centred search journeys.",
-    eyebrow: "SEO for healthcare · high-consideration search",
-    title: "Build visibility with the level of",
-    accent: "trust healthcare demands.",
-    description: "SEO for healthcare and medical clinics that makes expertise, authorship, clinical clarity and patient comprehension part of the search experience.",
+    navLabel: "Healthcare SEO services",
+    primaryKeyword: "healthcare SEO services UK",
+    supportingKeywords: ["SEO for healthcare", "SEO for medical clinics", "medical clinic SEO", "healthcare SEO consultants", "healthcare SEO agency"],
+    updated: "2026-09-15",
+    seoTitle: "Healthcare SEO Services UK | Private Clinics",
+    seoDescription: "UK healthcare SEO services for clinics, consultants and healthcare groups, combining technical clarity, clinical expertise and patient-centred search journeys.",
+    eyebrow: "UK healthcare SEO services · high-consideration search",
+    title: "Build healthcare visibility with",
+    accent: "trust at every decision.",
+    description: "UK healthcare SEO services for clinics, consultants and healthcare groups that connect technical clarity, clinical expertise, authorship and patient comprehension.",
     promise: "A healthcare page has to do two jobs at once: help search systems understand relevance and help a patient make a careful, informed next decision.",
     diagnosticQuestion: "Does the search experience make expertise and next steps clear without overclaiming?",
+    headings: {
+      principle: "Build trust before asking patients to act.",
+      symptoms: "Where healthcare discovery loses clinical confidence.",
+      work: "A healthcare search system built around real decisions.",
+      workIntro: "Each stage connects patient questions, qualified expertise and responsible measurement across services, clinicians and locations.",
+      measurement: "Discovery, trust and patient intent stay distinct.",
+      insights: "See what credible healthcare SEO requires.",
+      insightsIntro: "Use the field notes to evaluate technical, clinical and content decisions before turning them into a campaign.",
+    },
     symptoms: [
       "Clinician, treatment and location pages operate as disconnected templates.",
       "Clinical content has no clear author, reviewer, update context or evidence path.",
@@ -210,6 +264,8 @@ export type CaseStudyDefinition = {
   client: string;
   market: string;
   period: string;
+  published: string;
+  updated: string;
   title: string;
   accent: string;
   description: string;
@@ -228,6 +284,8 @@ export const caseStudies: readonly CaseStudyDefinition[] = [
     client: "The Recovery Room",
     market: "Birmingham, United Kingdom",
     period: "April–August 2026",
+    published: "2026-09-06",
+    updated: "2026-09-14",
     title: "From SEO foundation to",
     accent: "#1 commercial visibility.",
     description: "How a structured local SEO programme expanded discovery for a Birmingham massage clinic, produced a tracked #1 treatment query and increased booking intent.",
@@ -264,6 +322,8 @@ export const caseStudies: readonly CaseStudyDefinition[] = [
     client: "South City Hospital",
     market: "Karachi, Pakistan",
     period: "July 2025–May 2026",
+    published: "2026-09-06",
+    updated: "2026-09-14",
     title: "One healthcare system.",
     accent: "A much larger discovery footprint.",
     description: "How an 11-month SEO programme connected a multi-specialty hospital, more than 200 consultants and high-intent treatment demand across search surfaces.",

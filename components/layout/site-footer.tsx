@@ -9,7 +9,7 @@ export function SiteFooter() {
       <div className="container v3-footer__grid">
         <div className="v3-footer__brand">
           <Wordmark quiet />
-          <p>Search visibility for private clinics across Google, Maps and AI search.</p>
+          <p>UK search visibility for private clinics across Google, Maps and AI search.</p>
         </div>
         <nav aria-label="Services">
           <strong>Services</strong>
@@ -41,7 +41,7 @@ export function SiteFooter() {
         <span>© 2026 {siteConfig.name}</span>
         <Link href="/privacy">Privacy</Link>
         <Link href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}</Link>
-        <span>Search visibility for private clinics</span>
+        <span>UK search visibility for private clinics</span>
       </div>
     </footer>
   );

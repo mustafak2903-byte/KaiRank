@@ -3,11 +3,13 @@ const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$
 export const siteConfig = {
   name: "KaiRank",
   legalName: "KaiRank",
-  title: "Healthcare SEO Agency for Private Clinics | KaiRank",
+  title: "UK Healthcare SEO Agency for Private Clinics | KaiRank",
   description:
-    "A healthcare SEO agency for private clinics, connecting technical SEO, local search, medical content and AI search visibility to patient demand.",
-  url: configuredSiteUrl || "https://kairank.com",
+    "A UK healthcare SEO agency for private clinics, connecting technical SEO, local search, medical content and AI visibility to qualified patient demand.",
+  url: configuredSiteUrl || "https://www.kairank.com",
   locale: "en_GB",
+  primaryMarket: "United Kingdom",
+  serviceMarkets: ["United Kingdom", "United States"],
   contact: {
     email: "hello@kairank.com",
     phone: null,
@@ -32,11 +34,11 @@ export const siteConfig = {
     { label: "About", href: "/about" },
   ],
   serviceRoutes: [
-    { label: "SEO for clinics", href: "/seo" },
+    { label: "Clinic SEO strategy", href: "/seo" },
     { label: "Technical SEO", href: "/technical-seo" },
     { label: "Local SEO", href: "/local-seo" },
     { label: "AI search optimisation", href: "/ai-search-optimisation" },
-    { label: "Healthcare SEO", href: "/healthcare-seo" },
+    { label: "Healthcare SEO services", href: "/healthcare-seo" },
   ],
   publicRoutes: [
     "/services",

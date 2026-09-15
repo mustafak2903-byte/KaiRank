@@ -4,6 +4,11 @@ import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { services, type CaseStudyDefinition, type ServiceDefinition } from "@/lib/marketing-content";
 import { siteConfig } from "@/lib/site";
+import { founderReference, organisationReference } from "@/lib/structured-data";
+
+function displayDate(value: string) {
+  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" }).format(new Date(`${value}T12:00:00Z`));
+}
 
 export function CaseStudyPage({ study }: { study: CaseStudyDefinition }) {
   const url = `${siteConfig.url}/case-studies/${study.slug}`;
@@ -18,11 +23,15 @@ export function CaseStudyPage({ study }: { study: CaseStudyDefinition }) {
     headline: `${study.client}: ${study.title} ${study.accent}`,
     description: study.description,
     url,
-    datePublished: "2026-09-06",
-    dateModified: "2026-09-06",
-    author: { "@id": `${siteConfig.url}/#founder` },
-    publisher: { "@id": `${siteConfig.url}/#organisation` },
+    datePublished: study.published,
+    dateModified: study.updated,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    author: founderReference,
+    publisher: organisationReference,
+    isPartOf: { "@id": `${siteConfig.url}/#website` },
     about: { "@type": "Thing", name: "Healthcare search visibility" },
+    inLanguage: "en-GB",
+    image: `${siteConfig.url}/og/case-study/${study.slug}`,
   };
 
   return (
@@ -37,6 +46,7 @@ export function CaseStudyPage({ study }: { study: CaseStudyDefinition }) {
               <p className="case-hero__client">{study.client} · {study.market}</p>
               <h1>{study.title}<br /><em>{study.accent}</em></h1>
               <p>{study.description}</p>
+              <p className="data-label">Published {displayDate(study.published)} · Updated {displayDate(study.updated)} · {siteConfig.founder.name}</p>
               <a className="case-source" data-event="evidence_opened" data-event-label={`${study.client}: source report`} href={study.sourceUrl} target="_blank" rel="noreferrer">{study.sourceLabel} <span aria-hidden="true">↗</span></a>
             </div>
             <dl className="case-hero__ledger">

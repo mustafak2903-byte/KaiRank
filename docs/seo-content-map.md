@@ -8,15 +8,25 @@ Keyword volumes and difficulty scores are research inputs, not permanent facts. 
 
 | URL | Primary query | Supporting query family | Role |
 | --- | --- | --- | --- |
-| `/` | healthcare SEO agency for private clinics | healthcare SEO company, healthcare SEO consultants, search visibility for private clinics | Entity, proposition and routing authority |
+| `/` | UK healthcare SEO agency for private clinics | healthcare SEO company UK, healthcare SEO consultants, search visibility for private clinics | UK-primary entity, proposition and routing authority |
 | `/services` | healthcare SEO services | private clinic SEO services, medical SEO services | Service discovery and comparison hub |
-| `/seo` | SEO for clinics | clinic SEO, SEO for private clinics | Connected clinic SEO service |
-| `/healthcare-seo` | SEO for healthcare | SEO for medical clinics, medical clinic SEO, healthcare SEO consultants | Healthcare-specialist commercial page |
+| `/seo` | SEO for private clinics | clinic SEO strategy, UK clinic SEO | Demand mapping, page ownership and connected clinic SEO strategy |
+| `/healthcare-seo` | healthcare SEO services UK | SEO for healthcare, SEO for medical clinics, healthcare SEO consultants | Broader healthcare-specialist service for clinics, consultants and groups |
 | `/technical-seo` | technical SEO audit service | technical SEO for healthcare, healthcare website optimisation, crawling SEO | Technical access, selection and performance service |
 | `/local-seo` | local SEO for medical clinics | local SEO for medical practices UK, local SEO for doctors, healthcare directory optimisation | Local and Maps service |
 | `/ai-search-optimisation` | AI search optimisation for healthcare | AI search optimization for healthcare, healthcare AEO, medical content AI discoverability | AI retrieval, entity and evidence service |
 
-The homepage should not repeat every service page. It establishes KaiRank as the specialist entity, communicates the commercial promise and routes visitors and internal authority into the page that owns each constraint.
+The homepage should not repeat every service page. It establishes KaiRank as the UK-primary specialist entity, communicates the commercial promise and routes visitors and internal authority into the page that owns each constraint.
+
+## Geography decision
+
+The United Kingdom is the primary launch market. Current proof, British-English terminology and the private-clinic proposition are strongest there. The `.com` domain remains appropriate because KaiRank can support work in the United States, but US pages should be added only after US-specific search research, terminology, evidence and regulatory context exist. Do not publish copied `/us/` variants or mix UK and US spellings to manufacture geographic reach.
+
+## AEO, GEO and structured data boundary
+
+Organization, Person, WebSite, Service, BreadcrumbList, BlogPosting, Article and FAQPage entities describe content that visitors can verify on the page. FAQ markup remains semantically aligned with the visible questions, but Google removed the FAQ rich-result feature in May 2026; the markup is not treated as a ranking or rich-result shortcut. Google's current generative-AI guidance says the same crawlability, originality, technical clarity and people-first content principles apply, and that no special AI schema or `llms.txt` file is required for Google Search.
+
+Article and case-study pages use visible authorship, genuine publish/update dates and a unique representative social image. Keep those elements accurate when an article is revised; never advance a date without a substantive change.
 
 ## Blog ownership
 

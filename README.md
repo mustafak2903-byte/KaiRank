@@ -1,8 +1,8 @@
 # KaiRank rebuild
 
-The production Next.js website for KaiRank: a founder-led search visibility practice for private clinics across Google, Maps and AI discovery.
+The production Next.js website for KaiRank: a UK-focused, founder-led search visibility practice for private clinics across Google, Maps and AI discovery, with the United States retained as a deliberate secondary market.
 
-The production homepage is `/`. It combines the approved editorial system with a continuous patient-search journey, five focused service routes, verified healthcare evidence, a progressive Search Visibility Diagnostic, the Kai site guide and a lazy Cal.com booking modal. Crawlable Services, Case Studies and healthcare SEO Insights hubs connect the wider search architecture. `/visual-system` and `/experiments/*` remain non-indexable review routes.
+The production homepage is `/`. It combines the approved editorial system with a continuous patient-search journey, five focused service routes, verified healthcare evidence, a progressive Search Visibility Diagnostic, the Kai site guide and a lazy Cal.com booking modal. Crawlable Services, Case Studies and healthcare SEO Insights hubs connect the wider search architecture. In production, `/visual-system` and `/experiments/*` permanently redirect to the canonical homepage; Preview deployments remain `noindex`.
 
 ## Run locally
 
@@ -36,7 +36,7 @@ npm run build
 - Deploy the `kairank-rebuild` branch to a Vercel Preview environment first.
 - Configure `AUDIT_LEAD_WEBHOOK_URL` and, where supported, `AUDIT_LEAD_WEBHOOK_TOKEN` for Preview and Production.
 - Add `PAGESPEED_API_KEY` for more reliable enhanced diagnostic quota.
-- Connect `kairank.com`, confirm HTTPS and verify that `hello@kairank.com` can receive the form's email fallback.
+- Connect `www.kairank.com` as the primary domain, redirect `kairank.com` to it, confirm HTTPS and verify that `hello@kairank.com` can receive the form's email fallback.
 - Enable Vercel Web Analytics and Speed Insights.
 - Update the Cal.com profile and event names to match KaiRank's private-clinic positioning.
 - Run the full diagnostic, visibility-review delivery and Cal.com booking flow on the deployed Preview URL before promoting it.

@@ -6,8 +6,8 @@ import { createMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site";
 
 export const metadata = createMetadata({
-  title: "About the founder-led search practice",
-  description: "Meet the accountable search strategist behind KaiRank and the evidence-first operating principles used for private-clinic visibility.",
+  title: "About KaiRank's UK healthcare SEO practice",
+  description: "Meet the accountable search strategist behind KaiRank and the evidence-first operating principles used for UK private-clinic visibility.",
   path: "/about",
 });
 
@@ -36,7 +36,7 @@ export default function AboutPage() {
       <section className="profile-statement">
         <div className="container profile-statement__grid">
           <span className="data-label">The operating model</span>
-          <div><h2>Diagnosis, priorities and measurement stay connected.</h2><p>KaiRank is a founder-led search visibility practice for private clinics and high-consideration healthcare businesses. Mustafa leads the diagnosis and search strategy, then works directly with the developers, writers, clinicians or existing agency responsible for implementation.</p><p>The work shown here spans a Birmingham private clinic and a multi-specialty hospital with more than 200 consultants. Each case study separates first-party analytics, third-party estimates and booking-intent signals so the result can be read accurately.</p><a href={siteConfig.founder.linkedIn} target="_blank" rel="noreferrer">View Mustafa’s LinkedIn profile <span aria-hidden="true">↗</span></a></div>
+          <div><h2>Diagnosis, priorities and measurement stay connected.</h2><p>KaiRank is a UK-focused, founder-led search visibility practice for private clinics and high-consideration healthcare businesses. Mustafa leads the diagnosis and search strategy, then works directly with the developers, writers, clinicians or existing agency responsible for implementation.</p><p>The United Kingdom is the primary launch market. KaiRank can also support US healthcare organisations when the research, language, evidence and regulatory context are built specifically for that market—not copied from a UK page.</p><p>The work shown here spans a Birmingham private clinic and a multi-specialty hospital with more than 200 consultants. Each case study separates first-party analytics, third-party estimates and booking-intent signals so the result can be read accurately.</p><a href={siteConfig.founder.linkedIn} target="_blank" rel="noreferrer">View Mustafa’s LinkedIn profile <span aria-hidden="true">↗</span></a></div>
           <figure className="profile-operating-model" aria-label="Founder-led operating model connecting diagnosis, prioritisation and measurement">
             <div className="profile-operating-model__header" aria-hidden="true"><span>Search visibility system</span><small>Founder / 01</small></div>
             <svg viewBox="0 0 560 520" aria-hidden="true">

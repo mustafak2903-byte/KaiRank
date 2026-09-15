@@ -75,7 +75,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable} ${data.variable}`}>
+    <html lang="en-GB" className={`${display.variable} ${body.variable} ${data.variable}`}>
       <body>
         {children}
         <Analytics />

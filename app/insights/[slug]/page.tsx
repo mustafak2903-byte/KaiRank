@@ -22,6 +22,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       modifiedTime: insight.updated,
       authors: [siteConfig.founder.name],
     },
+    image: {
+      url: `/og/insight/${insight.slug}`,
+      width: 1200,
+      height: 630,
+      alt: `${insight.title} ${insight.accent} — KaiRank`,
+    },
   });
 }
 

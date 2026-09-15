@@ -12,6 +12,12 @@ type MetadataInput = {
     modifiedTime: string;
     authors: readonly string[];
   };
+  image?: {
+    url: string;
+    width: number;
+    height: number;
+    alt: string;
+  };
 };
 
 export function createMetadata({
@@ -21,6 +27,12 @@ export function createMetadata({
   noIndex = false,
   absoluteTitle = false,
   article,
+  image = {
+    url: "/og.png",
+    width: 1734,
+    height: 907,
+    alt: "KaiRank — Search visibility, engineered.",
+  },
 }: MetadataInput = {}): Metadata {
   const documentTitle = title ?? siteConfig.title;
   const socialTitle = absoluteTitle ? documentTitle : title ? `${title} — ${siteConfig.name}` : siteConfig.title;
@@ -41,12 +53,7 @@ export function createMetadata({
       modifiedTime: article.modifiedTime,
       authors: [...article.authors],
       images: [
-        {
-          url: "/og.png",
-          width: 1734,
-          height: 907,
-          alt: "KaiRank — Search visibility, engineered.",
-        },
+        image,
       ],
     } : {
       type: "website",
@@ -56,19 +63,14 @@ export function createMetadata({
       title: socialTitle,
       description,
       images: [
-        {
-          url: "/og.png",
-          width: 1734,
-          height: 907,
-          alt: "KaiRank — Search visibility, engineered.",
-        },
+        image,
       ],
     },
     twitter: {
       card: "summary_large_image",
       title: socialTitle,
       description,
-      images: ["/og.png"],
+      images: [image.url],
     },
   };
 }

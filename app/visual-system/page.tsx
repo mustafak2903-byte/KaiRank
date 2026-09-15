@@ -17,11 +17,12 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { insights } from "@/lib/insights-content";
 import { createMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site";
+import { createFaqEntity, siteEntityGraph } from "@/lib/structured-data";
 
 export const metadata = createMetadata({
-  title: "Search visibility for private clinics",
+  title: "UK search visibility for private clinics",
   description:
-    "KaiRank helps private clinics improve discovery across Google, Maps and AI search through technical SEO, local SEO, search strategy, content and AI-search optimisation.",
+    "KaiRank helps UK private clinics improve discovery across Google, Maps and AI search through technical SEO, local SEO, clinic search strategy and healthcare content.",
   path: "/visual-system",
   noIndex: true,
 });
@@ -70,37 +71,8 @@ const faqs = [
 ] as const;
 
 const structuredData = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": `${siteConfig.url}/#organisation`,
-      name: siteConfig.name,
-      url: siteConfig.url,
-      logo: `${siteConfig.url}/icon.svg`,
-      email: siteConfig.contact.email,
-      description: siteConfig.description,
-      founder: { "@id": `${siteConfig.url}/#founder` },
-      knowsAbout: ["Technical SEO", "Search strategy", "Local SEO", "Healthcare SEO", "AI search optimisation"],
-    },
-    {
-      "@type": "Person",
-      "@id": `${siteConfig.url}/#founder`,
-      name: siteConfig.founder.name,
-      jobTitle: "Founder and search strategist",
-      url: `${siteConfig.url}/about`,
-      sameAs: [siteConfig.founder.linkedIn],
-      worksFor: { "@id": `${siteConfig.url}/#organisation` },
-    },
-    {
-      "@type": "WebSite",
-      "@id": `${siteConfig.url}/#website`,
-      name: siteConfig.name,
-      url: siteConfig.url,
-      publisher: { "@id": `${siteConfig.url}/#organisation` },
-      audience: { "@type": "Audience", audienceType: "Private clinics and healthcare businesses" },
-    },
-  ],
+  ...siteEntityGraph,
+  "@graph": [...siteEntityGraph["@graph"], createFaqEntity(siteConfig.url, faqs)],
 };
 
 const homepageInsights = [...insights].sort((a, b) => b.published.localeCompare(a.published)).slice(0, 3);
@@ -118,14 +90,14 @@ export default function VisualSystemPage() {
           <CinematicBackground />
           <div className="container v7-hero__inner">
             <div className="v7-hero__copy" data-reveal>
-              <p className="v3-eyebrow"><i aria-hidden="true" /> Search visibility for private clinics</p>
+              <p className="v3-eyebrow"><i aria-hidden="true" /> UK search visibility for private clinics</p>
               <h1 id="hero-title">
                 <span>Be the clinic</span>
                 <span>patients find</span>
                 <em>before they choose.</em>
               </h1>
               <p className="v3-hero__lead">
-                KaiRank is a healthcare SEO agency that finds and fixes the technical, local and authority gaps keeping private clinics out of the shortlist across Google, Maps and AI search.
+                KaiRank is a UK healthcare SEO agency that finds and fixes the technical, local and authority gaps keeping private clinics out of the shortlist across Google, Maps and AI search.
               </p>
               <div className="v3-actions">
                 <a className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label="Hero: check my clinic" data-event-source="hero" href="#audit">Check my clinic <span aria-hidden="true">↘</span></a>

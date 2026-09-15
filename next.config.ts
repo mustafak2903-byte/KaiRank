@@ -37,6 +37,14 @@ const nextConfig: NextConfig = {
   agentRules: false,
   poweredByHeader: false,
   reactStrictMode: true,
+  async redirects() {
+    if (process.env.VERCEL_ENV !== "production") return [];
+    return [
+      { source: "/visual-system", destination: "/", permanent: true },
+      { source: "/experiments", destination: "/", permanent: true },
+      { source: "/experiments/:path*", destination: "/", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

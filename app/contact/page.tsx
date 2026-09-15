@@ -7,7 +7,7 @@ import { siteConfig } from "@/lib/site";
 
 export const metadata = createMetadata({
   title: "Talk through your clinic's search strategy",
-  description: "Start a focused conversation about the search constraints affecting a private clinic across Google, Maps and AI discovery.",
+  description: "Start a focused conversation about the search constraints affecting a UK private clinic across Google, Maps and AI discovery.",
   path: "/contact",
 });
 

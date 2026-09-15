@@ -17,7 +17,7 @@ const capabilities = [
     id: "intent",
     href: "/seo",
     index: "02",
-    title: "Search strategy & on-page SEO",
+    title: "Clinic SEO strategy",
     label: "Target searches capable of creating meaningful demand.",
     body: "Align treatment, service and location pages with the searches most likely to create qualified patient demand.",
   },

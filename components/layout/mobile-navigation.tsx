@@ -97,7 +97,7 @@ export function MobileNavigation() {
         </nav>
         <div className="mobile-navigation__footer">
           <span className="data-label">Google / Maps / AI search</span>
-          <p>Search visibility for private clinics.</p>
+          <p>UK search visibility for private clinics.</p>
         </div>
       </div>
     </div>

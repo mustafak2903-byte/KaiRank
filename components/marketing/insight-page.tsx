@@ -5,6 +5,7 @@ import { MarketingShell } from "@/components/marketing/marketing-shell";
 import type { InsightDefinition } from "@/lib/insights-content";
 import { insights } from "@/lib/insights-content";
 import { siteConfig } from "@/lib/site";
+import { founderReference, organisationReference } from "@/lib/structured-data";
 
 function displayDate(value: string) {
   return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" }).format(new Date(`${value}T12:00:00Z`));
@@ -15,7 +16,7 @@ export function InsightPage({ insight }: { insight: InsightDefinition }) {
   const related = insights.filter((item) => item.slug !== insight.slug).slice(0, 2);
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     "@id": `${url}#article`,
     headline: `${insight.title} ${insight.accent}`,
     description: insight.description,
@@ -23,13 +24,13 @@ export function InsightPage({ insight }: { insight: InsightDefinition }) {
     datePublished: insight.published,
     dateModified: insight.updated,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
-    author: { "@id": `${siteConfig.url}/#founder` },
-    publisher: { "@id": `${siteConfig.url}/#organisation` },
+    author: founderReference,
+    publisher: organisationReference,
     isPartOf: { "@id": `${siteConfig.url}/#website` },
     about: insight.category,
     keywords: [insight.primaryKeyword, ...insight.supportingKeywords].join(", "),
     inLanguage: "en-GB",
-    image: `${siteConfig.url}/og.png`,
+    image: `${siteConfig.url}/og/insight/${insight.slug}`,
   };
 
   return (

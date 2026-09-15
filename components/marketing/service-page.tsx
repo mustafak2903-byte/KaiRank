@@ -6,6 +6,7 @@ import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { insights } from "@/lib/insights-content";
 import { services, type ServiceDefinition } from "@/lib/marketing-content";
 import { siteConfig } from "@/lib/site";
+import { createFaqEntity } from "@/lib/structured-data";
 
 export function ServicePage({ service }: { service: ServiceDefinition }) {
   const url = `${siteConfig.url}/${service.slug}`;
@@ -14,17 +15,24 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
     .filter((insight) => insight.serviceSlug === service.slug)
     .sort((a, b) => b.published.localeCompare(a.published));
   const relatedInsights = (directInsights.length ? directInsights : [...insights].sort((a, b) => b.published.localeCompare(a.published))).slice(0, 2);
-  const structuredData = {
-    "@context": "https://schema.org",
+  const serviceEntity = {
     "@type": "Service",
     "@id": `${url}#service`,
     name: service.navLabel,
-    serviceType: service.navLabel,
+    serviceType: service.primaryKeyword,
     description: service.description,
     keywords: [service.primaryKeyword, ...service.supportingKeywords].join(", "),
     url,
     provider: { "@id": `${siteConfig.url}/#organisation` },
-    audience: { "@type": "Audience", audienceType: "Private clinics and high-consideration healthcare businesses" },
+    areaServed: siteConfig.serviceMarkets.map((market) => ({ "@type": "Country", name: market })),
+    audience: {
+      "@type": "Audience",
+      audienceType: "Private clinics and healthcare organisations in the United Kingdom and United States",
+    },
+  };
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [serviceEntity, createFaqEntity(url, service.faqs)],
   };
 
   return (
@@ -48,7 +56,7 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
 
       <section className="marketing-thesis" aria-labelledby="thesis-title">
         <div className="container marketing-thesis__grid">
-          <div><span className="data-label">The operating principle</span><h2 id="thesis-title">Constraint first.<br /><em>Activity second.</em></h2></div>
+          <div><span className="data-label">The operating principle</span><h2 id="thesis-title">{service.headings.principle}</h2></div>
           <p>{service.promise}</p>
         </div>
       </section>
@@ -57,7 +65,7 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
         <div className="container">
           <div className="marketing-section__index data-label"><span>When to look closer</span><span>Observable symptoms</span></div>
           <div className="marketing-symptoms">
-            <h2 id="symptoms-title">The signals that usually precede the diagnosis.</h2>
+            <h2 id="symptoms-title">{service.headings.symptoms}</h2>
             <ol>
               {service.symptoms.map((symptom, index) => <li key={symptom}><span className="data-label">0{index + 1}</span><p>{symptom}</p></li>)}
             </ol>
@@ -68,7 +76,7 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
       <section className="marketing-section" aria-labelledby="work-title">
         <div className="container">
           <div className="marketing-section__index data-label"><span>How the work moves</span><span>Evidence at each stage</span></div>
-          <div className="marketing-section__lead"><h2 id="work-title">A sequence your team can inspect.</h2><p>Every stage ends with a defined output. Strategy stays connected to implementation and measurement.</p></div>
+          <div className="marketing-section__lead"><h2 id="work-title">{service.headings.work}</h2><p>{service.headings.workIntro}</p></div>
           <ol className="marketing-work">
             {service.work.map((step) => (
               <li key={step.index}>
@@ -83,7 +91,7 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
 
       <section className="marketing-section marketing-section--signal" aria-labelledby="measurement-title">
         <div className="container marketing-measurement">
-          <div><span className="data-label">Measurement</span><h2 id="measurement-title">Visibility is separated from meaningful action.</h2></div>
+          <div><span className="data-label">Measurement</span><h2 id="measurement-title">{service.headings.measurement}</h2></div>
           <dl>{service.measures.map((measure) => <div key={measure.label}><dt>{measure.label}</dt><dd>{measure.value}</dd></div>)}</dl>
         </div>
       </section>
@@ -92,7 +100,7 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
         <div className="container">
           <div className="marketing-section__index data-label"><span>Search intelligence</span><span>Supporting field notes</span></div>
           <div className="service-insights__grid">
-            <div><h2 id="service-insights-title">Understand the decision behind the work.</h2><p>Use the evidence-led guides to evaluate the problem before choosing a tactic or deliverable.</p><Link href="/insights">Explore the healthcare SEO blog <span aria-hidden="true">↗</span></Link></div>
+            <div><h2 id="service-insights-title">{service.headings.insights}</h2><p>{service.headings.insightsIntro}</p><Link href="/insights">Explore the healthcare SEO blog <span aria-hidden="true">↗</span></Link></div>
             <ol>{relatedInsights.map((insight, index) => <li key={insight.slug}><Link href={`/insights/${insight.slug}`}><span className="data-label">0{index + 1} / {insight.category}</span><strong>{insight.title} {insight.accent}</strong><small>{insight.readTime}</small><i aria-hidden="true">↗</i></Link></li>)}</ol>
           </div>
         </div>
