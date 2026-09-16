@@ -17,6 +17,7 @@ export type AnalyticsEventName =
   | "full_review_requested"
   | "full_review_confirmed"
   | "full_review_failed"
+  | "diagnostic_email_clicked"
   | "booking_opened"
   | "booking_clicked"
   | "booking_completed"

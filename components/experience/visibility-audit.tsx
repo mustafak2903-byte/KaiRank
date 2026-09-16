@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { FastVisibilitySurface } from "@/lib/competitors/types";
 import { trackEvent } from "@/lib/analytics";
@@ -48,25 +47,6 @@ type PageSpeedResponse = {
 };
 
 type ApiError = { code?: string; message?: string };
-
-function reviewAttribution() {
-  const params = new URLSearchParams(window.location.search);
-  let referrerHost: string | null = null;
-  try {
-    referrerHost = document.referrer ? new URL(document.referrer).hostname : null;
-  } catch {
-    referrerHost = null;
-  }
-  return {
-    landingPath: window.location.pathname,
-    referrerHost,
-    utmSource: params.get("utm_source"),
-    utmMedium: params.get("utm_medium"),
-    utmCampaign: params.get("utm_campaign"),
-    utmContent: params.get("utm_content"),
-    utmTerm: params.get("utm_term"),
-  };
-}
 
 const resultGroups = [
   { title: "Technical access", ids: ["response", "https"] },
@@ -155,101 +135,40 @@ function ReviewContext({ location, priorityService }: { location: string; priori
   );
 }
 
-function FullReviewForm({
+function ReviewActions({
   website,
   location,
   priorityService,
-  auditResults,
 }: {
   website: string;
   location: string;
   priorityService: string;
-  auditResults: FastCheck;
 }) {
-  const [state, setState] = useState<"idle" | "sending" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const emailRef = useRef<HTMLInputElement>(null);
-
-  async function submitReview(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setMessage("");
-    setEmailError("");
-    const form = new FormData(event.currentTarget);
-    const submittedEmail = String(form.get("email") ?? "").trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(submittedEmail) || submittedEmail.length > 254) {
-      setEmailError("Add a valid email address so we can deliver the review.");
-      window.requestAnimationFrame(() => emailRef.current?.focus());
-      return;
-    }
-
-    setState("sending");
-    trackEvent("full_review_requested", { source: "search-context" });
-
-    try {
-      const response = await fetch("/api/visibility-review", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          website,
-          location,
-          priorityService,
-          email: submittedEmail,
-          businessName: String(form.get("businessName") ?? ""),
-          numberOfLocations: String(form.get("numberOfLocations") ?? ""),
-          companyWebsite: String(form.get("companyWebsite") ?? ""),
-          auditResults: {
-            statusCode: auditResults.statusCode,
-            responseMs: auditResults.responseMs,
-            checks: auditResults.checks.map(({ id, status }) => ({ id, status })),
-          },
-          attribution: reviewAttribution(),
-        }),
-      });
-      const payload = (await response.json()) as ApiError;
-      if (!response.ok) throw new Error(payload.message ?? "The review request could not be confirmed.");
-      setState("success");
-      setMessage("Request confirmed. KaiRank will review your competitive search map.");
-      trackEvent("full_review_confirmed", { source: "search-context" });
-    } catch (error) {
-      setState("error");
-      setMessage(error instanceof Error ? error.message : "The review request could not be confirmed.");
-      trackEvent("full_review_failed", { source: "search-context" });
-    }
-  }
+  const subject = encodeURIComponent(`Search visibility context: ${priorityService} in ${location}`);
+  const body = encodeURIComponent([
+    "Hello KaiRank,",
+    "",
+    "I would like to discuss this search visibility context:",
+    `Website: ${website}`,
+    `Clinic location: ${location}`,
+    `Priority treatment or service: ${priorityService}`,
+  ].join("\n"));
+  const emailHref = `mailto:${siteConfig.contact.email}?subject=${subject}&body=${body}`;
 
   return (
     <div className="audit-review">
-      <div>
+      <div className="audit-review__intro">
         <span className="data-label">Want the deeper search picture?</span>
-        <strong>See which search constraints deserve attention first.</strong>
-        <p>We’ll review treatment demand, nearby competition and the wider search landscape.</p>
+        <strong>Turn these signals into a focused search conversation.</strong>
+        <p>The public check shows the surface. A strategy conversation connects it to treatment demand, nearby competition and the pages that should work hardest.</p>
       </div>
-      {state === "success" ? (
-        <p className="audit-review__success" role="status">{message}</p>
-      ) : (
-        <form onSubmit={submitReview} noValidate>
-          <label><span>Email</span><input ref={emailRef} name="email" type="email" autoComplete="email" placeholder="you@yourclinic.com" required value={email} aria-invalid={Boolean(emailError)} aria-describedby={emailError ? "review-email-error" : undefined} onChange={(event) => { setEmail(event.target.value); setEmailError(""); }} /></label>
-          <label className="audit-review__honeypot" aria-hidden="true"><span>Company website</span><input name="companyWebsite" type="text" autoComplete="off" tabIndex={-1} /></label>
-          <label><span>Clinic <i>optional</i></span><input name="businessName" type="text" autoComplete="organization" placeholder="Clinic name" /></label>
-          <label>
-            <span>Number of locations <i>optional</i></span>
-            <select name="numberOfLocations" defaultValue="">
-              <option value="">Select</option>
-              <option value="1">1</option>
-              <option value="2-5">2–5</option>
-              <option value="6-20">6–20</option>
-              <option value="21+">21+</option>
-            </select>
-          </label>
-          <button type="submit" disabled={state === "sending"}>{state === "sending" ? "Confirming…" : "Request my competitive search map"}<span aria-hidden="true">↗</span></button>
-          <p className="audit-review__privacy">Submitting sends these details and limited campaign attribution to KaiRank so the requested review can be delivered. <Link href="/privacy">Read the privacy notice.</Link></p>
-          {emailError ? <p className="audit-review__message is-error" id="review-email-error" role="alert">{emailError}</p> : null}
-          {message ? <p className={`audit-review__message is-${state}`} role={state === "error" ? "alert" : "status"}>{message}{state === "error" ? <> <a href={`mailto:${siteConfig.contact.email}`}>Email KaiRank instead <span aria-hidden="true">↗</span></a></> : null}</p> : null}
-        </form>
-      )}
-      <BookingTrigger className="audit-review__booking" label="Talk through my findings" source="post-diagnostic" prefill={{ email }} />
+      <div className="audit-review__actions">
+        <BookingTrigger className="audit-review__booking" label="Talk through my findings" source="post-diagnostic" />
+        <a className="audit-review__email" href={emailHref} onClick={() => trackEvent("diagnostic_email_clicked", { source: "post-diagnostic" })}>
+          Email this context instead <span aria-hidden="true">↗</span>
+        </a>
+        <p>No account access requested. The calendar loads only when you choose to open it.</p>
+      </div>
     </div>
   );
 }
@@ -428,7 +347,7 @@ export function VisibilityAudit() {
 
       {hasResult && gapReady ? <ReviewContext location={location.trim()} priorityService={priorityService.trim()} /> : null}
       {hasResult && gapReady ? (
-        <FullReviewForm website={fastResult.fast.finalUrl} location={location.trim()} priorityService={priorityService.trim()} auditResults={fastResult.fast} />
+        <ReviewActions website={fastResult.fast.finalUrl} location={location.trim()} priorityService={priorityService.trim()} />
       ) : null}
     </section>
   );

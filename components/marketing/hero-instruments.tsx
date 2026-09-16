@@ -68,7 +68,7 @@ export function DiagnosticSignalInstrument() {
       <ol className="diagnostic-signal__steps">
         <li><span>01</span><div><small>Technical surface</small><strong>Access, selection and mobile signals</strong></div></li>
         <li><span>02</span><div><small>Search context</small><strong>One location and priority treatment</strong></div></li>
-        <li><span>03</span><div><small>Deeper review</small><strong>Requested only when you choose</strong></div></li>
+        <li><span>03</span><div><small>Strategy conversation</small><strong>Opened only when you choose</strong></div></li>
       </ol>
       <footer><span>Access required</span><strong>Public website only</strong></footer>
     </aside>

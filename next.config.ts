@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 function assertProductionConfiguration() {
   if (process.env.VERCEL_ENV !== "production") return;
 
-  const required = ["NEXT_PUBLIC_SITE_URL", "AUDIT_LEAD_WEBHOOK_URL"] as const;
+  const required = ["NEXT_PUBLIC_SITE_URL"] as const;
   const missing = required.filter((name) => !process.env[name]?.trim());
   if (missing.length) {
     throw new Error(`Missing required production environment variables: ${missing.join(", ")}`);

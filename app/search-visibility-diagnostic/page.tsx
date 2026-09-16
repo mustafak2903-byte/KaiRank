@@ -51,7 +51,7 @@ export default function SearchVisibilityDiagnosticPage() {
       <section className="diagnostic-boundaries" aria-labelledby="diagnostic-boundaries-title">
         <div className="container diagnostic-boundaries__grid">
           <div><span className="data-label">Read the result accurately</span><h2 id="diagnostic-boundaries-title">A diagnostic—not a ranking promise.</h2></div>
-          <div><p>The first check reads public response, HTTPS, page fundamentals, indexation signals, structured data and mobile setup. Optional PageSpeed data adds a performance layer when Google makes it available.</p><p>It does not access analytics, log in to the website, measure live rankings or turn a technical score into a forecast. A deeper review is sent only after you add context and explicitly request it.</p><Link href="/privacy">How KaiRank handles diagnostic data <span aria-hidden="true">↗</span></Link></div>
+          <div><p>The first check reads public response, HTTPS, page fundamentals, indexation signals, structured data and mobile setup. Optional PageSpeed data adds a performance layer when Google makes it available.</p><p>It does not access analytics, log in to the website, measure live rankings or turn a technical score into a forecast. After adding context, you can choose to open the strategy calendar or email the details yourself.</p><Link href="/privacy">How KaiRank handles diagnostic data <span aria-hidden="true">↗</span></Link></div>
         </div>
       </section>
     </MarketingShell>
