@@ -1,5 +1,6 @@
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
+import { siteConfig } from "./site";
 
 const MAX_REDIRECTS = 5;
 const MAX_HTML_BYTES = 1_250_000;
@@ -194,7 +195,7 @@ async function safeFetch(startUrl: string, options: SafeFetchOptions): Promise<S
         signal: controller.signal,
         headers: {
           Accept: options.requireHtml ? "text/html,application/xhtml+xml" : "text/plain,text/xml,application/xml,*/*;q=0.2",
-          "User-Agent": "KaiRank-Visibility-Fast-Check/3.0 (+https://kairank.com)",
+          "User-Agent": `KaiRank-Visibility-Fast-Check/3.0 (+${siteConfig.url})`,
         },
       });
 

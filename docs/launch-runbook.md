@@ -2,6 +2,10 @@
 
 This runbook is the production hand-off for the `kairank-rebuild` branch. Do not promote a build until every launch gate is confirmed on the deployed Vercel Preview URL.
 
+## Current temporary production domain
+
+The only configured public hostname is `https://kai-rank.vercel.app`. The custom domain has not been purchased or connected. Set Vercel Production `NEXT_PUBLIC_SITE_URL=https://kai-rank.vercel.app` before the approved deployment; an existing environment value overrides the code fallback. Do not redirect to the future domain or noindex the current production hostname. Custom-domain steps below apply only to a later migration after purchase, DNS connection and HTTPS verification.
+
 ## Search ownership
 
 - `/` — UK healthcare SEO agency proposition, brand and routing authority
@@ -21,7 +25,7 @@ Do not add city, treatment or clinic-specialty pages until each proposed page ha
 
 1. Import `mustafak2903-byte/KaiRank` into Vercel, then set **Settings → Environments → Production → Branch Tracking** to `kairank-rebuild`. This keeps `main` untouched while making the approved branch the production source.
 2. Add the Preview and Production environment variables from `.env.example`.
-3. Choose the receiving system for diagnostic review requests and provide its HTTPS webhook URL and bearer token, if supported.
+3. A webhook is optional and reserved for a future review-request workflow; the current diagnostic uses booking/email actions.
 4. Add both `www.kairank.com` and `kairank.com` to Vercel. Use `www.kairank.com` as primary for Vercel's recommended CNAME reliability and redirect the apex to it, then update `NEXT_PUBLIC_SITE_URL` to `https://www.kairank.com` before the production deployment. If the apex must remain primary, redirect `www` to the apex and retain `https://kairank.com` instead. Never allow both hosts to resolve independently.
 5. Configure MX records with the chosen email provider and confirm `hello@kairank.com` can send and receive.
 6. Rename the Cal.com event used by the website to a KaiRank-specific strategy conversation and refine the public profile copy.
@@ -29,12 +33,12 @@ Do not add city, treatment or clinic-specialty pages until each proposed page ha
 
 ## Required Vercel configuration
 
-- `NEXT_PUBLIC_SITE_URL=https://www.kairank.com` when using Vercel's recommended `www` primary; otherwise `https://kairank.com`
-- `AUDIT_LEAD_WEBHOOK_URL=https://…`
-- `AUDIT_LEAD_WEBHOOK_TOKEN=…` when the receiver supports authentication
+- `NEXT_PUBLIC_SITE_URL=https://kai-rank.vercel.app`
+- `AUDIT_LEAD_WEBHOOK_URL=https://…` only for a future enabled review-request workflow
+- `AUDIT_LEAD_WEBHOOK_TOKEN=…` only when that receiver supports authentication
 - `PAGESPEED_API_KEY=…` for more reliable enhanced diagnostic quota
 
-Production builds fail closed if the canonical origin or lead webhook is missing or does not use HTTPS.
+The central site URL defaults to the current Vercel hostname when unset. A configured value must be an HTTPS origin without credentials, a path, query or fragment. No webhook is required for the current production build.
 
 ## Exact Vercel dashboard sequence
 
@@ -42,7 +46,7 @@ Production builds fail closed if the canonical origin or lead webhook is missing
 2. Keep **Framework Preset: Next.js**, **Root Directory: `./`**, and the default install/build/output settings; then deploy once to create the project.
 3. Open **Settings → Environments → Production → Branch Tracking**, set the production branch to `kairank-rebuild`, and save. Do not select or merge `main`.
 4. Open **Settings → Environment Variables**. Add `NEXT_PUBLIC_SITE_URL`, `AUDIT_LEAD_WEBHOOK_URL`, the optional webhook token and the optional PageSpeed key. Apply the canonical origin to Production and Preview; apply secret values only to the environments that need them. Redeploy after every environment-variable change because previous deployments do not receive new values.
-5. Open **Settings → Domains** and add `www.kairank.com`, then `kairank.com`. Set `www.kairank.com` as primary and configure `kairank.com` to redirect to it.
+5. For the current launch, retain `kai-rank.vercel.app`. Only after purchasing the custom domain, add it under **Settings → Domains** and choose the preferred hostname.
 6. At the domain registrar, remove conflicting records and enter the exact DNS values shown by Vercel for both hosts. Vercel's general-purpose values are not a substitute for the project-specific values shown in **Domains**.
 7. Wait until Vercel marks both domains valid and provisions HTTPS. Then redeploy the latest `kairank-rebuild` commit to Production and execute the live-domain release gate below.
 
@@ -65,9 +69,9 @@ Production builds fail closed if the canonical origin or lead webhook is missing
 
 1. Promote the approved Vercel Preview to Production.
 2. Confirm the preferred hostname and HTTPS redirect behaviour.
-3. Re-run the full route, form, booking, security-header and mobile QA against `https://www.kairank.com`.
+3. Re-run route, booking, security-header and mobile QA against the configured `NEXT_PUBLIC_SITE_URL` (currently `https://kai-rank.vercel.app`).
 4. Verify a Google Search Console Domain property through DNS.
-5. Submit `https://www.kairank.com/sitemap.xml`.
+5. Submit the configured origin's `/sitemap.xml`. Use a URL-prefix Search Console property for the current Vercel hostname; a Domain property requires ownership of the later custom domain.
 6. Inspect the homepage, service hub, five commercial service pages, case-study hub, healthcare SEO blog and diagnostic URL.
 7. Request indexing only after the live canonical, rendered HTML and indexation status are correct.
 8. Record the launch date and the initial Search Console, analytics and qualified-lead baseline.

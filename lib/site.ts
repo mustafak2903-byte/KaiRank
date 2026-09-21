@@ -1,4 +1,15 @@
-const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, "");
+// One origin for metadata, structured data, feeds, sitemap and robots.
+// Change NEXT_PUBLIC_SITE_URL only after the new domain is connected and verified.
+function resolveSiteUrl() {
+  const value = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://kai-rank.vercel.app";
+  const url = new URL(value);
+  if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash) {
+    throw new Error("NEXT_PUBLIC_SITE_URL must be an HTTPS origin without credentials, a path, query or fragment.");
+  }
+  return url.origin;
+}
+
+export const SITE_URL = resolveSiteUrl();
 
 export const siteConfig = {
   name: "KaiRank",
@@ -6,7 +17,7 @@ export const siteConfig = {
   title: "UK Healthcare SEO Agency for Private Clinics | KaiRank",
   description:
     "A UK healthcare SEO agency for private clinics, connecting technical SEO, local search, medical content and AI visibility to qualified patient demand.",
-  url: configuredSiteUrl || "https://www.kairank.com",
+  url: SITE_URL,
   locale: "en_GB",
   primaryMarket: "United Kingdom",
   serviceMarkets: ["United Kingdom", "United States"],

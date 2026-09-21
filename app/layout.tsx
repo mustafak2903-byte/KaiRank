@@ -41,17 +41,17 @@ export const metadata: Metadata = {
   applicationName: siteConfig.name,
   referrer: "origin-when-cross-origin",
   robots: process.env.VERCEL_ENV === "preview" ? { index: false, follow: false } : undefined,
-  alternates: { canonical: "/" },
+  alternates: { canonical: siteConfig.url },
   openGraph: {
     type: "website",
     locale: siteConfig.locale,
-    url: "/",
+    url: siteConfig.url,
     siteName: siteConfig.name,
     title: siteConfig.title,
     description: siteConfig.description,
     images: [
       {
-        url: "/og.png",
+        url: `${siteConfig.url}/og.png`,
         width: 1734,
         height: 907,
         alt: "KaiRank — Search visibility, engineered.",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.title,
     description: siteConfig.description,
-    images: ["/og.png"],
+    images: [`${siteConfig.url}/og.png`],
   },
 };
 

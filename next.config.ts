@@ -1,21 +1,6 @@
 import type { NextConfig } from "next";
-
-function assertProductionConfiguration() {
-  if (process.env.VERCEL_ENV !== "production") return;
-
-  const required = ["NEXT_PUBLIC_SITE_URL"] as const;
-  const missing = required.filter((name) => !process.env[name]?.trim());
-  if (missing.length) {
-    throw new Error(`Missing required production environment variables: ${missing.join(", ")}`);
-  }
-
-  required.forEach((name) => {
-    const url = new URL(process.env[name] as string);
-    if (url.protocol !== "https:") throw new Error(`${name} must use HTTPS.`);
-  });
-}
-
-assertProductionConfiguration();
+// Validate the same canonical origin consumed by every public SEO surface.
+import "./lib/site";
 
 const contentSecurityPolicy = [
   "default-src 'self'",

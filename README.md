@@ -19,7 +19,7 @@ If macOS reports an `EMFILE` watcher error, use the webpack polling fallback:
 WATCHPACK_POLLING=true CHOKIDAR_USEPOLLING=1 npm run dev -- --webpack
 ```
 
-Copy `.env.example` to `.env.local` when configuring production integrations. `NEXT_PUBLIC_SITE_URL` and `AUDIT_LEAD_WEBHOOK_URL` are required for a Vercel Production build; production fails closed rather than publishing broken canonical or lead-delivery configuration. `PAGESPEED_API_KEY` is optional: the independent Fast Technical Check still returns public response, redirect, HTTPS, timing and on-page signals when PageSpeed is missing, unavailable or quota-limited. `AUDIT_LEAD_WEBHOOK_TOKEN` is recommended whenever the receiving endpoint supports bearer authentication.
+Copy `.env.example` to `.env.local` when configuring production integrations. Set `NEXT_PUBLIC_SITE_URL=https://kai-rank.vercel.app` in Vercel Production; this is also the central fallback in `lib/site.ts`. Replace any older Vercel environment value before redeploying: an explicit environment value overrides the fallback. Invalid origins fail the build. `PAGESPEED_API_KEY` is optional. The lead webhook is reserved for a future workflow and is not required by the current booking/email journey.
 
 Vercel Web Analytics and Speed Insights are integrated in the root layout. Enable both products in the Vercel project dashboard after importing the repository. Conversion events contain only non-personal operational labels; names, email addresses and Cal.com booking identifiers are not sent to analytics.
 
@@ -34,14 +34,16 @@ npm run build
 ## Production checklist
 
 - Deploy the `kairank-rebuild` branch to a Vercel Preview environment first.
-- Configure `AUDIT_LEAD_WEBHOOK_URL` and, where supported, `AUDIT_LEAD_WEBHOOK_TOKEN` for Preview and Production.
+- Set `NEXT_PUBLIC_SITE_URL=https://kai-rank.vercel.app` for the current production deployment.
 - Add `PAGESPEED_API_KEY` for more reliable enhanced diagnostic quota.
-- Connect `www.kairank.com` as the primary domain, redirect `kairank.com` to it, confirm HTTPS and verify that `hello@kairank.com` can receive the form's email fallback.
+- Keep the Vercel production hostname indexable. The custom domain has not been purchased or connected; do not redirect to it. Email delivery must be configured separately before relying on the email fallback.
 - Enable Vercel Web Analytics and Speed Insights.
 - Update the Cal.com profile and event names to match KaiRank's private-clinic positioning.
-- Run the full diagnostic, visibility-review delivery and Cal.com booking flow on the deployed Preview URL before promoting it.
+- Run the diagnostic and Cal.com booking flow on the deployed Preview URL before promoting it.
 - Add a Google Search Console Domain property after DNS is active, submit `/sitemap.xml` and inspect the homepage, service hub, service pages, case-study hub and diagnostic.
 - Keep one canonical convention: production URLs do not use a trailing slash, and slash variants redirect to the canonical URL.
+
+For a later custom-domain migration, purchase and connect the domain, verify DNS and HTTPS, then change only `NEXT_PUBLIC_SITE_URL` and rebuild. Metadata, canonical/social URLs, structured data, RSS, sitemap and robots all derive from that value. Configure permanent hostname redirects only when the destination works, and re-run the route checks before submitting the new sitemap.
 
 ## Search architecture
 
