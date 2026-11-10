@@ -28,7 +28,6 @@ export function InsightPage({ insight }: { insight: InsightDefinition }) {
     publisher: organisationReference,
     isPartOf: { "@id": `${siteConfig.url}/#website` },
     about: insight.category,
-    keywords: [insight.primaryKeyword, ...insight.supportingKeywords].join(", "),
     inLanguage: "en-GB",
     image: `${siteConfig.url}/og/insight/${insight.slug}`,
   };

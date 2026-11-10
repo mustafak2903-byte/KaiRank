@@ -88,12 +88,7 @@ export function MobileNavigation() {
               <span aria-hidden="true">↗</span>
             </Link>
           ))}
-          <Link className="mobile-navigation__audit" data-event="primary_cta_clicked" data-event-label="Mobile navigation: check my clinic" data-event-source="mobile-navigation" href="/search-visibility-diagnostic" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
-            <span className="data-label">05</span>
-            <span>Check my clinic</span>
-            <span aria-hidden="true">↘</span>
-          </Link>
-          <BookingTrigger className="mobile-navigation__booking" label="Talk through my search strategy" source="mobile-navigation" tabIndex={open ? 0 : -1} />
+          <BookingTrigger className="mobile-navigation__booking" label="Book a clinic visibility review" source="mobile-navigation" tabIndex={open ? 0 : -1} />
         </nav>
         <div className="mobile-navigation__footer">
           <span className="data-label">Google / Maps / AI search</span>

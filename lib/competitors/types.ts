@@ -42,5 +42,8 @@ export type FastVisibilitySurface = {
     label: string;
     status: "pass" | "attention" | "fail" | "info";
     value: string;
+    source?: string;
+    why?: string;
+    limitation?: string;
   }>;
 };

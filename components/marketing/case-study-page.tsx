@@ -13,7 +13,7 @@ function displayDate(value: string) {
 export function CaseStudyPage({ study }: { study: CaseStudyDefinition }) {
   const url = `${siteConfig.url}/case-studies/${study.slug}`;
   const relatedSlugs = study.slug === "the-recovery-room"
-    ? ["technical-seo", "local-seo", "seo"]
+    ? ["technical-seo", "local-seo", "healthcare-seo"]
     : ["healthcare-seo", "technical-seo", "ai-search-optimisation"];
   const relatedServices = relatedSlugs.map((slug) => services.find((service) => service.slug === slug)).filter((service): service is ServiceDefinition => Boolean(service));
   const structuredData = {
@@ -95,7 +95,7 @@ export function CaseStudyPage({ study }: { study: CaseStudyDefinition }) {
             <span className="data-label">Apply the evidence</span>
             <h2 id="case-conversion-title">Which constraint is limiting your clinic?</h2>
             <p>Start with public technical evidence, or talk through one priority treatment and location.</p>
-            <div className="v3-actions"><Link className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label={`${study.slug}: diagnostic`} data-event-source="case-study-final" href="/search-visibility-diagnostic">Check my clinic <span aria-hidden="true">↗</span></Link><BookingTrigger className="v3-action v3-action--text" label="Talk through my search strategy" source={`${study.slug}-final`} /></div>
+            <div className="v3-actions"><BookingTrigger className="v3-action v3-action--solid" label="Book a clinic visibility review" source={`${study.slug}-final`} /><Link className="v3-action v3-action--text" data-event="diagnostic_clicked" data-event-label={`${study.slug}: health check`} data-event-source="case-study-final" href="/search-visibility-diagnostic">Run the free website health check <span aria-hidden="true">↗</span></Link></div>
           </div>
         </section>
       </article>

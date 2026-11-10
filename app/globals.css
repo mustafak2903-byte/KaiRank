@@ -177,6 +177,9 @@ button:disabled {
 }
 
 .site-header__navigation a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   color: var(--color-text-secondary);
   font-size: 0.78rem;
   transition: color 180ms ease;
@@ -2233,6 +2236,9 @@ button:disabled {
 }
 
 .v3-footer nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   width: fit-content;
   color: var(--color-text-secondary);
   font-size: 0.72rem;
@@ -2249,6 +2255,12 @@ button:disabled {
   padding-block: 1.25rem;
   border-top: 1px solid var(--color-line);
   color: var(--color-text-muted);
+}
+
+.v3-footer__base a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
 }
 
 /* Responsive */

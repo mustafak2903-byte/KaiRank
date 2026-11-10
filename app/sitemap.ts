@@ -4,13 +4,13 @@ import { caseStudies, services } from "@/lib/marketing-content";
 import { siteConfig } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUpdated = "2026-09-15";
+  const siteUpdated = "2026-11-04";
   const routes = [
     { path: "/", priority: 1, changeFrequency: "monthly" as const, lastModified: siteUpdated },
     { path: "/services", priority: 0.9, changeFrequency: "monthly" as const, lastModified: siteUpdated },
     ...services.map((service) => ({ path: `/${service.slug}`, priority: 0.85, changeFrequency: "monthly" as const, lastModified: service.updated })),
     { path: "/case-studies", priority: 0.85, changeFrequency: "monthly" as const, lastModified: siteUpdated },
-    ...caseStudies.map((study) => ({ path: `/case-studies/${study.slug}`, priority: 0.8, changeFrequency: "monthly" as const, lastModified: siteUpdated })),
+    ...caseStudies.map((study) => ({ path: `/case-studies/${study.slug}`, priority: 0.8, changeFrequency: "monthly" as const, lastModified: study.updated })),
     { path: "/search-visibility-diagnostic", priority: 0.9, changeFrequency: "monthly" as const, lastModified: siteUpdated },
     { path: "/insights", priority: 0.8, changeFrequency: "weekly" as const, lastModified: siteUpdated },
     ...insights.map((insight) => ({ path: `/insights/${insight.slug}`, priority: 0.72, changeFrequency: "monthly" as const, lastModified: insight.updated })),

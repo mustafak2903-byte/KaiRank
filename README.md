@@ -2,7 +2,7 @@
 
 The production Next.js website for KaiRank: a UK-focused, founder-led search visibility practice for private clinics across Google, Maps and AI discovery, with the United States retained as a deliberate secondary market.
 
-The production homepage is `/`. It combines the approved editorial system with a continuous patient-search journey, five focused service routes, verified healthcare evidence, a progressive Search Visibility Diagnostic, the Kai site guide and a lazy Cal.com booking modal. Crawlable Services, Case Studies and healthcare SEO Insights hubs connect the wider search architecture. In production, `/visual-system` and `/experiments/*` permanently redirect to the canonical homepage; Preview deployments remain `noindex`.
+The production homepage is `/`. It combines the approved editorial system with a continuous patient-search journey, four focused service routes, verified healthcare evidence, a progressive Search Visibility Diagnostic, the Kai site guide and a lazy Cal.com booking modal. Crawlable Services, Case Studies and healthcare SEO Insights hubs connect the wider search architecture. In production, `/visual-system` and `/experiments/*` permanently redirect to the canonical homepage; Preview deployments remain `noindex`.
 
 ## Run locally
 
@@ -48,7 +48,7 @@ For a later custom-domain migration, purchase and connect the domain, verify DNS
 ## Search architecture
 
 - `/services` — crawlable service hub
-- `/seo`, `/healthcare-seo`, `/technical-seo`, `/local-seo`, `/ai-search-optimisation` — distinct commercial query clusters
+- `/healthcare-seo`, `/technical-seo`, `/local-seo`, `/ai-search-optimisation` — distinct commercial query clusters; `/seo` permanently redirects to `/healthcare-seo`
 - `/case-studies` and `/case-studies/*` — verified evidence with source and limitation context
 - `/search-visibility-diagnostic` — standalone acquisition and diagnostic route
 - `/insights` and `/insights/*` — the founder-authored healthcare SEO blog, with article metadata, internal service routes and an RSS feed at `/insights/feed.xml`

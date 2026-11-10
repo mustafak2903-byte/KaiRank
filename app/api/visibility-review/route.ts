@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
 
   const webhook = process.env.AUDIT_LEAD_WEBHOOK_URL;
   if (!webhook) {
-    return json({ message: "The review-request channel is not configured in this preview. Email hello@kairank.com to request the full review." }, 503);
+    return json({ message: "The review-request channel is not configured in this preview. Please book a clinic visibility review instead." }, 503);
   }
 
   let endpoint: URL;
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest) {
 
     return json({ confirmed: true });
   } catch {
-    return json({ message: "The request could not be confirmed. Nothing has been marked as sent—try again or email hello@kairank.com." }, 502);
+    return json({ message: "The request could not be confirmed. Nothing has been marked as sent—please try again or book a clinic visibility review." }, 502);
   } finally {
     clearTimeout(timeout);
   }

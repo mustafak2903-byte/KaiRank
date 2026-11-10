@@ -15,7 +15,7 @@ const capabilities = [
   },
   {
     id: "intent",
-    href: "/seo",
+    href: "/healthcare-seo",
     index: "02",
     title: "Clinic SEO strategy",
     label: "Target searches capable of creating meaningful demand.",

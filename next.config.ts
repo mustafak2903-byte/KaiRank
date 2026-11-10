@@ -20,11 +20,16 @@ const contentSecurityPolicy = [
 
 const nextConfig: NextConfig = {
   agentRules: false,
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   poweredByHeader: false,
   reactStrictMode: true,
   async redirects() {
-    if (process.env.VERCEL_ENV !== "production") return [];
+    const redirects = [
+      { source: "/seo", destination: "/healthcare-seo", permanent: true },
+    ];
+    if (process.env.VERCEL_ENV !== "production") return redirects;
     return [
+      ...redirects,
       { source: "/visual-system", destination: "/", permanent: true },
       { source: "/experiments", destination: "/", permanent: true },
       { source: "/experiments/:path*", destination: "/", permanent: true },

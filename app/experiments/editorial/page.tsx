@@ -85,11 +85,11 @@ export default function EditorialExperimentPage() {
             <aside className="editorial-proof" aria-label="Verified case-study evidence" data-kai-avoid>
               <span>Verified case-study evidence</span>
               <dl>
-                <div><dt>+808%</dt><dd>Search impressions</dd></div>
-                <div><dt>+354%</dt><dd>Organic clicks</dd></div>
+                <div><dt>+500%</dt><dd>Search impressions</dd></div>
+                <div><dt>+204%</dt><dd>Google Search clicks</dd></div>
                 <div><dt>#1</dt><dd>Deep tissue massage Birmingham</dd></div>
               </dl>
-              <small>Recovery Room case study · evidence available in V6</small>
+              <small>Recovery Room case study · first vs latest 28 days · source linked</small>
             </aside>
           </div>
         </section>

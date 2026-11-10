@@ -10,6 +10,7 @@ import "@/styles/v6.css";
 import "@/styles/v7.css";
 import "@/styles/v8.css";
 import "@/styles/marketing.css";
+import "@/styles/refinement.css";
 
 const display = Instrument_Serif({
   subsets: ["latin"],
@@ -54,7 +55,7 @@ export const metadata: Metadata = {
         url: `${siteConfig.url}/og.png`,
         width: 1734,
         height: 907,
-        alt: "KaiRank — Search visibility, engineered.",
+        alt: "KaiRank healthcare SEO for UK private clinics.",
       },
     ],
   },

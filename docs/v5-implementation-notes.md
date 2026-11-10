@@ -1,5 +1,7 @@
 # KaiRank V5 implementation notes
 
+> Archived design record. Metrics, source links and production behaviour in this document reflect the V5 milestone and must not be used as current public evidence. Use `lib/marketing-content.ts` and the current case-study source reports instead.
+
 ## What V5 preserves
 
 V5 keeps the committed V3 rollback at `5b89b9b` and preserves its Instrument Serif editorial typography, ink/ivory rhythm, periwinkle SIGNAL path, native scroll behaviour, patient-query visual, cost-of-invisibility sequence, interactive capability stage, Recovery Room progression and Diagnose / Engineer / Compound process. No animation, UI-kit, WebGL or smooth-scroll dependency was added.

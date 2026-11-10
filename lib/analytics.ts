@@ -12,7 +12,6 @@ export type AnalyticsEventName =
   | "kai_opened"
   | "kai_mode_selected"
   | "kai_action"
-  | "kai_voice_played"
   | "primary_cta_clicked"
   | "full_review_requested"
   | "full_review_confirmed"

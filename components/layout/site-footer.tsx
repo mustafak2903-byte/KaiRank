@@ -14,14 +14,14 @@ export function SiteFooter() {
         <nav aria-label="Services">
           <strong>Services</strong>
           <Link href="/services">All services</Link>
-          {services.slice(0, 5).map((service) => <Link href={`/${service.slug}`} key={service.slug}>{service.navLabel}</Link>)}
+          {services.map((service) => <Link href={`/${service.slug}`} key={service.slug}>{service.navLabel}</Link>)}
         </nav>
         <nav aria-label="Results">
           <strong>Results</strong>
           <Link href="/case-studies">All case studies</Link>
           <Link href="/case-studies/the-recovery-room">The Recovery Room</Link>
           <Link href="/case-studies/south-city-hospital">South City Hospital</Link>
-          <Link href="/search-visibility-diagnostic">Visibility Diagnostic</Link>
+          <Link href="/search-visibility-diagnostic">Free website health check</Link>
         </nav>
         <nav aria-label="Company">
           <strong>Company</strong>
@@ -40,7 +40,7 @@ export function SiteFooter() {
       <div className="container v3-footer__base data-label">
         <span>© 2026 {siteConfig.name}</span>
         <Link href="/privacy">Privacy</Link>
-        <Link href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}</Link>
+        <Link href="/contact">Contact KaiRank</Link>
         <span>UK search visibility for private clinics</span>
       </div>
     </footer>

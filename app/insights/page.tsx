@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
 import { InsightSignalInstrument } from "@/components/marketing/hero-instruments";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { insights } from "@/lib/insights-content";
+import { services } from "@/lib/marketing-content";
 import { createMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site";
 
@@ -61,6 +63,26 @@ export default function InsightsPage() {
       <nav className="insights-topics" aria-label="Healthcare SEO blog topics">
         <div className="container"><span className="data-label">Explore by search constraint</span>{topics.map((topic) => <a href={`#${topicId(topic)}`} key={topic}>{topic}</a>)}</div>
       </nav>
+      <section className="insights-pathways" aria-labelledby="insights-pathways-title">
+        <div className="container">
+          <div className="marketing-section__index data-label"><span>From research to action</span><span>Choose the constraint</span></div>
+          <div className="insights-pathways__grid">
+            <div><h2 id="insights-pathways-title">Take the next useful route.</h2><p>Move from an evidence-led article to the service layer that owns the problem.</p></div>
+            <ol>
+              {services.map((service, index) => (
+                <li key={service.slug}>
+                  <Link href={`/${service.slug}`}>
+                    <span className="data-label">0{index + 1}</span>
+                    <strong>{service.navLabel}</strong>
+                    <small>{service.diagnosticQuestion}</small>
+                    <i aria-hidden="true">↗</i>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </section>
       <section className="insights-index" id="field-notes" aria-label="KaiRank healthcare SEO blog">
         <div className="container">
           <article className="insights-featured" id={topicId(featured.category)} data-reveal>
@@ -80,6 +102,9 @@ export default function InsightsPage() {
             </article>
           ))}
         </div>
+      </section>
+      <section className="marketing-conversion" aria-labelledby="insights-conversion-title" data-kai-avoid>
+        <div className="container marketing-conversion__inner"><span className="data-label">Turn insight into a decision</span><h2 id="insights-conversion-title">Apply the evidence to one clinic search constraint.</h2><p>Explore the service system, or bring one priority treatment and location to a focused review.</p><div className="v3-actions"><Link className="v3-action v3-action--solid" href="/services">Explore healthcare SEO services <span aria-hidden="true">↗</span></Link><BookingTrigger className="v3-action v3-action--text" label="Book a clinic visibility review" source="insights-final" /></div></div>
       </section>
     </MarketingShell>
   );

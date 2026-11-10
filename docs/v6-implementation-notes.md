@@ -1,5 +1,7 @@
 # KaiRank V6 implementation notes
 
+> Archived design record. Metrics, source links and production behaviour in this document reflect the V6 milestone and must not be used as current public evidence. Use `lib/marketing-content.ts` and the current case-study source reports instead.
+
 ## Corrective experience pass
 
 V6 keeps the verified V5 foundation at `9da93ef147087d3b8069492a25422e13e0c0e226` and the V3 rollback point at `5b89b9b`. It does not replace the retained legacy site or change the production `/` route.

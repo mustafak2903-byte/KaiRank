@@ -1,5 +1,11 @@
 # KaiRank launch runbook
 
+## Publishing model
+
+Keep the current Next.js application on Vercel for launch. It already supports route-level metadata, structured data, sitemap generation, performance optimisation and the custom interaction system without a WordPress migration.
+
+The current insight library in `lib/insights-content.ts` is the launch CMS. When non-technical publishing becomes frequent, Sanity is the preferred next step because it can add an editorial interface while preserving the Next.js front end, visual system and URL architecture. Do not connect a live CMS until the Sanity project, dataset, roles, preview policy and content model are approved. WordPress is not required for SEO and would add migration, security and rendering overhead without solving a current launch blocker.
+
 This runbook is the production hand-off for the `kairank-rebuild` branch. Do not promote a build until every launch gate is confirmed on the deployed Vercel Preview URL.
 
 ## Current temporary production domain
@@ -8,16 +14,17 @@ The only configured public hostname is `https://kai-rank.vercel.app`. The custom
 
 ## Search ownership
 
-- `/` — UK healthcare SEO agency proposition, brand and routing authority
-- `/services` — service discovery hub
-- `/seo` — SEO for private clinics / UK clinic SEO strategy
-- `/healthcare-seo` — UK healthcare SEO services / SEO for healthcare
-- `/technical-seo` — technical SEO audit service
-- `/local-seo` — local SEO for medical clinics
-- `/ai-search-optimisation` — AI search optimisation for healthcare
+- `/` — UK healthcare SEO proposition, brand and routing authority; no separate commercial cluster
+- `/services` — service discovery hub; no separate commercial cluster
+- `/healthcare-seo` — verified UK cluster led by `healthcare seo agency` and `healthcare seo services`
+- `/technical-seo` — descriptive service page; UK focus keyword research still required
+- `/local-seo` — verified UK directional cluster led by `local seo for healthcare`; service-versus-guide intent still requires a live SERP check
+- `/ai-search-optimisation` — descriptive service page; UK AI/GEO focus keyword research still required
 - `/case-studies` — verified healthcare SEO evidence
 - `/search-visibility-diagnostic` — public diagnostic and lead acquisition
 - `/insights` — healthcare SEO blog and evidence-led informational search hub
+
+`/seo` permanently redirects to `/healthcare-seo` so overlapping commercial terms do not split relevance or internal authority.
 
 Do not add city, treatment or clinic-specialty pages until each proposed page has a distinct search intent, real audience need, original material and relevant evidence.
 
@@ -69,12 +76,13 @@ The central site URL defaults to the current Vercel hostname when unset. A confi
 
 1. Promote the approved Vercel Preview to Production.
 2. Confirm the preferred hostname and HTTPS redirect behaviour.
-3. Re-run route, booking, security-header and mobile QA against the configured `NEXT_PUBLIC_SITE_URL` (currently `https://kai-rank.vercel.app`).
-4. Verify a Google Search Console Domain property through DNS.
-5. Submit the configured origin's `/sitemap.xml`. Use a URL-prefix Search Console property for the current Vercel hostname; a Domain property requires ownership of the later custom domain.
-6. Inspect the homepage, service hub, five commercial service pages, case-study hub, healthcare SEO blog and diagnostic URL.
-7. Request indexing only after the live canonical, rendered HTML and indexation status are correct.
-8. Record the launch date and the initial Search Console, analytics and qualified-lead baseline.
+3. Inspect the live homepage source and generated outputs. Canonical, `og:url`, Open Graph image, Twitter image, JSON-LD URLs, `/robots.txt` and `/sitemap.xml` must all use `https://kai-rank.vercel.app`; the 4 November 2026 public crawl still exposed stale `https://www.kairank.com` social metadata from the older deployment.
+4. Re-run route, booking, security-header and mobile QA against the configured `NEXT_PUBLIC_SITE_URL` (currently `https://kai-rank.vercel.app`).
+5. Verify a Google Search Console Domain property through DNS.
+6. Submit the configured origin's `/sitemap.xml`. Use a URL-prefix Search Console property for the current Vercel hostname; a Domain property requires ownership of the later custom domain.
+7. Inspect the homepage, service hub, four commercial service pages, case-study hub, healthcare SEO blog and diagnostic URL.
+8. Request indexing only after the live canonical, rendered HTML and indexation status are correct.
+9. Record the launch date and the initial Search Console, analytics and qualified-lead baseline.
 
 ## First 90 days
 

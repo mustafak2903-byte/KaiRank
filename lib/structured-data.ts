@@ -7,7 +7,6 @@ export const organisationEntity = {
   legalName: siteConfig.legalName,
   url: siteConfig.url,
   logo: `${siteConfig.url}/icon.svg`,
-  email: siteConfig.contact.email,
   description: siteConfig.description,
   founder: { "@id": `${siteConfig.url}/#founder` },
   areaServed: siteConfig.serviceMarkets.map((market) => ({ "@type": "Country", name: market })),
@@ -38,7 +37,7 @@ export const websiteEntity = {
   publisher: { "@id": `${siteConfig.url}/#organisation` },
   audience: {
     "@type": "Audience",
-    audienceType: "Private clinics and healthcare organisations in the United Kingdom and United States",
+    audienceType: "Private clinics and healthcare organisations in the United Kingdom",
   },
   inLanguage: "en-GB",
 };

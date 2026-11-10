@@ -305,7 +305,15 @@ export type FastCheck = {
   structuredDataValidCount: number;
   robotsTxt: { found: boolean; status: number | null; allowsPage: boolean | null };
   sitemap: { found: boolean; valid: boolean; status: number | null; url: string };
-  checks: Array<{ id: string; label: string; status: CheckStatus; value: string }>;
+  checks: Array<{
+    id: string;
+    label: string;
+    status: CheckStatus;
+    value: string;
+    source: string;
+    why: string;
+    limitation: string;
+  }>;
 };
 
 async function inspectSupportFile(url: string) {
@@ -427,17 +435,108 @@ export async function runFastCheck(url: string): Promise<FastCheck> {
   const sitemapValid = sitemapFile.found && isValidSitemap(sitemapFile.body);
   const robotsTxt = { found: robotsFile.found, status: robotsFile.status, allowsPage: robotsAllows };
   const sitemap = { found: sitemapFile.found, valid: sitemapValid, status: sitemapFile.status, url: sitemapUrl };
+  const pageSource = page.finalUrl;
+  const robotsSource = new URL("/robots.txt", origin).toString();
   const checks: FastCheck["checks"] = [
-    { id: "response", label: "Public response", status: okStatus ? "pass" : "fail", value: `${page.status} · ${page.responseMs} ms` },
-    { id: "https", label: "HTTPS", status: page.finalUrl.startsWith("https://") ? "pass" : "attention", value: page.finalUrl.startsWith("https://") ? "Secure" : "Not secure" },
-    { id: "title", label: "Page title", status: !title ? "fail" : title.length >= 10 && title.length <= 65 ? "pass" : "attention", value: title ? `${title.length} characters` : "Missing" },
-    { id: "description", label: "Meta description", status: !metaDescription ? "attention" : metaDescription.length >= 70 && metaDescription.length <= 170 ? "pass" : "attention", value: metaDescription ? `${metaDescription.length} characters` : "Missing" },
-    { id: "canonical", label: "Canonical URL", status: canonicalMatches ? "pass" : "attention", value: !canonical ? "Not declared" : canonicalMatches ? "Self-referencing" : "Points elsewhere" },
-    { id: "h1", label: "Primary heading", status: h1Count === 1 ? "pass" : h1Count === 0 ? "fail" : "attention", value: h1Count === 1 ? "One H1" : `${h1Count} H1 elements` },
-    { id: "viewport", label: "Mobile viewport", status: viewport ? "pass" : "fail", value: viewport ? "Declared" : "Missing" },
-    { id: "structured", label: "Structured data", status: structuredDataValidCount > 0 ? "pass" : structuredDataCount > 0 ? "attention" : "info", value: structuredDataValidCount > 0 ? `${structuredDataValidCount} valid JSON-LD block${structuredDataValidCount === 1 ? "" : "s"}` : structuredDataCount > 0 ? "JSON-LD could not be parsed" : "Not detected" },
-    { id: "robots", label: "Indexing permission", status: metaBlocksIndexing || robotsAllows === false ? "fail" : robotsTxt.found && robotsAllows === true ? "pass" : "attention", value: metaBlocksIndexing ? "Page declares noindex" : robotsAllows === false ? "Blocked by robots.txt" : robotsTxt.found ? "Allowed by robots.txt" : "robots.txt not found" },
-    { id: "sitemap", label: "Sitemap", status: sitemapValid ? "pass" : "attention", value: sitemapValid ? "Valid XML sitemap" : sitemapFile.found ? "File is not a valid sitemap" : "Not found" },
+    {
+      id: "response",
+      label: "HTTP response",
+      status: okStatus ? "pass" : "fail",
+      value: `${page.status} in ${page.responseMs} ms`,
+      source: pageSource,
+      why: "Search systems and visitors need a successful public response before the page can be used.",
+      limitation: "One live request does not establish uptime or real-user speed.",
+    },
+    {
+      id: "https",
+      label: "HTTPS connection",
+      status: page.finalUrl.startsWith("https://") ? "pass" : "attention",
+      value: page.finalUrl.startsWith("https://") ? "HTTPS destination" : "HTTP destination",
+      source: pageSource,
+      why: "HTTPS protects data in transit and is the expected public protocol for a clinic website.",
+      limitation: "This check does not grade certificate configuration or wider security controls.",
+    },
+    {
+      id: "title",
+      label: "HTML page title",
+      status: !title ? "fail" : title.length >= 10 && title.length <= 65 ? "pass" : "attention",
+      value: title ? `${title.length} characters · ${title}` : "Missing",
+      source: pageSource,
+      why: "A descriptive title helps people and search systems understand the page topic.",
+      limitation: "Character ranges are editorial guidance, not a ranking rule or a guarantee of how Google will display the title.",
+    },
+    {
+      id: "description",
+      label: "Meta description",
+      status: !metaDescription ? "attention" : metaDescription.length >= 70 && metaDescription.length <= 170 ? "pass" : "attention",
+      value: metaDescription ? `${metaDescription.length} characters · ${metaDescription}` : "Missing",
+      source: pageSource,
+      why: "A useful description can explain the page before a searcher decides whether to visit.",
+      limitation: "Search engines may generate a different search-result snippet.",
+    },
+    {
+      id: "canonical",
+      label: "Declared canonical URL",
+      status: canonicalMatches ? "pass" : "attention",
+      value: !canonical ? "Not declared" : canonicalMatches ? `Self-referencing · ${canonical}` : `Points to ${canonical}`,
+      source: pageSource,
+      why: "A canonical declaration identifies the preferred URL when duplicates or variants exist.",
+      limitation: "This is the site’s declaration. Google may select a different canonical.",
+    },
+    {
+      id: "h1",
+      label: "Primary page heading",
+      status: h1Count === 1 ? "pass" : h1Count === 0 ? "fail" : "attention",
+      value: h1Count === 1 ? `One H1 · ${primaryHeading ?? "Text unavailable"}` : `${h1Count} H1 elements detected`,
+      source: pageSource,
+      why: "A clear primary heading makes the main subject easier to identify and scan.",
+      limitation: "Heading count alone does not prove content quality or search relevance.",
+    },
+    {
+      id: "viewport",
+      label: "Mobile viewport declaration",
+      status: viewport ? "pass" : "fail",
+      value: viewport ? "Viewport meta tag detected" : "Viewport meta tag missing",
+      source: pageSource,
+      why: "The declaration allows responsive layouts to use the device width correctly.",
+      limitation: "This does not test responsive layout, touch targets or mobile usability.",
+    },
+    {
+      id: "structured",
+      label: "JSON-LD syntax",
+      status: structuredDataValidCount > 0 ? "pass" : structuredDataCount > 0 ? "attention" : "info",
+      value: structuredDataValidCount > 0 ? `${structuredDataValidCount} parseable JSON-LD block${structuredDataValidCount === 1 ? "" : "s"}` : structuredDataCount > 0 ? "JSON-LD syntax could not be parsed" : "No JSON-LD detected",
+      source: pageSource,
+      why: "Machine-readable data can clarify entities and page meaning when it matches visible content.",
+      limitation: "Parseable JSON is not proof of Schema.org validity, rich-result eligibility or factual accuracy.",
+    },
+    {
+      id: "robots-meta",
+      label: "Robots meta directive",
+      status: metaBlocksIndexing ? "fail" : "pass",
+      value: metaBlocksIndexing ? `Noindex detected · ${robotsMeta}` : robotsMeta ? `No noindex detected · ${robotsMeta}` : "No noindex directive detected",
+      source: pageSource,
+      why: "A noindex directive asks compliant search engines not to index the page.",
+      limitation: "The absence of noindex does not prove that a page is indexed or will rank.",
+    },
+    {
+      id: "robots",
+      label: "robots.txt crawl rule",
+      status: robotsAllows === false ? "fail" : robotsTxt.found ? "pass" : "info",
+      value: robotsAllows === false ? "Page path is disallowed" : robotsTxt.found ? "Page path is allowed for User-agent: *" : "robots.txt not found; no rule was evaluated",
+      source: robotsSource,
+      why: "robots.txt can allow or restrict crawler access to a URL path.",
+      limitation: "Crawl permission is not an indexing decision, and this check evaluates the wildcard user-agent rules only.",
+    },
+    {
+      id: "sitemap",
+      label: "XML sitemap discovery",
+      status: sitemapValid ? "pass" : "attention",
+      value: sitemapValid ? "Sitemap syntax and absolute URL detected" : sitemapFile.found ? "File found, but expected sitemap syntax was not detected" : "Sitemap not found at the tested URL",
+      source: sitemapUrl,
+      why: "A sitemap helps search engines discover canonical URLs, especially on a new website.",
+      limitation: "A sitemap does not guarantee crawling, indexing or ranking, and this check does not confirm that the tested page is listed.",
+    },
   ];
 
   return {

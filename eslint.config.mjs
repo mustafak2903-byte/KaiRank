@@ -5,5 +5,12 @@ import nextTypescript from "eslint-config-next/typescript";
 export default defineConfig([
   ...nextVitals,
   ...nextTypescript,
-  globalIgnores([".next/**", "node_modules/**", "next-env.d.ts", "app.js", "scroll.js"]),
+  globalIgnores([
+    ".next/**",
+    ".next-*/**",
+    "node_modules/**",
+    "next-env.d.ts",
+    "app.js",
+    "scroll.js",
+  ]),
 ]);

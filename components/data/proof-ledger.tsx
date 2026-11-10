@@ -1,8 +1,8 @@
 const proof = [
-  { value: "8,076", label: "patient calls in one month", context: "South City Hospital" },
-  { value: "194", label: "doctor profiles in Google’s top 10", context: "South City Hospital" },
-  { value: "682", label: "organic clicks in 90 days", context: "The Recovery Room" },
-  { value: "22,100", label: "search impressions in 90 days", context: "The Recovery Room" },
+  { value: "40.5K", label: "Google Search clicks in August 2026", context: "South City Hospital" },
+  { value: "8,801", label: "profile call actions in July 2026", context: "South City Hospital" },
+  { value: "3,027", label: "Google Search clicks in six months", context: "The Recovery Room" },
+  { value: "180,419", label: "search impressions in six months", context: "The Recovery Room" },
 ] as const;
 
 export function ProofLedger() {

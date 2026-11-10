@@ -50,6 +50,19 @@ function isCalModalOpen() {
   });
 }
 
+function isCalModalVisible() {
+  return [...document.querySelectorAll<HTMLElement>("cal-modal-box")].some((modal) => {
+    const style = window.getComputedStyle(modal);
+    return style.visibility !== "hidden" && style.display !== "none";
+  });
+}
+
+function pruneDuplicateCalModals() {
+  const modals = [...document.querySelectorAll<HTMLElement>("cal-modal-box")];
+  if (modals.length < 2) return;
+  modals.slice(0, -1).forEach((modal) => modal.remove());
+}
+
 function createCalBootstrap() {
   if (window.Cal) {
     calInstance = window.Cal;
@@ -142,13 +155,17 @@ function prepareCal(cal: CalApi) {
     window.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
       const liveCal = window.Cal ?? calInstance;
-      if (!isCalModalOpen() || !liveCal) return;
+      if (!isCalModalVisible() || !liveCal) return;
       const closeApi = liveCal.ns?.[calNamespace] ?? liveCal;
       closeApi("closeModal");
       document.body.classList.remove("has-booking-open");
       restoreBookingFocus();
       window.setTimeout(() => {
-        if (!isCalModalOpen()) document.body.style.overflow = "";
+        const modal = document.querySelector<HTMLElement>("cal-modal-box");
+        if (isCalModalVisible() && modal?.getAttribute("state") === "loading") {
+          modal.remove();
+        }
+        if (!isCalModalVisible()) document.body.style.overflow = "";
       }, 80);
     });
     escapeListenerReady = true;
@@ -175,6 +192,38 @@ async function loadCalEmbed() {
   return loadedCal;
 }
 
+function watchCalModalClose(modal: HTMLElement) {
+  if (modal.dataset.kairankCloseWatched === "true") return;
+  modal.dataset.kairankCloseWatched = "true";
+  modalCloseObserver?.disconnect();
+
+  const restoreAfterClose = () => {
+    modalCloseObserver?.disconnect();
+    modalCloseObserver = null;
+    if (modalCloseTimer !== null) window.clearTimeout(modalCloseTimer);
+    modalCloseTimer = null;
+    document.body.classList.remove("has-booking-open");
+    document.body.style.overflow = "";
+    restoreBookingFocus();
+  };
+
+  modal.addEventListener("close", restoreAfterClose, { once: true });
+  modalCloseObserver = new MutationObserver(() => {
+    if (isCalModalVisible()) return;
+    restoreAfterClose();
+  });
+  modalCloseObserver.observe(modal, { attributes: true, attributeFilter: ["state", "style"] });
+
+  const checkForClose = () => {
+    if (!isCalModalVisible()) {
+      restoreAfterClose();
+      return;
+    }
+    modalCloseTimer = window.setTimeout(checkForClose, 120);
+  };
+  modalCloseTimer = window.setTimeout(checkForClose, 120);
+}
+
 function trackWhenModalOpens(source: string) {
   modalOpenObserver?.disconnect();
   modalOpenObserver = null;
@@ -189,37 +238,16 @@ function trackWhenModalOpens(source: string) {
   };
 
   const check = () => {
+    pruneDuplicateCalModals();
+    const modal = [...document.querySelectorAll<HTMLElement>("cal-modal-box")].find((candidate) => {
+      const style = window.getComputedStyle(candidate);
+      return style.visibility !== "hidden" && style.display !== "none";
+    });
+    if (modal) watchCalModalClose(modal);
     if (!isCalModalOpen()) return;
     stopWatching();
     trackEvent("booking_opened", { source, experience: "cal-popup" });
     document.body.classList.add("has-booking-open");
-    const modal = document.querySelector<HTMLElement>("cal-modal-box");
-    modalCloseObserver?.disconnect();
-    if (!modal) return;
-
-    const restoreAfterClose = () => {
-      modalCloseObserver?.disconnect();
-      modalCloseObserver = null;
-      if (modalCloseTimer !== null) window.clearTimeout(modalCloseTimer);
-      modalCloseTimer = null;
-      document.body.classList.remove("has-booking-open");
-      document.body.style.overflow = "";
-      restoreBookingFocus();
-    };
-    modal.addEventListener("close", restoreAfterClose, { once: true });
-    modalCloseObserver = new MutationObserver(() => {
-      if (isCalModalOpen()) return;
-      restoreAfterClose();
-    });
-    modalCloseObserver.observe(modal, { attributes: true, attributeFilter: ["state", "style"] });
-    const checkForClose = () => {
-      if (!isCalModalOpen()) {
-        restoreAfterClose();
-        return;
-      }
-      modalCloseTimer = window.setTimeout(checkForClose, 120);
-    };
-    modalCloseTimer = window.setTimeout(checkForClose, 120);
   };
 
   modalOpenObserver = new MutationObserver(check);
@@ -233,17 +261,10 @@ function trackWhenModalOpens(source: string) {
 
 function openCalModal(config: Record<string, string>) {
   if (!calInstance) throw new Error("Cal.com embed is not ready.");
-  const retainedModal = document.querySelector<HTMLElement>("cal-modal-box");
-  if (retainedModal && !isCalModalOpen()) {
-    retainedModal.setAttribute("state", "reopened");
-    retainedModal.style.visibility = "visible";
-    const retainedFrame = retainedModal.querySelector<HTMLIFrameElement>("iframe");
-    if (retainedFrame) {
-      retainedFrame.style.display = "";
-      retainedFrame.style.visibility = "visible";
-    }
-    return;
-  }
+  document.querySelectorAll<HTMLElement>("cal-modal-box").forEach((modal) => {
+    const style = window.getComputedStyle(modal);
+    if (style.visibility === "hidden" || style.display === "none") modal.remove();
+  });
   const modalApi = calInstance.ns?.[calNamespace] ?? calInstance;
   modalApi("modal", { calLink, config });
 }

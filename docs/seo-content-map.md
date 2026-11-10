@@ -1,26 +1,27 @@
 # KaiRank search ownership and publishing map
 
-This document records the launch architecture implemented on the `kairank-rebuild` branch. It is based on `KaiRank_Keyword_Research_Master_v3.xlsm` and the 12-row Keyword Manager export in the KaiRank Google Drive folder, reviewed on 13 September 2026.
+This document records the launch architecture implemented on the `kairank-rebuild` branch and refined on 22 September 2026. It is based on `KaiRank_Keyword_Research_Master_UK_v5.xlsx`, including the UK-confirmed competitor export and the separate 12-row Keyword Manager export.
 
-Keyword volumes and difficulty scores are research inputs, not permanent facts. Recheck the target market, search results, volume and intent before adding a new commercial URL. The two supplied files disagree on the `seo for healthcare` volume: the newer shortlist reports 2.9K volume and KD 29, while the master workbook records 2.4K and leaves difficulty pending. The query remains a priority; the metric should not be published as a claim until revalidated.
+Keyword volumes and difficulty scores are research inputs, not permanent facts. Recheck the target market, live results, volume and intent before adding a new commercial URL. For UK planning, use only the user-confirmed UK competitor-export values. Keep Keyword Manager-only and legacy values separate because their geography is not confirmed.
 
 ## Commercial page ownership
 
 | URL | Primary query | Supporting query family | Role |
 | --- | --- | --- | --- |
-| `/` | UK healthcare SEO agency for private clinics | healthcare SEO company UK, healthcare SEO consultants, search visibility for private clinics | UK-primary entity, proposition and routing authority |
-| `/services` | healthcare SEO services | private clinic SEO services, medical SEO services | Service discovery and comparison hub |
-| `/seo` | SEO for private clinics | clinic SEO strategy, UK clinic SEO | Demand mapping, page ownership and connected clinic SEO strategy |
-| `/healthcare-seo` | healthcare SEO services UK | SEO for healthcare, SEO for medical clinics, healthcare SEO consultants | Broader healthcare-specialist service for clinics, consultants and groups |
-| `/technical-seo` | technical SEO audit service | technical SEO for healthcare, healthcare website optimisation, crawling SEO | Technical access, selection and performance service |
-| `/local-seo` | local SEO for medical clinics | local SEO for medical practices UK, local SEO for doctors, healthcare directory optimisation | Local and Maps service |
-| `/ai-search-optimisation` | AI search optimisation for healthcare | AI search optimization for healthcare, healthcare AEO, medical content AI discoverability | AI retrieval, entity and evidence service |
+| `/` | Brand + healthcare SEO proposition | Descriptive homepage language only; no separate high-volume cluster assigned | UK-primary entity, proposition, proof and conversion authority; avoid competing with `/healthcare-seo` |
+| `/services` | Service discovery hub | No separate keyword cluster assigned | Compare the four intervention types without competing with their service pages |
+| `/healthcare-seo` | healthcare SEO agency (UK 1,300/KD8) | healthcare SEO services (1,000/KD6), healthcare SEO (1,600/KD25), SEO for healthcare (880/KD21), medical SEO agency (720/KD16), seo services for healthcare (590/KD9), medical SEO services (590/KD9), clinic SEO (140/KD6) | Primary healthcare-specialist commercial page for clinics, consultants and groups |
+| `/technical-seo` | UK primary keyword not yet verified | Descriptive technical-SEO language only; do not use the manager-only 3,600/KD19 as UK evidence | Technical access, selection and performance service |
+| `/local-seo` | local SEO for healthcare (UK 320/KD19; mixed-intent gate) | healthcare local SEO (260/KD22) | Local and Maps service; verify the current UK service-page SERP before broadening the cluster |
+| `/ai-search-optimisation` | UK primary keyword not yet verified | Descriptive AI-search language only; legacy 110/KD6 data is not UK-confirmed | AI retrieval, entity and evidence service |
 
 The homepage should not repeat every service page. It establishes KaiRank as the UK-primary specialist entity, communicates the commercial promise and routes visitors and internal authority into the page that owns each constraint.
 
+`/seo` permanently redirects to `/healthcare-seo`. This removes commercial-intent overlap and concentrates internal authority on one definitive healthcare SEO page.
+
 ## Geography decision
 
-The United Kingdom is the primary launch market. Current proof, British-English terminology and the private-clinic proposition are strongest there. The `.com` domain remains appropriate because KaiRank can support work in the United States, but US pages should be added only after US-specific search research, terminology, evidence and regulatory context exist. Do not publish copied `/us/` variants or mix UK and US spellings to manufacture geographic reach.
+The United Kingdom is the primary launch market. Current proof, British-English terminology and the private-clinic proposition are strongest there. The `.com` domain remains appropriate for later expansion, but US pages should be added only after US-specific search research, terminology, evidence and regulatory context exist. Do not publish copied `/us/` variants or mix UK and US spellings to manufacture geographic reach.
 
 ## AEO, GEO and structured data boundary
 
@@ -32,7 +33,7 @@ Article and case-study pages use visible authorship, genuine publish/update date
 
 The `/insights` route is the healthcare SEO blog and evidence-led learning hub. Its articles answer informational questions, demonstrate reasoning and link to the relevant commercial page.
 
-Current keyword-led articles include:
+Current editorial topics include. They are useful supporting topics, not claims of verified UK search volume or difficulty:
 
 - `/insights/healthcare-website-optimisation` — `optimizing healthcare websites`, `healthcare website optimisation`, `on-page SEO services healthcare`
 - `/insights/why-local-seo-matters-medical-practices` — `importance of local SEO for medical practices`, `local SEO for doctors`, `healthcare directory optimisation`
@@ -48,7 +49,7 @@ The hub, static route generation, article structured data, sitemap entries and R
 
 Before publishing:
 
-1. Assign one primary query and one search intent. Confirm that no existing page already owns it.
+1. Assign one verified primary query and one search intent. Confirm the data source, market, date and that no existing page already owns it.
 2. Define the clinic decision the article will help resolve.
 3. Add original experience, a clear method, useful examples or first-party evidence. Do not publish a generic search summary.
 4. Name the author and qualified clinical reviewer when the subject includes medical guidance or consequential clinical claims.

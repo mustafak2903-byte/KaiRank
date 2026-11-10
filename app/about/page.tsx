@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
 import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
@@ -15,6 +16,12 @@ export default function AboutPage() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
+    "@id": `${siteConfig.url}/about#page`,
+    name: "About KaiRank and Muhammad Mustafa Khan",
+    description: "The founder-led operating model behind KaiRank's UK healthcare SEO work.",
+    url: `${siteConfig.url}/about`,
+    dateModified: "2026-11-04",
+    isPartOf: { "@id": `${siteConfig.url}/#website` },
     mainEntity: {
       "@type": "Person",
       "@id": `${siteConfig.url}/#founder`,
@@ -30,13 +37,13 @@ export default function AboutPage() {
       <section className="profile-hero" aria-labelledby="about-title">
         <div className="container profile-hero__grid">
           <div><Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About", href: "/about" }]} /><span className="data-label">Founder-led by design</span><h1 id="about-title">One accountable lead.<br /><em>No strategic hand-off.</em></h1></div>
-          <div className="profile-hero__dossier" aria-label={`Profile for ${siteConfig.founder.name}`}><span aria-hidden="true">MK</span><p><strong>{siteConfig.founder.name}</strong><small>{siteConfig.founder.role}</small></p></div>
+          <div className="profile-hero__dossier" aria-label={`Profile for ${siteConfig.founder.name}`}><Image src={siteConfig.founder.portraitUrl} alt={`Portrait of ${siteConfig.founder.name}, founder of KaiRank`} width={560} height={700} sizes="(max-width: 992px) 100vw, 32vw" quality={92} /><p><strong>{siteConfig.founder.name}</strong><small>{siteConfig.founder.role}</small></p></div>
         </div>
       </section>
       <section className="profile-statement">
         <div className="container profile-statement__grid">
           <span className="data-label">The operating model</span>
-          <div><h2>Diagnosis, priorities and measurement stay connected.</h2><p>KaiRank is a UK-focused, founder-led search visibility practice for private clinics and high-consideration healthcare businesses. Mustafa leads the diagnosis and search strategy, then works directly with the developers, writers, clinicians or existing agency responsible for implementation.</p><p>The United Kingdom is the primary launch market. KaiRank can also support US healthcare organisations when the research, language, evidence and regulatory context are built specifically for that market—not copied from a UK page.</p><p>The work shown here spans a Birmingham private clinic and a multi-specialty hospital with more than 200 consultants. Each case study separates first-party analytics, third-party estimates and booking-intent signals so the result can be read accurately.</p><a href={siteConfig.founder.linkedIn} target="_blank" rel="noreferrer">View Mustafa’s LinkedIn profile <span aria-hidden="true">↗</span></a></div>
+          <div><h2>Diagnosis, priorities and measurement stay connected.</h2><p>KaiRank is a UK-focused, founder-led search visibility practice for private clinics and high-consideration healthcare businesses. Mustafa leads the diagnosis and strategy, then works directly with the developers, writers, clinicians or existing agency responsible for implementation.</p><p>The <Link href="/case-studies">verified case studies</Link> separate first-party analytics, third-party estimates and booking-intent signals. Explore the <Link href="/services">healthcare SEO services</Link> to see how that operating model is applied.</p><a href={siteConfig.founder.linkedIn} target="_blank" rel="noreferrer">View Mustafa’s LinkedIn profile <span aria-hidden="true">↗</span></a></div>
           <figure className="profile-operating-model" aria-label="Founder-led operating model connecting diagnosis, prioritisation and measurement">
             <div className="profile-operating-model__header" aria-hidden="true"><span>Search visibility system</span><small>Founder / 01</small></div>
             <svg viewBox="0 0 560 520" aria-hidden="true">
@@ -58,7 +65,7 @@ export default function AboutPage() {
         </div>
       </section>
       <section className="profile-principles" aria-labelledby="principles-title"><div className="container"><span className="data-label">Working principles</span><h2 id="principles-title">The standard applied to every engagement.</h2><ol><li><span>01</span><strong>Evidence before activity</strong><p>Establish what is actually suppressing discovery before prescribing output.</p></li><li><span>02</span><strong>Priority before volume</strong><p>Order work around patient demand and commercial value, not a generic monthly checklist.</p></li><li><span>03</span><strong>Clarity before claims</strong><p>Keep rankings, estimates, clicks, enquiries and bookings separate.</p></li><li><span>04</span><strong>One accountable owner</strong><p>Keep strategic reasoning close to delivery and measurement.</p></li></ol></div></section>
-      <section className="marketing-conversion" aria-labelledby="about-conversion-title" data-kai-avoid><div className="container marketing-conversion__inner"><span className="data-label">Start with one real constraint</span><h2 id="about-conversion-title">Bring the clinic, location and treatment that matter most.</h2><div className="v3-actions"><Link className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label="about: diagnostic" data-event-source="about-final" href="/search-visibility-diagnostic">Check my clinic <span aria-hidden="true">↗</span></Link><BookingTrigger className="v3-action v3-action--text" label="Talk through my search strategy" source="about-final" /></div></div></section>
+      <section className="marketing-conversion" aria-labelledby="about-conversion-title" data-kai-avoid><div className="container marketing-conversion__inner"><span className="data-label">Start with one real constraint</span><h2 id="about-conversion-title">Bring the clinic, location and treatment that matter most.</h2><div className="v3-actions"><BookingTrigger className="v3-action v3-action--solid" label="Book a clinic visibility review" source="about-final" /><Link className="v3-action v3-action--text" data-event="diagnostic_clicked" data-event-label="about: health check" data-event-source="about-final" href="/search-visibility-diagnostic">Run the free website health check <span aria-hidden="true">↗</span></Link></div></div></section>
     </MarketingShell>
   );
 }

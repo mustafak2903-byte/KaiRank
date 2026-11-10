@@ -14,21 +14,22 @@ export const SITE_URL = resolveSiteUrl();
 export const siteConfig = {
   name: "KaiRank",
   legalName: "KaiRank",
-  title: "UK Healthcare SEO Agency for Private Clinics | KaiRank",
+  title: "Healthcare Search Visibility for UK Private Clinics | KaiRank",
   description:
-    "A UK healthcare SEO agency for private clinics, connecting technical SEO, local search, medical content and AI visibility to qualified patient demand.",
+    "Founder-led healthcare SEO for UK private clinics, strengthening visibility across Google Search and Maps from treatment search to enquiry.",
   url: SITE_URL,
   locale: "en_GB",
   primaryMarket: "United Kingdom",
-  serviceMarkets: ["United Kingdom", "United States"],
+  serviceMarkets: ["United Kingdom"],
   contact: {
-    email: "hello@kairank.com",
+    email: null,
     phone: null,
   },
   founder: {
     name: "Muhammad Mustafa Khan",
     role: "Founder · Search strategist",
     linkedIn: "https://www.linkedin.com/in/muhammad-mustafa-khan/",
+    portraitUrl: "/muhammad-mustafa-khan.webp",
     aboutUrl: null,
   },
   bookingUrl: "https://cal.com/mustafa-reuzwm",
@@ -45,7 +46,6 @@ export const siteConfig = {
     { label: "About", href: "/about" },
   ],
   serviceRoutes: [
-    { label: "Clinic SEO strategy", href: "/seo" },
     { label: "Technical SEO", href: "/technical-seo" },
     { label: "Local SEO", href: "/local-seo" },
     { label: "AI search optimisation", href: "/ai-search-optimisation" },

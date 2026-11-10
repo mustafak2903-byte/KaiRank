@@ -1,5 +1,7 @@
 # KaiRank V3 implementation notes
 
+> Archived design record. Metrics, source links and production behaviour in this document reflect the V3 milestone and must not be used as current public evidence. Use `lib/marketing-content.ts` and the current case-study source reports instead.
+
 ## Creative concept
 
 V3 treats search visibility as one living **SIGNAL path**: patient demand moves through Search, Maps and AI discovery before a clinic can earn trust and an enquiry. The same visual grammar appears in the hero, the cost-of-invisibility sequence, the capabilities and the Recovery Room proof story. It is implemented with original CSS and SVG rather than a component kit or shader dependency.

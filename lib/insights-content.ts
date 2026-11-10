@@ -7,8 +7,8 @@ export type InsightSection = {
 export type InsightDefinition = {
   slug: string;
   category: string;
-  primaryKeyword: string;
-  supportingKeywords: readonly string[];
+  editorialTopic: string;
+  relatedEditorialTopics: readonly string[];
   seoTitle: string;
   title: string;
   accent: string;
@@ -27,8 +27,8 @@ export const insights: readonly InsightDefinition[] = [
   {
     slug: "prioritise-technical-seo-audit-private-clinic",
     category: "Technical SEO",
-    primaryKeyword: "technical SEO audit for clinics",
-    supportingKeywords: ["technical SEO audit checklist", "clinic technical SEO", "technical website audit"],
+    editorialTopic: "Technical SEO audit prioritisation for clinics",
+    relatedEditorialTopics: ["technical audit evidence", "clinic technical SEO", "technical website checks"],
     seoTitle: "Prioritising a Clinic Technical SEO Audit",
     title: "A clinic technical audit should protect",
     accent: "the patient journey—not the report.",
@@ -88,8 +88,8 @@ export const insights: readonly InsightDefinition[] = [
   {
     slug: "clinic-location-pages-without-doorway-content",
     category: "Local SEO",
-    primaryKeyword: "clinic location pages",
-    supportingKeywords: ["local SEO for clinics", "medical clinic location pages", "healthcare local SEO"],
+    editorialTopic: "Clinic location-page strategy",
+    relatedEditorialTopics: ["local search for clinics", "medical clinic location pages", "healthcare local SEO"],
     seoTitle: "Clinic location pages without doorway content",
     title: "A clinic location page should represent",
     accent: "a real patient decision.",
@@ -145,8 +145,8 @@ export const insights: readonly InsightDefinition[] = [
   {
     slug: "what-ai-search-changes-for-healthcare-websites",
     category: "AI search",
-    primaryKeyword: "medical content for AI search",
-    supportingKeywords: ["medical content AI discoverability", "AI discoverability for healthcare websites", "AI search content structure"],
+    editorialTopic: "Medical content for AI search",
+    relatedEditorialTopics: ["medical-content discoverability", "AI discovery for healthcare websites", "AI-search content structure"],
     seoTitle: "How to Structure Medical Content for AI Search",
     title: "AI search changes the retrieval layer.",
     accent: "It does not remove the need for evidence.",
@@ -202,8 +202,8 @@ export const insights: readonly InsightDefinition[] = [
   {
     slug: "healthcare-website-optimisation",
     category: "Technical SEO",
-    primaryKeyword: "optimizing healthcare websites",
-    supportingKeywords: ["healthcare website optimisation", "healthcare website optimization", "on-page SEO services healthcare"],
+    editorialTopic: "Healthcare website optimisation",
+    relatedEditorialTopics: ["healthcare website structure", "on-page healthcare SEO", "clinic website optimisation"],
     seoTitle: "Healthcare Website Optimisation Framework",
     title: "A healthcare website should make",
     accent: "the right page unmistakable.",
@@ -258,8 +258,8 @@ export const insights: readonly InsightDefinition[] = [
   {
     slug: "why-local-seo-matters-medical-practices",
     category: "Local SEO",
-    primaryKeyword: "importance of local SEO for medical practices",
-    supportingKeywords: ["local SEO for doctors", "local SEO medical practice", "healthcare directory optimisation"],
+    editorialTopic: "The role of local SEO for medical practices",
+    relatedEditorialTopics: ["local search for doctors", "medical-practice local visibility", "healthcare directory consistency"],
     seoTitle: "Why Local SEO Matters for Medical Practices",
     title: "Local search decides whether proximity",
     accent: "becomes consideration.",
@@ -315,8 +315,8 @@ export const insights: readonly InsightDefinition[] = [
   {
     slug: "healthcare-answer-engine-optimisation",
     category: "AI search",
-    primaryKeyword: "healthcare answer engine optimisation",
-    supportingKeywords: ["healthcare answer engine optimization", "AI search optimisation for medical websites", "healthcare visibility in AI search engines"],
+    editorialTopic: "Healthcare answer-engine optimisation",
+    relatedEditorialTopics: ["AI-search optimisation for medical websites", "healthcare visibility in AI answers", "answer-ready healthcare content"],
     seoTitle: "Healthcare Answer Engine Optimisation",
     title: "Answer engines need a source",
     accent: "people can still verify.",
@@ -372,8 +372,8 @@ export const insights: readonly InsightDefinition[] = [
   {
     slug: "healthcare-content-strategy",
     category: "Healthcare content",
-    primaryKeyword: "healthcare content strategy",
-    supportingKeywords: ["healthcare website content", "content marketing workflow healthcare", "healthcare content SEO"],
+    editorialTopic: "Healthcare content strategy",
+    relatedEditorialTopics: ["healthcare website content", "healthcare content workflow", "healthcare content SEO"],
     seoTitle: "Healthcare Content Strategy for Search",
     title: "A healthcare content strategy should follow",
     accent: "the patient’s decision—not a calendar.",

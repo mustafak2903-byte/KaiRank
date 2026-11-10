@@ -34,10 +34,7 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="site-header__actions">
-          <BookingTrigger className="site-header__strategy" label="Talk through my search strategy" source="navigation" />
-          <Link className="site-header__contact" data-event="primary_cta_clicked" data-event-label="Navigation: check my clinic" data-event-source="navigation" href="/search-visibility-diagnostic">
-            Check my clinic <span aria-hidden="true">↘</span>
-          </Link>
+          <BookingTrigger className="site-header__contact" label="Book a clinic visibility review" source="navigation" />
         </div>
         <MobileNavigation />
       </div>

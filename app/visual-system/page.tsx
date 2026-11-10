@@ -1,269 +1,279 @@
+import Image from "next/image";
 import Link from "next/link";
 import { AnalyticsEvents } from "@/components/experience/analytics-events";
 import { BookingTrigger } from "@/components/experience/booking-trigger";
-import { CapabilityStage } from "@/components/experience/capability-stage";
 import { CinematicBackground } from "@/components/experience/cinematic-background";
-import { ConversionSignal } from "@/components/experience/conversion-signal";
-import { HeroSignal } from "@/components/experience/hero-signal";
 import { KaiAssistant } from "@/components/experience/kai-assistant";
-import { ProblemJourney } from "@/components/experience/problem-journey";
-import { ProcessFlow } from "@/components/experience/process-flow";
-import { RecoveryProgress } from "@/components/experience/recovery-progress";
-import { SearchSignalField } from "@/components/experience/search-signal-field";
 import { ScrollExperience } from "@/components/experience/scroll-experience";
-import { VisibilityAudit } from "@/components/experience/visibility-audit";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { insights } from "@/lib/insights-content";
 import { createMetadata } from "@/lib/metadata";
 import { siteConfig } from "@/lib/site";
 import { createFaqEntity, siteEntityGraph } from "@/lib/structured-data";
 
 export const metadata = createMetadata({
-  title: "UK search visibility for private clinics",
+  title: "Healthcare search visibility for UK private clinics",
   description:
-    "KaiRank helps UK private clinics improve discovery across Google, Maps and AI search through technical SEO, local SEO, clinic search strategy and healthcare content.",
+    "Founder-led healthcare SEO for UK private clinics that want stronger visibility across Google Search and Maps and a clearer route from treatment search to enquiry.",
   path: "/visual-system",
   noIndex: true,
 });
 
 const faqs = [
   {
-    question: "What will the Search Visibility Diagnostic show me?",
+    question: "Why choose a specialist healthcare SEO agency?",
     answer:
-      "It checks the public response, redirects, HTTPS, page fundamentals, indexation signals, structured data, mobile setup and optional PageSpeed data. It does not claim to measure rankings.",
+      "Healthcare search has a higher trust burden than ordinary service marketing. A useful strategy has to connect technical SEO, local visibility, patient intent and clear clinical ownership without turning unqualified marketing copy into medical advice.",
   },
   {
-    question: "What happens after I run the diagnostic?",
+    question: "What does KaiRank help private clinics with?",
     answer:
-      "You’ll see the public technical signals KaiRank can verify immediately. Add a location and priority treatment if you want a deeper competitive review; nothing is sent unless you request it.",
+      "KaiRank helps private clinics improve how patients discover and evaluate priority treatments across Google Search and Maps. The work can include technical SEO, local SEO, treatment-page strategy, internal linking and measurement of qualified patient actions.",
   },
   {
-    question: "Which clinics are the best fit for KaiRank?",
+    question: "What happens in a clinic visibility review?",
     answer:
-      "Private clinics with valuable treatments, defined service areas and a genuine need to improve how patients discover and evaluate them. Similar high-consideration healthcare businesses may also be a fit.",
+      "We look at your website, location and priority treatments, then identify the clearest visibility constraint and the most useful next step. You will not be pushed into a pre-set package.",
   },
   {
-    question: "How quickly can search visibility change?",
+    question: "How is success measured?",
     answer:
-      "Technical access can improve quickly. Competitive treatment and local visibility usually compound over months, depending on the starting point and market.",
-  },
-  {
-    question: "Can KaiRank work with our current team or agency?",
-    answer:
-      "Yes. KaiRank can lead delivery or provide the diagnosis, priorities and measurement layer for your developers, writers or existing agency.",
-  },
-  {
-    question: "Do you guarantee rankings or AI citations?",
-    answer:
-      "No. KaiRank improves the signals search systems use, but rankings, Maps visibility and AI citations remain decisions made by third-party platforms.",
-  },
-  {
-    question: "What happens in the first strategy conversation?",
-    answer:
-      "We start with one website, location and priority treatment, identify the constraint that most needs evidence and decide whether a focused review, implementation sequence or no further work is the right next step.",
-  },
-  {
-    question: "How is an engagement scoped?",
-    answer:
-      "Scope follows the diagnosis. KaiRank defines the priority pages, technical repairs, local evidence or measurement work required before agreeing deliverables, ownership and timing with your team.",
+      "Visibility, organic visits, enquiries and completed bookings are different signals and should be reported separately. KaiRank does not guarantee rankings, enquiries or AI citations, because those outcomes depend on third-party systems and factors no agency controls.",
   },
 ] as const;
 
 const structuredData = {
   ...siteEntityGraph,
-  "@graph": [...siteEntityGraph["@graph"], createFaqEntity(siteConfig.url, faqs)],
+  "@graph": [
+    ...siteEntityGraph["@graph"],
+    {
+      "@type": "WebPage",
+      "@id": `${siteConfig.url}/#webpage`,
+      name: "Healthcare Search Visibility for UK Private Clinics",
+      description: siteConfig.description,
+      url: siteConfig.url,
+      isPartOf: { "@id": `${siteConfig.url}/#website` },
+      about: { "@id": `${siteConfig.url}/#organisation` },
+      inLanguage: "en-GB",
+    },
+    createFaqEntity(siteConfig.url, faqs),
+  ],
 };
 
-const homepageInsights = [...insights].sort((a, b) => b.published.localeCompare(a.published)).slice(0, 3);
+const visibilityGaps = [
+  {
+    index: "01",
+    title: "Invisible treatments",
+    body: "Priority services never reach the shortlist.",
+  },
+  {
+    index: "02",
+    title: "Weak local signals",
+    body: "Nearby patients see a clearer competitor first.",
+  },
+  {
+    index: "03",
+    title: "Decision friction",
+    body: "The page leaves questions unanswered.",
+  },
+] as const;
+
+const outcomes = [
+  {
+    index: "01",
+    title: "Treatment discovery",
+    body: "Be present for the services patients are actively seeking.",
+    href: "/healthcare-seo",
+    link: "Explore healthcare SEO",
+  },
+  {
+    index: "02",
+    title: "Local consideration",
+    body: "Become a credible nearby option across Search and Maps.",
+    href: "/local-seo",
+    link: "Explore local SEO",
+  },
+  {
+    index: "03",
+    title: "Confident enquiry",
+    body: "Make evidence, answers and the next step easy to act on.",
+    href: "/services",
+    link: "Explore the connected service system",
+  },
+] as const;
+
+const process = [
+  {
+    index: "01",
+    title: "Diagnose",
+    body: "Find the constraint between patient demand and your clinic.",
+    output: "Clear diagnosis",
+  },
+  {
+    index: "02",
+    title: "Prioritise",
+    body: "Order the work by commercial value, effort and evidence.",
+    output: "Focused roadmap",
+  },
+  {
+    index: "03",
+    title: "Improve",
+    body: "Measure visibility, engagement and patient actions separately.",
+    output: "Measured progress",
+  },
+] as const;
 
 export default function VisualSystemPage() {
   return (
-    <div className="v3-experience v6-experience v7-experience v8-experience">
+    <div className="v3-experience v6-experience v7-experience v8-experience refinement-experience">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <ScrollExperience />
       <AnalyticsEvents />
       <SiteHeader />
 
       <main id="main-content">
-        <section className="v3-hero v7-hero" id="home" aria-labelledby="hero-title" data-kai-avoid>
+        <section className="v3-hero v7-hero refinement-hero" id="home" aria-labelledby="hero-title" data-kai-avoid data-scroll-scene>
           <CinematicBackground />
-          <div className="container v7-hero__inner">
-            <div className="v7-hero__copy" data-reveal>
-              <p className="v3-eyebrow"><i aria-hidden="true" /> UK search visibility for private clinics</p>
-              <h1 id="hero-title">
-                <span>Be the clinic</span>
-                <span>patients find</span>
-                <em>before they choose.</em>
-              </h1>
-              <p className="v3-hero__lead">
-                KaiRank is a UK healthcare SEO agency that finds and fixes the technical, local and authority gaps keeping private clinics out of the shortlist across Google, Maps and AI search.
-              </p>
+          <div className="container refinement-hero__inner">
+            <div className="refinement-hero__copy" data-reveal>
+              <p className="v3-eyebrow"><i aria-hidden="true" /> Healthcare SEO for private clinics</p>
+              <h1 id="hero-title"><span>Help more patients</span><em>find your clinic.</em></h1>
+              <p>Founder-led healthcare SEO for UK private clinics that need stronger visibility across Google Search and Maps—and a clearer path from treatment search to enquiry.</p>
               <div className="v3-actions">
-                <a className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label="Hero: check my clinic" data-event-source="hero" href="#audit">Check my clinic <span aria-hidden="true">↘</span></a>
-                <a className="v3-action v3-action--text" href="#proof">See verified clinic results <span aria-hidden="true">↓</span></a>
+                <BookingTrigger className="v3-action v3-action--solid" label="Book a clinic visibility review" source="hero" />
+                <a className="v3-action v3-action--text" href="#visibility-gap">See where clinics lose visibility <span aria-hidden="true">↓</span></a>
               </div>
             </div>
 
-            <div className="v7-hero__evidence" aria-label="Verified Recovery Room case-study evidence" data-reveal>
-              <span className="data-label">Verified clinic case study · source linked</span>
-              <dl>
-                <div><dt>+808%</dt><dd>Search impressions</dd></div>
-                <div><dt>+354%</dt><dd>Organic clicks</dd></div>
-                <div><dt>#1</dt><dd>Treatment query</dd></div>
-              </dl>
+            <div className="refinement-hero__signal" aria-label="A patient journey from treatment need to clinic enquiry" data-interactive-surface data-reveal>
+              <div className="refinement-hero__signal-copy"><span>Patient decision path</span><strong>Treatment need.<br />Local search.<br />Confident enquiry.</strong></div>
+              <div className="refinement-hero__route" aria-hidden="true">
+                <span className="refinement-hero__route-line"><i /></span>
+                <ol><li><i />Need</li><li><i />Search + Maps</li><li><i />Clinic</li></ol>
+              </div>
+              <p>KaiRank strengthens the route between what a patient needs and why your clinic becomes a credible choice.</p>
             </div>
-
-            <a className="v7-hero__scroll data-label" href="#surface-model">
-              <span>Follow one patient query</span><i aria-hidden="true" />
-            </a>
           </div>
         </section>
 
-        <section className="v7-surfaces" id="surface-model" aria-labelledby="surface-model-title">
+        <section className="refinement-gap" id="visibility-gap" aria-labelledby="gap-title" data-scroll-scene>
           <div className="container">
-            <div className="v3-section-index data-label"><span>Search surface</span><span>One query · three systems</span></div>
-            <div className="v7-surfaces__intro" data-reveal>
-              <h2 id="surface-model-title">Patients search once.<br /><em>Discovery fragments.</em></h2>
-              <p>Google, Maps and AI evaluate different signals. A clinic can be credible in one surface and absent from another. KaiRank connects the technical, local and authority signals that help it enter consideration.</p>
+            <div className="v3-section-index data-label"><span>The visibility gap</span><span>Why good clinics get overlooked</span></div>
+            <div className="refinement-gap__stage">
+              <div className="refinement-section-lead refinement-section-lead--stacked" data-reveal>
+                <h2 id="gap-title">The patient has a need.<br /><em>Your clinic is missing.</em></h2>
+                <p>Search decisions happen before the phone call. KaiRank repairs the moments where discovery, trust or action breaks.</p>
+              </div>
+              <div className="refinement-decision-map" data-interactive-surface data-reveal>
+                <div className="refinement-decision-map__route" aria-hidden="true"><i /><span /></div>
+                <ol>
+                  {visibilityGaps.map((item) => (
+                    <li key={item.index}>
+                      <span className="data-label">{item.index}</span>
+                      <div><h3>{item.title}</h3><p>{item.body}</p></div>
+                      <i aria-hidden="true" />
+                    </li>
+                  ))}
+                </ol>
+                <div className="refinement-decision-map__target" aria-hidden="true"><span>Clinic</span><strong>?</strong><i /></div>
+              </div>
             </div>
-            <HeroSignal />
           </div>
         </section>
 
-        <ProblemJourney />
-
-        <section className="v3-capabilities" id="services" aria-labelledby="capabilities-title">
+        <section className="refinement-outcomes" id="services" aria-labelledby="outcomes-title" data-scroll-scene>
           <div className="container">
-            <div className="v3-section-index data-label"><span>What we fix</span><span>Constraint first</span></div>
-            <div className="v3-capabilities__intro" data-reveal>
-              <h2 id="capabilities-title">Fix the layer costing you visibility.</h2>
-              <p>Not every clinic needs more content. Some need technical repairs. Others need clearer treatment pages, stronger local evidence or better-connected authority signals. The work starts where the loss begins.</p>
+            <div className="v3-section-index data-label"><span>The KaiRank system</span><span>Search → trust → enquiry</span></div>
+            <div className="refinement-section-lead" data-reveal>
+              <h2 id="outcomes-title">Make your clinic the <em>clear next step.</em></h2>
+              <p>One connected system for technical access, treatment intent, local relevance and measurable action.</p>
             </div>
-            <CapabilityStage />
+            <div className="refinement-outcomes__stage">
+              <div className="refinement-visibility-orbit" aria-label="KaiRank connects treatment demand, Google Search, Maps and clinic trust" data-interactive-surface data-reveal>
+                <span className="refinement-visibility-orbit__ring refinement-visibility-orbit__ring--one" aria-hidden="true" />
+                <span className="refinement-visibility-orbit__ring refinement-visibility-orbit__ring--two" aria-hidden="true" />
+                <div className="refinement-visibility-orbit__core"><small>KaiRank</small><strong>Clinic<br />visibility</strong></div>
+                <span className="refinement-visibility-orbit__node refinement-visibility-orbit__node--search">Search</span>
+                <span className="refinement-visibility-orbit__node refinement-visibility-orbit__node--maps">Maps</span>
+                <span className="refinement-visibility-orbit__node refinement-visibility-orbit__node--trust">Trust</span>
+                <span className="refinement-visibility-orbit__pulse" aria-hidden="true" />
+              </div>
+              <ol className="refinement-outcomes__grid">
+                {outcomes.map((item) => (
+                  <li key={item.index} data-interactive-surface data-reveal>
+                    <span className="data-label">{item.index}</span>
+                    <div><h3>{item.title}</h3><p>{item.body}</p></div>
+                    <Link href={item.href} aria-label={item.link}><span aria-hidden="true">↗</span></Link>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </section>
 
-        <section className="v9-outcomes" aria-labelledby="outcomes-title">
+        <section className="refinement-proof" id="proof" aria-labelledby="proof-title" data-kai-avoid data-scroll-scene>
           <div className="container">
-            <div className="v3-section-index data-label"><span>From visibility to action</span><span>Three distinct outcomes</span></div>
-            <div className="v9-outcomes__intro" data-reveal>
-              <h2 id="outcomes-title">Visibility only matters when it creates <em>a credible route to action.</em></h2>
-              <p>KaiRank keeps discovery, evaluation and patient intent separate—so the work is judged by what changed, not by one inflated number.</p>
+            <div className="v3-section-index data-label"><span>Proof without the theatre</span><span>The Recovery Room · Birmingham</span></div>
+            <div className="refinement-proof__intro" data-reveal>
+              <div><p className="v3-eyebrow">Verified clinic evidence</p><h2 id="proof-title">Proof you can <em>inspect.</em></h2></div>
+              <p>A Birmingham clinic moved from an indexing barrier to measurable discovery and booking intent. Sources, periods and limits stay attached.</p>
             </div>
-            <ol className="v9-outcomes__grid">
-              <li data-reveal><span className="data-label">01 / Discovered</span><strong>Enter the shortlist.</strong><p>Earn visibility for priority treatments in the locations and search surfaces that matter.</p><small>Measured with impressions, rankings and local discovery.</small></li>
-              <li data-reveal><span className="data-label">02 / Evaluated</span><strong>Make the decision easier.</strong><p>Give patients and search systems clear services, clinicians, locations and trustworthy evidence.</p><small>Measured with qualified landing-page and evidence engagement.</small></li>
-              <li data-reveal><span className="data-label">03 / Action</span><strong>Connect demand to the clinic.</strong><p>Build an observable route from organic discovery to calls, enquiries and booking intent.</p><small>Measured as actions—not automatically relabelled as patients or revenue.</small></li>
-            </ol>
+            <Link className="refinement-proof__story" href="/case-studies/the-recovery-room" data-interactive-surface data-reveal>
+              <div className="refinement-proof__metric"><span className="data-label">Google Search Console · 6 months</span><strong>180K</strong><small>search impressions</small></div>
+              <div className="refinement-proof__flow" aria-hidden="true"><span>Indexing barrier</span><i /><span>Priority intent</span><i /><span>Measured action</span></div>
+              <div className="refinement-proof__result"><span className="data-label">Commercial result</span><strong>#1</strong><small>“deep tissue massage Birmingham”</small></div>
+              <span className="refinement-proof__link">Open the evidence ledger <i aria-hidden="true">↗</i></span>
+            </Link>
+            <ul className="refinement-proof__standards" aria-label="KaiRank evidence standards" data-reveal>
+              <li><span className="data-label">Source</span><strong>Attached</strong></li>
+              <li><span className="data-label">Period</span><strong>Stated</strong></li>
+              <li><span className="data-label">Limits</span><strong>Visible</strong></li>
+            </ul>
           </div>
         </section>
 
-        <section className="v3-proof" id="proof" aria-labelledby="proof-title" data-kai-avoid>
+        <section className="refinement-process" id="process" aria-labelledby="process-title" data-scroll-scene>
           <div className="container">
-            <div className="v3-section-index data-label"><span>Verified outcome</span><span>Evidence attached</span></div>
-            <div className="v3-proof__intro" data-reveal>
-              <p className="v3-eyebrow">The Recovery Room · Birmingham</p>
-              <h2 id="proof-title">One clinic. A much larger search surface.</h2>
+            <div className="v3-section-index data-label"><span>How the work moves</span><span>Three decisions, one accountable lead</span></div>
+            <div className="refinement-section-lead" data-reveal>
+              <h2 id="process-title">Clarity before <em>activity.</em></h2>
+              <p>Find the constraint. Choose the priority. Measure what changed.</p>
             </div>
-            <p className="v7-proof-context data-label">Verified project evidence · comparison period documented in the linked source</p>
-            <RecoveryProgress />
+            <div className="refinement-process__stage">
+              <div className="refinement-process__scanner" aria-hidden="true" data-reveal><span /><i /><b /></div>
+              <ol className="refinement-process__grid">
+                {process.map((item) => (
+                  <li key={item.index} data-interactive-surface data-reveal>
+                    <span className="data-label">{item.index}</span>
+                    <div><h3>{item.title}</h3><p>{item.body}</p></div>
+                    <small>{item.output}</small>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </section>
 
-            <div className="v3-south-city" data-reveal>
+        <section className="refinement-founder" id="founder" aria-labelledby="founder-title" data-scroll-scene>
+          <div className="container refinement-founder__grid" data-reveal>
+            <div><span className="data-label">Founder-led healthcare SEO</span><h2 id="founder-title">Senior strategy stays close to the work.</h2></div>
+            <figure className="refinement-founder__profile" data-interactive-surface>
               <div>
-                <span className="data-label">Supporting proof / South City Hospital</span>
-                <h3>Scale without losing clinical structure.</h3>
-                <p>From roughly 250 ranking keywords in July 2025 to 3,900 in May 2026, a connected service-and-doctor architecture expanded discovery across specialties, services and individual doctor profiles.</p>
-                <Link data-event="evidence_opened" data-event-label="South City Hospital case study" href="/case-studies/south-city-hospital">Read verified case study <span aria-hidden="true">↗</span></Link>
+                <Image src={siteConfig.founder.portraitUrl} alt="Muhammad Mustafa Khan, founder and search strategist at KaiRank" width={560} height={700} sizes="(max-width: 992px) 18rem, 22vw" quality={92} />
+                <span aria-hidden="true">Founder / 01</span>
               </div>
-              <dl>
-                <div><dt>46K+</dt><dd>monthly organic visits</dd></div>
-                <div><dt>3,900</dt><dd>ranking keywords</dd></div>
-                <div><dt>194</dt><dd>doctor profiles in the top 10</dd></div>
-                <div><dt>8,076</dt><dd>Google profile call actions · one month</dd></div>
-              </dl>
-            </div>
-
-            <div className="v7-proof-bridge" data-reveal>
-              <div><span className="data-label">Apply the evidence</span><strong>Want to see which constraint applies to your clinic?</strong></div>
-              <a className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label="Proof: check my clinic" data-event-source="proof" href="#audit">Check my clinic <span aria-hidden="true">↘</span></a>
+              <figcaption><strong>{siteConfig.founder.name}</strong><small>{siteConfig.founder.role}</small></figcaption>
+            </figure>
+            <div className="refinement-founder__copy">
+              <p>Mustafa leads the diagnosis, priorities and measurement. When delivery needs specialist support, he works directly with your developers, writers, clinicians or existing agency—without a sales-to-junior hand-off.</p>
+              <a href={siteConfig.founder.linkedIn} target="_blank" rel="noreferrer">View Mustafa’s LinkedIn profile <span aria-hidden="true">↗</span></a>
             </div>
           </div>
         </section>
 
-        <section className="v7-founder" id="founder" aria-labelledby="founder-title">
-          <div className="container">
-            <div className="v3-section-index data-label"><span>Accountable specialist</span><span>One clear owner</span></div>
-            <div className="v7-founder__grid v8-founder__grid" data-reveal>
-              <div>
-                <span className="data-label">{siteConfig.founder.role}</span>
-                <h2 id="founder-title">Specialist diagnosis.<br /><em>Accountable delivery.</em></h2>
-              </div>
-              <div className="v7-founder__statement">
-                <p>Every engagement has a clear owner. {siteConfig.founder.name} leads the diagnosis, priorities and search strategy—working with your developers, writers or existing agency where needed.</p>
-                <a href={siteConfig.founder.linkedIn} target="_blank" rel="noreferrer">View founder profile <span aria-hidden="true">↗</span></a>
-              </div>
-              <div className="v8-founder__dossier" aria-label={`Founder profile for ${siteConfig.founder.name}`}>
-                <div aria-hidden="true"><span>MK</span><i /></div>
-                <p><span className="data-label">Your accountable lead</span><strong>{siteConfig.founder.name}</strong><small>Diagnosis, prioritisation and search strategy stay founder-led from first review to delivery.</small></p>
-              </div>
-              <ul aria-label="KaiRank working principles">
-                <li><span>01</span><strong>Evidence before activity</strong></li>
-                <li><span>02</span><strong>Priority before volume</strong></li>
-                <li><span>03</span><strong>No ranking guarantees</strong></li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section className="v3-process" id="process" aria-labelledby="process-title">
-          <div className="container">
-            <div className="v3-section-index data-label"><span>How we work</span><span>Three decisive stages</span></div>
-            <div className="v3-process__intro" data-reveal>
-              <h2 id="process-title">Diagnose. Engineer. Compound.</h2>
-              <p>One constraint at a time. Each stage produces a clear output before the next begins.</p>
-            </div>
-            <ProcessFlow />
-          </div>
-        </section>
-
-        <section className="v9-insight-bridge" aria-labelledby="insight-bridge-title">
-          <div className="container">
-            <div className="v3-section-index data-label"><span>Healthcare SEO insights</span><span>Questions before tactics</span></div>
-            <div className="v9-insight-bridge__intro" data-reveal>
-              <h2 id="insight-bridge-title">Read the decision behind <em>the search work.</em></h2>
-              <p>Practical guidance for clinic owners and marketing teams evaluating technical SEO, local visibility, healthcare content and AI search.</p>
-              <Link href="/insights">Explore the healthcare SEO blog <span aria-hidden="true">↗</span></Link>
-            </div>
-            <ol className="v9-insight-bridge__list">
-              {homepageInsights.map((insight, index) => (
-                <li key={insight.slug} data-reveal>
-                  <Link href={`/insights/${insight.slug}`}>
-                    <span className="data-label">0{index + 1} / {insight.category}</span>
-                    <strong>{insight.title} <em>{insight.accent}</em></strong>
-                    <small>{insight.readTime}</small>
-                    <i aria-hidden="true">↗</i>
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        <div className="v6-diagnostic" aria-label="Clinic search visibility diagnostic" data-kai-avoid>
-          <SearchSignalField />
-          <div className="container">
-            <div className="v3-section-index data-label"><span>Search visibility diagnostic</span><span>Start with public evidence</span></div>
-            <VisibilityAudit />
-          </div>
-        </div>
-
-        <section className="v3-faq" id="faq" aria-labelledby="faq-title" data-kai-avoid>
+        <section className="v3-faq refinement-faq" id="faq" aria-labelledby="faq-title" data-kai-avoid data-scroll-scene>
           <div className="container v3-faq__grid">
-            <div data-reveal>
-              <span className="data-label">Useful answers</span>
-              <h2 id="faq-title">Questions before we look closer.</h2>
-            </div>
+            <div data-reveal><span className="data-label">Useful answers</span><h2 id="faq-title">What clinic leaders usually need to know.</h2></div>
             <div className="v3-faq__list">
               {faqs.map((faq, index) => (
                 <details key={faq.question} data-reveal>
@@ -275,22 +285,27 @@ export default function VisualSystemPage() {
           </div>
         </section>
 
-        <section className="v3-conversion" id="contact" aria-labelledby="conversion-title" data-kai-avoid>
-          <ConversionSignal />
-          <div className="container v3-conversion__inner" data-reveal>
-            <span className="data-label">Start with evidence</span>
-            <h2 id="conversion-title">Find the gap between your clinic and the shortlist.</h2>
-            <p>Bring your website, location and priority treatment. The first conversation starts with the constraint—not a pre-filled deliverables list.</p>
+        <section className="refinement-conversion" id="contact" aria-labelledby="conversion-title" data-kai-avoid data-scroll-scene>
+          <div className="container refinement-conversion__inner" data-reveal>
+            <span className="data-label">A practical first conversation</span>
+            <h2 id="conversion-title">Find the clearest route to more <em>qualified patient enquiries.</em></h2>
+            <p>A focused review for UK private clinics—not a generic sales call.</p>
+            <ol className="refinement-conversion__brief" aria-label="What to expect from the clinic visibility review">
+              <li><span className="data-label">Best fit</span><strong>Private clinics with one priority treatment or location</strong></li>
+              <li><span className="data-label">Bring</span><strong>Your website, target area and priority service</strong></li>
+              <li><span className="data-label">Leave with</span><strong>The clearest opportunity and an honest next move</strong></li>
+            </ol>
             <div className="v3-actions">
-              <a className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label="Final: check my clinic" data-event-source="final-cta" href="#audit">Check my clinic <span aria-hidden="true">↗</span></a>
-              <BookingTrigger className="v3-action v3-action--text" label="Talk through my search strategy" source="final-cta" />
+              <BookingTrigger className="v3-action v3-action--solid" label="Book a clinic visibility review" source="final-cta" />
+              <Link className="v3-action v3-action--text" data-event="diagnostic_clicked" data-event-label="final: website health check" data-event-source="final-cta" href="/search-visibility-diagnostic">Check my website first <span aria-hidden="true">↗</span></Link>
             </div>
+            <small>No obligation. No ranking guarantees. The calendar loads only when you choose to open it. Prefer a written introduction? <Link href="/contact">See contact options.</Link></small>
           </div>
         </section>
+
       </main>
 
       <SiteFooter />
-
       <KaiAssistant />
     </div>
   );

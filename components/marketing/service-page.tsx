@@ -4,13 +4,23 @@ import { Breadcrumbs } from "@/components/marketing/breadcrumbs";
 import { ServiceSignalInstrument } from "@/components/marketing/hero-instruments";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { insights } from "@/lib/insights-content";
-import { services, type ServiceDefinition } from "@/lib/marketing-content";
+import { caseStudies, services, type ServiceDefinition } from "@/lib/marketing-content";
 import { siteConfig } from "@/lib/site";
 import { createFaqEntity } from "@/lib/structured-data";
 
 export function ServicePage({ service }: { service: ServiceDefinition }) {
   const url = `${siteConfig.url}/${service.slug}`;
   const relatedServices = services.filter((item) => item.slug !== service.slug).slice(0, 3);
+  const featuredCaseStudy = service.slug === "ai-search-optimisation"
+    ? caseStudies.find((item) => item.slug === "south-city-hospital")
+    : caseStudies.find((item) => item.slug === "the-recovery-room");
+  const flowLabels: Record<string, readonly [string, string, string]> = {
+    "technical-seo": ["Patient demand", "Reachable page", "Search discovery"],
+    "local-seo": ["Nearby need", "Location evidence", "Clinic consideration"],
+    "ai-search-optimisation": ["Real expertise", "Entity clarity", "Retrievable evidence"],
+    "healthcare-seo": ["Treatment search", "Trusted journey", "Qualified enquiry"],
+  };
+  const proofFlow = flowLabels[service.slug] ?? ["Patient demand", "Search evidence", "Qualified action"];
   const directInsights = [...insights]
     .filter((insight) => insight.serviceSlug === service.slug)
     .sort((a, b) => b.published.localeCompare(a.published));
@@ -19,15 +29,15 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
     "@type": "Service",
     "@id": `${url}#service`,
     name: service.navLabel,
-    serviceType: service.primaryKeyword,
+    serviceType: service.primaryTopic,
     description: service.description,
-    keywords: [service.primaryKeyword, ...service.supportingKeywords].join(", "),
+    ...(service.verifiedKeywordCluster.length ? { keywords: service.verifiedKeywordCluster.join(", ") } : {}),
     url,
     provider: { "@id": `${siteConfig.url}/#organisation` },
     areaServed: siteConfig.serviceMarkets.map((market) => ({ "@type": "Country", name: market })),
     audience: {
       "@type": "Audience",
-      audienceType: "Private clinics and healthcare organisations in the United Kingdom and United States",
+      audienceType: "Private clinics and healthcare organisations in the United Kingdom",
     },
   };
   const structuredData = {
@@ -46,8 +56,8 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
             <h1 id="marketing-title">{service.title}<br /><em>{service.accent}</em></h1>
             <p>{service.description}</p>
             <div className="v3-actions">
-              <Link className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label={`${service.slug}: diagnostic`} data-event-source="service-hero" href="/search-visibility-diagnostic">Check my clinic <span aria-hidden="true">↘</span></Link>
-              <BookingTrigger className="v3-action v3-action--text" label="Talk through my search strategy" source={`${service.slug}-hero`} />
+              <BookingTrigger className="v3-action v3-action--solid" label="Book a clinic visibility review" source={`${service.slug}-hero`} />
+              <Link className="v3-action v3-action--text" href="/case-studies">See verified clinic results <span aria-hidden="true">↘</span></Link>
             </div>
           </div>
           <ServiceSignalInstrument service={service} />
@@ -96,6 +106,22 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
         </div>
       </section>
 
+      {featuredCaseStudy ? (
+        <section className="services-proof" aria-labelledby="service-proof-title">
+          <div className="container services-proof__grid">
+            <div><span className="data-label">Evidence under real conditions</span><h2 id="service-proof-title">See this work in practice.</h2><p>Read the methods, source labels and limitations behind a relevant healthcare search programme.</p></div>
+            <div>
+              <figure className="service-proof-flow" aria-label={`${service.navLabel} connects ${proofFlow.join(" to ")}`} data-interactive-surface>
+                <figcaption><span className="data-label">Visibility system trace</span><strong>{service.navLabel}</strong></figcaption>
+                <ol>{proofFlow.map((label, index) => <li key={label}><i aria-hidden="true" /><span className="data-label">0{index + 1}</span><strong>{label}</strong></li>)}</ol>
+                <span className="service-proof-flow__signal" aria-hidden="true" />
+              </figure>
+              <Link href={`/case-studies/${featuredCaseStudy.slug}`}><span>{featuredCaseStudy.client}</span><strong>{featuredCaseStudy.title} {featuredCaseStudy.accent}</strong><i aria-hidden="true">↗</i></Link>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <section className="service-insights" aria-labelledby="service-insights-title">
         <div className="container">
           <div className="marketing-section__index data-label"><span>Search intelligence</span><span>Supporting field notes</span></div>
@@ -127,8 +153,8 @@ export function ServicePage({ service }: { service: ServiceDefinition }) {
           <h2 id="service-conversion-title">Find the first constraint worth fixing.</h2>
           <p>Run the public technical check, or bring one priority treatment and location to a focused strategy conversation.</p>
           <div className="v3-actions">
-            <Link className="v3-action v3-action--solid" data-event="primary_cta_clicked" data-event-label={`${service.slug}: final diagnostic`} data-event-source="service-final" href="/search-visibility-diagnostic">Check my clinic <span aria-hidden="true">↗</span></Link>
-            <BookingTrigger className="v3-action v3-action--text" label="Talk through my search strategy" source={`${service.slug}-final`} />
+            <BookingTrigger className="v3-action v3-action--solid" label="Book a clinic visibility review" source={`${service.slug}-final`} />
+            <Link className="v3-action v3-action--text" data-event="diagnostic_clicked" data-event-label={`${service.slug}: final health check`} data-event-source="service-final" href="/search-visibility-diagnostic">Run the free website health check <span aria-hidden="true">↗</span></Link>
           </div>
           <small>Bring your website, location and priority treatment. The first conversation starts with the constraint—not a pre-filled deliverables list.</small>
         </div>
