@@ -100,12 +100,12 @@ for (const href of uniqueInternalLinks) {
   await bookingButton.focus();
   const triggerFocused = await bookingButton.evaluate((element) => document.activeElement === element);
   await bookingButton.click();
-  const modal = page.locator("cal-modal-box").last();
-  await modal.waitFor({ state: "attached", timeout: 15_000 }).catch(() => null);
+  const modal = page.locator('iframe[src*="app.cal.com"][src*="embedType=modal"]').last();
+  await modal.waitFor({ state: "visible", timeout: 20_000 }).catch(() => null);
   const modalVisible = await modal.isVisible().catch(() => false);
   await page.keyboard.press("Escape");
-  await page.waitForTimeout(300);
-  const modalClosed = !(await modal.isVisible().catch(() => false));
+  await page.waitForTimeout(600);
+  const modalClosed = await page.locator("body").evaluate((element) => !element.classList.contains("has-booking-open"));
   const focusRestored = await bookingButton.evaluate((element) => document.activeElement === element).catch(() => false);
   report.interactions.booking = { triggerFocused, modalVisible, modalClosed, focusRestored };
   await context.close();
@@ -130,7 +130,7 @@ for (const href of uniqueInternalLinks) {
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: "reduce" });
   const page = await context.newPage();
   await page.goto(`${base}/search-visibility-diagnostic`, { waitUntil: "networkidle" });
-  const input = page.getByLabel("Your website");
+  const input = page.locator('input[name="url"]');
   await page.getByRole("button", { name: "Check my website" }).last().click();
   const emptyValidation = await page.getByRole("alert").textContent().catch(() => "");
   await input.fill("http://localhost:3000");
@@ -153,5 +153,32 @@ const sitemapResponse = await fetch(`${base}/sitemap.xml`);
 report.technical = { robotsStatus: robotsResponse.status, robotsBody, sitemapStatus: sitemapResponse.status, sitemapRouteCount: routes.length };
 
 await browser.close();
-await fs.writeFile(`${output}/report.json`, JSON.stringify(report, null, 2));
-console.log(JSON.stringify(report, null, 2));
+const failures = {
+  non200: report.pages.filter((page) => page.status !== 200).map((page) => ({ profile: page.profile, route: page.route, status: page.status })),
+  canonical: report.pages.filter((page) => !page.canonicalHostCorrect || page.hasUnconfiguredDomain).map((page) => ({ profile: page.profile, route: page.route, canonical: page.canonical })),
+  structure: report.pages.filter((page) => page.h1s.length !== 1 || page.mainCount !== 1 || page.horizontalOverflow > 0 || page.missingAlt > 0 || page.minTapTargetFailures > 0).map((page) => ({ profile: page.profile, route: page.route, h1s: page.h1s.length, main: page.mainCount, overflow: page.horizontalOverflow, missingAlt: page.missingAlt, tapTargets: page.minTapTargetFailures })),
+  brokenLinks: report.brokenLinks,
+  schema: report.schemaErrors,
+  interactions: [
+    ...(!report.interactions.booking?.triggerFocused || !report.interactions.booking?.modalVisible || !report.interactions.booking?.modalClosed || !report.interactions.booking?.focusRestored ? ["booking"] : []),
+    ...(!report.interactions.mobileMenu?.opened || !report.interactions.mobileMenu?.closedWithEscape || !report.interactions.mobileMenu?.focusRestored ? ["mobile-menu"] : []),
+    ...(report.interactions.diagnostic?.checkCards < 8 || !report.interactions.diagnostic?.boundariesVisible || report.interactions.diagnostic?.sourceRows !== report.interactions.diagnostic?.checkCards || report.interactions.diagnostic?.limitRows !== report.interactions.diagnostic?.checkCards ? ["diagnostic"] : []),
+  ],
+  technical: [
+    ...(report.technical.robotsStatus !== 200 ? ["robots"] : []),
+    ...(report.technical.sitemapStatus !== 200 || report.technical.sitemapRouteCount !== routes.length ? ["sitemap"] : []),
+  ],
+};
+const failureCount = Object.values(failures).reduce((total, items) => total + items.length, 0);
+const completedReport = { ...report, failures, failureCount };
+await fs.writeFile(`${output}/report.json`, JSON.stringify(completedReport, null, 2));
+console.log(JSON.stringify({
+  base,
+  routeCount: routes.length,
+  viewportPageChecks: report.pages.length,
+  interactions: report.interactions,
+  technical: report.technical,
+  failures,
+  failureCount,
+}, null, 2));
+if (failureCount > 0) process.exitCode = 1;

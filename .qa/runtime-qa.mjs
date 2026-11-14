@@ -28,8 +28,22 @@ const sitemap = await fetch(`${base}/sitemap.xml`);
 const sitemapText = await sitemap.text();
 const feed = await fetch(`${base}/insights/feed.xml`);
 const seoRedirect = await fetch(`${base}/seo`, { redirect: "manual" });
-const visualSystem = await fetch(`${base}/visual-system`);
-const visualSystemHtml = await visualSystem.text();
+const internalRoutes = [
+  "/visual-system",
+  "/experiments",
+  "/experiments/atlas",
+  "/experiments/editorial",
+  "/experiments/prism",
+];
+const internalRouteResults = [];
+for (const path of internalRoutes) {
+  const response = await fetch(`${base}${path}`, { redirect: "manual" });
+  const html = await response.text();
+  const location = response.headers.get("location");
+  const redirectedHome = [307, 308].includes(response.status) && location === "/";
+  const noIndex = /<meta\b[^>]*name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html);
+  internalRouteResults.push({ path, status: response.status, location, redirectedHome, noIndex });
+}
 
 const invalid = await jsonPost("/api/audit", { url: "" });
 const privateDestination = await jsonPost("/api/audit", { url: "http://127.0.0.1:3134" });
@@ -55,7 +69,7 @@ const report = {
   sitemap: { status: sitemap.status, legacyDomain: /https:\/\/(?:www\.)?kairank\.com/i.test(sitemapText) },
   feed: { status: feed.status, contentType: feed.headers.get("content-type") },
   redirect: { status: seoRedirect.status, location: seoRedirect.headers.get("location") },
-  visualSystem: { status: visualSystem.status, noIndex: /<meta\b[^>]*name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(visualSystemHtml) },
+  internalRoutes: internalRouteResults,
   auditApi: {
     invalid: { status: invalid.status, code: invalid.payload?.code },
     privateDestination: { status: privateDestination.status, code: privateDestination.payload?.code },
@@ -77,7 +91,7 @@ if (report.robots.status !== 200 || !report.robots.currentSitemap) failures.push
 if (report.sitemap.status !== 200 || report.sitemap.legacyDomain) failures.push("sitemap");
 if (report.feed.status !== 200) failures.push("feed");
 if (![307, 308].includes(report.redirect.status) || !report.redirect.location?.endsWith("/healthcare-seo")) failures.push("seo-redirect");
-if (!report.visualSystem.noIndex) failures.push("visual-system-noindex");
+if (internalRouteResults.some((route) => !route.redirectedHome && !route.noIndex)) failures.push("internal-routes-indexable");
 if (report.auditApi.invalid.status !== 400 || report.auditApi.invalid.code !== "invalid_url") failures.push("audit-invalid");
 if (report.auditApi.privateDestination.status !== 400 || report.auditApi.privateDestination.code !== "private_destination") failures.push("audit-ssrf");
 if (report.auditApi.publicDestination.status !== 200 || report.auditApi.publicDestination.checks < 8 || !report.auditApi.publicDestination.completeEvidence) failures.push("audit-public");

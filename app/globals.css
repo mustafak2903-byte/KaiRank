@@ -2238,6 +2238,7 @@ button:disabled {
 .v3-footer nav a {
   display: inline-flex;
   align-items: center;
+  min-width: 2.75rem;
   min-height: 2.75rem;
   width: fit-content;
   color: var(--color-text-secondary);

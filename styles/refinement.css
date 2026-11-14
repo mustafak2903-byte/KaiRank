@@ -116,7 +116,7 @@
 .refinement-conversion p { max-width:48rem; margin:1.7rem auto 0; color:var(--color-text-secondary); font-size:1.12rem; line-height:1.7; }
 .refinement-conversion .v3-actions { justify-content:center; margin-top:2.2rem; }
 .refinement-conversion small { display:block; margin-top:1.25rem; color:rgba(241,238,230,.48); }
-.refinement-conversion small a { color:rgba(241,238,230,.82); text-decoration:underline; text-decoration-color:rgba(126,144,255,.52); text-underline-offset:.25em; }
+.refinement-conversion small a { display:inline-flex; align-items:center; min-height:2.75rem; color:rgba(241,238,230,.82); text-decoration:underline; text-decoration-color:rgba(126,144,255,.52); text-underline-offset:.25em; }
 .refinement-conversion small a:hover,.refinement-conversion small a:focus-visible { color:var(--color-paper); text-decoration-color:var(--color-signal-bright); }
 
 .refinement-health-check { background:#ece8df; color:var(--color-ink); }
